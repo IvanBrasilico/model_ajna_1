@@ -1,0 +1,7 @@
+.idea/*
+*_checkpoints/*
+bases/*
+logs/*
+venv/*
+*.zip
+*.hdf5
