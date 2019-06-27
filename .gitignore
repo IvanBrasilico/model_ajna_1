@@ -1,7 +1,8 @@
 .idea/*
 *_checkpoints/*
 bases/*
-logs/*
+*projeto/logs/*
 venv/*
 *.zip
 *.hdf5
+*_erro_*
