@@ -1,0 +1,8 @@
+site_name: Projeto AJNA - Treinamento de modelos
+site_description: Followup do treinamento de novos modelos para o AJNA com TensorFlow2.0
+
+nav:
+    - Home: index.md
+    - About: about.md
+    - Notebooks: notebooks.md
+
