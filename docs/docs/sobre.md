@@ -2,7 +2,8 @@
 
 
 Ivan da Silva Brasílico
-https://github.com/IvanBrasilico/
+
+[Código Fonte no GitHub](https://github.com/IvanBrasilico/projeto)
 
 
-Apresentado como Capstone Project no curso de Engenheiro de Machine Learning, Udacity.
+* Apresentado como Capstone Project no curso de Engenheiro de Machine Learning, Udacity.

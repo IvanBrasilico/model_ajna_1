@@ -2,7 +2,7 @@
 
 
 ## 01-Baseline-redesimples-vazio
-<a href="/html/01-Baseline-redesimples-vazio.html" 
+<a href="../html/01-Baseline-redesimples-vazio.html" 
 target="_blank">01-Baseline-redesimples-vazio</a>
 
 Rede convolucional bem simples treinada do zero.
@@ -12,7 +12,7 @@ acc: 0.9551 - val_acc: 0.9564
 Este notebook também contém visualizações para tentar entender melhor o que foi aprendido pela rede.
 
 ## 01b-Baseline-redesimples-vazio-tamanhomaior
-<a href="/html/01b-Baseline-redesimples-vazio-tamanhomaior.html" 
+<a href="../html/01b-Baseline-redesimples-vazio-tamanhomaior.html" 
 target="_blank">01b-Baseline-redesimples-vazio-tamanhomaior</a>
 
 Mesma rede convolucional, mas treinada com entrada maior (224x224). 
@@ -46,7 +46,7 @@ Conclusões:
     
 
 ## 02-TransferLearningSimples-vazio
-<a href="/html/02-TransferLearningSimples-vazio.html" 
+<a href="../html/02-TransferLearningSimples-vazio.html" 
 target="_blank">02-TransferLearningSimples-vazio</a>
 
 Rede Densenet121, pré treinada na imagenet.
@@ -69,7 +69,7 @@ https://arxiv.org/abs/1811.12231
 
 
 ## 02b-TransferLearningSimplesRegularizer-vazio
-<a href="/html/02b-TransferLearningSimplesRegularizer-vazio.html" 
+<a href="../html/02b-TransferLearningSimplesRegularizer-vazio.html" 
 target="_blank">02b-TransferLearningSimplesRegularizer-vazio</a>
 
 Rede Densenet121, pré treinada na imagenet, com regularização.
@@ -78,7 +78,7 @@ Rede Densenet121, pré treinada na imagenet, com regularização.
 
 
 ## 02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio
-<a href="/html/02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio.html" 
+<a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio.html" 
 target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio</a>
 
 Rede Densenet121, pré treinada na imagenet, com regularização.
@@ -103,9 +103,18 @@ Será criada uma cópia da base sem esses exemplos, para testar os mesmos
  algoritmos e comparar.
 
 
+## 01-Baseline-redesimples-chestXRay
+<a href="../html/01-Baseline-redesimples-chestXRay.html" 
+target="_blank">01-Baseline-redesimples-chestXRay</a>
+
+Rede convolucional bem simples treinada do zero.
+
+Input shape = 150, 150
+
+acc: 0.9279 - val_loss: 0.4564 - val_acc: 0.8285
 
 ## 01b-Baseline-redesimples-chestXRay-tamanhomaior
-<a href="/html/01b-Baseline-redesimples-chestXRay-tamanhomaior.html" 
+<a href="../html/01b-Baseline-redesimples-chestXRay-tamanhomaior.html" 
 target="_blank">H01b-Baseline-redesimples-chestXRay-tamanhomaior</a>
 
 Rede convolucional bem simples treinada do zero.
@@ -125,11 +134,19 @@ Mesmo a rede sendo simples, aparenta ligeiro overfitting
  testar se deixar a base de treinamento mais parecida com a de testes reduz erro de
  generalização, ao menos nesses exemplos e no "fine tunning"
  
- Conforme a teoria previa, o sobreajuste aumentou. acc foi para 0.96 e val_acc caiu para menos de 0.80
+Conforme previsto pela teoria, o sobreajuste aumentou. 
+ 
+acc foi para 0.96 e val_acc caiu para menos de 0.80
  
 - Quarta tentativa, com regularização L1 e L2 na última camada e otimizador Adam,
 pareceu que ia conseguir melhoria, foi expandido o treinamento para 50 épocas iniciando com uma
 lr maior, mas a melhoria foi apenas marginal, com val_acc ensaiando ultrapassar 0.87 mas oscilando bastante
+
+Em 04/06/2019 o melhor modelo foi:
+
+Epoch 14/50
+loss: 0.1884 - acc: 0.9507 - val_loss: 0.4122 - val_acc: 0.8429
+
 
 Conclusões/próximos passos
 

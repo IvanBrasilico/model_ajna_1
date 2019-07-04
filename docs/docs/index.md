@@ -6,9 +6,10 @@
 Nestes documentos centralizadas as anotações e histórico detalhado do treinamento
 de alguns modelos de visão computacional.
 
-* Planejamento e metas do projeto em <a href="/html/CapstoneProject.html" target="_blank">CapstoneProject</a>
-* Detalhes dos modelos desenvolvidos e exploração de dados e modelos em 
- [relatório](notebooks.md)
+* Proposta do projeto - <a href="../html/CapstoneProject.html" target="_blank">Capstone Proposal</a>
+* Detalhes dos [modelos desenvolvidos e exploração de dados](notebooks.md)
+* <a href="https://github.com/IvanBrasilico/projeto" target="_blank">Código Fonte</a>
+
 
 ## Organização
 
