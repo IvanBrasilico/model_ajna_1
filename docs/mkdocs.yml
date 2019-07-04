@@ -3,6 +3,6 @@ site_description: Followup do treinamento de novos modelos para o AJNA com Tenso
 
 nav:
     - Home: index.md
-    - About: about.md
-    - Notebooks: notebooks.md
+    - Relatório: notebooks.md
+    - Sobre: sobre.md
 

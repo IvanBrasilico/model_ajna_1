@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>01b-Baseline-redesimples-chestXRay-tamanhomaior</title>
+<title>CapstoneProject</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13113,467 +13113,130 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">zipfile</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">from</span> <span class="nn">tensorflow.keras.optimizers</span> <span class="k">import</span> <span class="n">Adam</span>
-<span class="kn">from</span> <span class="nn">tensorflow.keras.preprocessing.image</span> <span class="k">import</span> <span class="n">ImageDataGenerator</span>
-
-<span class="kn">from</span> <span class="nn">tensorflow.keras.callbacks</span> <span class="k">import</span> <span class="n">EarlyStopping</span><span class="p">,</span> <span class="n">ModelCheckpoint</span><span class="p">,</span> \
-    <span class="n">ReduceLROnPlateau</span><span class="p">,</span> <span class="n">TensorBoard</span>
-</pre></div>
-
-    </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Similarity-Project---combining-geometric-and-semantic-distances">Similarity Project - combining geometric and semantic distances<a class="anchor-link" href="#Similarity-Project---combining-geometric-and-semantic-distances">&#182;</a></h2>
 </div>
 </div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">MODEL_DIR</span> <span class="o">=</span> <span class="s1">&#39;../modelschest&#39;</span>
-<span class="n">LOG_DIR</span> <span class="o">=</span> <span class="s1">&#39;../logs/chest/01b/&#39;</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">MODEL_DIR</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">MODEL_DIR</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">LOG_DIR</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">LOG_DIR</span><span class="p">)</span>
-
-<span class="n">caminho_bases</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;bases&#39;</span><span class="p">,</span> <span class="s1">&#39;chest_xray&#39;</span><span class="p">)</span>
-<span class="n">caminho_train</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">caminho_bases</span><span class="p">,</span> <span class="s1">&#39;train&#39;</span><span class="p">)</span>
-<span class="n">caminho_test</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">caminho_bases</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">)</span>
-<span class="n">SIZE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Callbacks">Callbacks<a class="anchor-link" href="#Callbacks">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tensorboard_logs</span> <span class="o">=</span> <span class="n">TensorBoard</span><span class="p">(</span><span class="n">log_dir</span><span class="o">=</span><span class="n">LOG_DIR</span><span class="p">,</span> <span class="n">histogram_freq</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                               <span class="n">write_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">write_images</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                               <span class="n">update_freq</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">)</span>
-<span class="n">mcp_save</span> <span class="o">=</span> <span class="n">ModelCheckpoint</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODEL_DIR</span><span class="p">,</span> 
-                                        <span class="s1">&#39;01b-chest-modelweights.</span><span class="si">{epoch:02d}</span><span class="s1">-</span><span class="si">{val_loss:.2f}</span><span class="s1">.hdf5&#39;</span><span class="p">),</span>
-                           <span class="n">save_best_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
-<span class="n">early_stop</span> <span class="o">=</span> <span class="n">EarlyStopping</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
-<span class="n">reduce_lr</span> <span class="o">=</span> <span class="n">ReduceLROnPlateau</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
-                              <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_delta</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
-</pre></div>
+<h1 id="Machine-Learning-Engineer-Nanodegree">Machine Learning Engineer Nanodegree<a class="anchor-link" href="#Machine-Learning-Engineer-Nanodegree">&#182;</a></h1><h2 id="Capstone-Proposal">Capstone Proposal<a class="anchor-link" href="#Capstone-Proposal">&#182;</a></h2><p>Ivan da Silva Brasílico</p>
+<p>April 23, 2019</p>
 
-    </div>
 </div>
 </div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Model">Model<a class="anchor-link" href="#Model">&#182;</a></h1>
+<h2 id="Proposal">Proposal<a class="anchor-link" href="#Proposal">&#182;</a></h2>
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="k">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">Flatten</span>
-<span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="k">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">MaxPooling2D</span>
-
-<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Sequential</span><span class="p">([</span>
-  <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-                         <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span>
-                         <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span>
-                         <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="o">*</span><span class="n">SIZE</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span>
-  <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
-  <span class="n">Conv2D</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">),</span>
-  <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
-  <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">),</span>
-  <span class="n">Conv2D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">),</span>
-  <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
-  <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.25</span><span class="p">),</span>
-  <span class="n">Conv2D</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">),</span>
-  <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
-  <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.25</span><span class="p">),</span>
-  <span class="n">Conv2D</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">),</span>
-  <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
-  <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.25</span><span class="p">),</span>
-  <span class="n">Conv2D</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">),</span>
-  <span class="n">Flatten</span><span class="p">(),</span>
-  <span class="n">Dense</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">regularizers</span><span class="o">.</span><span class="n">l1_l2</span><span class="p">(</span><span class="n">l1</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">l2</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)),</span>
-  <span class="n">Dropout</span><span class="p">(</span><span class="mf">0.4</span><span class="p">),</span>
-  <span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">)</span>
- 
-<span class="p">])</span>
-
-<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">),</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">])</span>
-<span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Model: &#34;sequential&#34;
-_________________________________________________________________
-Layer (type)                 Output Shape              Param #   
-=================================================================
-conv2d (Conv2D)              (None, 224, 224, 16)      448       
-_________________________________________________________________
-max_pooling2d (MaxPooling2D) (None, 112, 112, 16)      0         
-_________________________________________________________________
-conv2d_1 (Conv2D)            (None, 112, 112, 32)      4640      
-_________________________________________________________________
-max_pooling2d_1 (MaxPooling2 (None, 56, 56, 32)        0         
-_________________________________________________________________
-dropout (Dropout)            (None, 56, 56, 32)        0         
-_________________________________________________________________
-conv2d_2 (Conv2D)            (None, 56, 56, 64)        18496     
-_________________________________________________________________
-max_pooling2d_2 (MaxPooling2 (None, 28, 28, 64)        0         
-_________________________________________________________________
-dropout_1 (Dropout)          (None, 28, 28, 64)        0         
-_________________________________________________________________
-conv2d_3 (Conv2D)            (None, 28, 28, 128)       73856     
-_________________________________________________________________
-max_pooling2d_3 (MaxPooling2 (None, 14, 14, 128)       0         
-_________________________________________________________________
-dropout_2 (Dropout)          (None, 14, 14, 128)       0         
-_________________________________________________________________
-conv2d_4 (Conv2D)            (None, 12, 12, 128)       147584    
-_________________________________________________________________
-max_pooling2d_4 (MaxPooling2 (None, 6, 6, 128)         0         
-_________________________________________________________________
-dropout_3 (Dropout)          (None, 6, 6, 128)         0         
-_________________________________________________________________
-conv2d_5 (Conv2D)            (None, 4, 4, 256)         295168    
-_________________________________________________________________
-flatten (Flatten)            (None, 4096)              0         
-_________________________________________________________________
-dense (Dense)                (None, 256)               1048832   
-_________________________________________________________________
-dropout_4 (Dropout)          (None, 256)               0         
-_________________________________________________________________
-dense_1 (Dense)              (None, 1)                 257       
-=================================================================
-Total params: 1,589,281
-Trainable params: 1,589,281
-Non-trainable params: 0
-_________________________________________________________________
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Training-and-validation">Training and validation<a class="anchor-link" href="#Training-and-validation">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_datagen</span> <span class="o">=</span> <span class="n">ImageDataGenerator</span><span class="p">(</span>
-    <span class="n">rescale</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span>
-    <span class="n">width_shift_range</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-    <span class="n">height_shift_range</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-    <span class="n">brightness_range</span><span class="o">=</span><span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">],</span>
-    <span class="n">fill_mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
-    <span class="n">horizontal_flip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">train_generator</span> <span class="o">=</span> <span class="n">train_datagen</span><span class="o">.</span><span class="n">flow_from_directory</span><span class="p">(</span>
-    <span class="n">caminho_train</span><span class="p">,</span>
-    <span class="n">target_size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span>
-    <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
-    <span class="n">class_mode</span><span class="o">=</span><span class="s1">&#39;binary&#39;</span>
-<span class="p">)</span>
-
-<span class="n">validation_datagen</span> <span class="o">=</span> <span class="n">ImageDataGenerator</span><span class="p">(</span>
-    <span class="n">rescale</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span>
-    <span class="c1"># brightness_range=[0.9, 1.1],</span>
-    <span class="n">fill_mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
-    <span class="n">horizontal_flip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">validation_generator</span> <span class="o">=</span> <span class="n">validation_datagen</span><span class="o">.</span><span class="n">flow_from_directory</span><span class="p">(</span>
-    <span class="n">caminho_test</span><span class="p">,</span>
-    <span class="n">target_size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">,</span>
-    <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
-    <span class="n">class_mode</span><span class="o">=</span><span class="s1">&#39;binary&#39;</span>
-<span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Found 5216 images belonging to 2 classes.
-Found 624 images belonging to 2 classes.
-</pre>
-</div>
-</div>
+<h3 id="Domain-Background">Domain Background<a class="anchor-link" href="#Domain-Background">&#182;</a></h3><p>There are many aproachs for adressing image similarity search. The old ones use hand crafted features, like HOG, SIFT or Histograms of images, and some distance, like Euclidean Distances, to compare these features. More modern aproaches uses Neural Networks.</p>
+<p>Two common neural net image similarity search methods are using autoencoders to generate a compact representation of the image, or accessing this compact representation on features learned on Vanilla Networks pre-trained on ImageNet (i.e., using values from the latter convolutional filters on pre-trained Nets like VGG, DenseNet, Inception, etc). The autoencoder method tends to learn the geometric/exact match. The convolutional filter can, depending on the layer used, be more geometric or more semantic. These methods commonly use euclidean distances to compare the generated features between target images and the image database.</p>
+<p>There are alternative aproachs, like, for fast search, as proposed by Hinton, using Markov Models to learn binary patches and use hamming distance, or even memory addresses, for very fast searching (<a href="https://pdfs.semanticscholar.org/bba0/6d9f6632391313f62143596342945cbf7a0e.pdf">https://pdfs.semanticscholar.org/bba0/6d9f6632391313f62143596342945cbf7a0e.pdf</a>). Also, one can generate text labels for images (image captioning <a href="https://arxiv.org/pdf/1810.04020.pdf">https://arxiv.org/pdf/1810.04020.pdf</a>) and use text retrieval methods (bag of words, tf/idf) to do semantic similarity search.</p>
 
 </div>
 </div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">epoch</span> <span class="o">=</span> <span class="mi">48</span>
-<span class="n">val_loss</span> <span class="o">=</span> <span class="mf">0.42</span>
-<span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODEL_DIR</span><span class="p">,</span>
-                 <span class="s1">&#39;01b-chest-modelweights.</span><span class="si">{:02d}</span><span class="s1">-</span><span class="si">{:.2f}</span><span class="s1">.hdf5&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">val_loss</span><span class="p">)</span>
-                <span class="p">))</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_generator</span><span class="p">(</span><span class="n">train_generator</span><span class="p">,</span>
-                              <span class="n">initial_epoch</span><span class="o">=</span><span class="n">epoch</span><span class="p">,</span>
-                              <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-                              <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                              <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">early_stop</span><span class="p">,</span> <span class="n">mcp_save</span><span class="p">,</span> <span class="n">reduce_lr</span><span class="p">,</span> <span class="n">tensorboard_logs</span><span class="p">],</span>
-                              <span class="n">validation_data</span><span class="o">=</span><span class="n">validation_generator</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Epoch 31/50
-82/82 [==============================] - 169s 2s/step - loss: 0.2342 - acc: 0.9379 - val_loss: 0.4505 - val_acc: 0.8301
-Epoch 32/50
-82/82 [==============================] - 133s 2s/step - loss: 0.2353 - acc: 0.9377 - val_loss: 0.4461 - val_acc: 0.8301
-Epoch 33/50
-82/82 [==============================] - 130s 2s/step - loss: 0.2293 - acc: 0.9385 - val_loss: 0.4443 - val_acc: 0.8365
-Epoch 34/50
-82/82 [==============================] - 133s 2s/step - loss: 0.2330 - acc: 0.9360 - val_loss: 0.4303 - val_acc: 0.8397
-Epoch 35/50
-82/82 [==============================] - 136s 2s/step - loss: 0.2333 - acc: 0.9348 - val_loss: 0.4763 - val_acc: 0.8157
-Epoch 36/50
-82/82 [==============================] - 128s 2s/step - loss: 0.2284 - acc: 0.9400 - val_loss: 0.4692 - val_acc: 0.8141
-Epoch 37/50
-82/82 [==============================] - 137s 2s/step - loss: 0.2297 - acc: 0.9392 - val_loss: 0.4634 - val_acc: 0.8189
-Epoch 38/50
-81/82 [============================&gt;.] - ETA: 1s - loss: 0.2282 - acc: 0.9394
-Epoch 00038: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
-82/82 [==============================] - 141s 2s/step - loss: 0.2297 - acc: 0.9388 - val_loss: 0.4284 - val_acc: 0.8397
-Epoch 39/50
-82/82 [==============================] - 126s 2s/step - loss: 0.2136 - acc: 0.9381 - val_loss: 0.4321 - val_acc: 0.8285
-Epoch 40/50
-82/82 [==============================] - 126s 2s/step - loss: 0.2103 - acc: 0.9369 - val_loss: 0.4377 - val_acc: 0.8205
-Epoch 41/50
-82/82 [==============================] - 125s 2s/step - loss: 0.2120 - acc: 0.9346 - val_loss: 0.4260 - val_acc: 0.8349
-Epoch 42/50
-81/82 [============================&gt;.] - ETA: 1s - loss: 0.2061 - acc: 0.9400
-Epoch 00042: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
-82/82 [==============================] - 126s 2s/step - loss: 0.2059 - acc: 0.9400 - val_loss: 0.4264 - val_acc: 0.8317
-Epoch 43/50
-82/82 [==============================] - 125s 2s/step - loss: 0.2051 - acc: 0.9398 - val_loss: 0.4263 - val_acc: 0.8333
-Epoch 44/50
-82/82 [==============================] - 128s 2s/step - loss: 0.2046 - acc: 0.9429 - val_loss: 0.4296 - val_acc: 0.8317
-Epoch 45/50
-82/82 [==============================] - 126s 2s/step - loss: 0.2047 - acc: 0.9400 - val_loss: 0.4251 - val_acc: 0.8237
-Epoch 46/50
-81/82 [============================&gt;.] - ETA: 1s - loss: 0.2123 - acc: 0.9373
-Epoch 00046: ReduceLROnPlateau reducing learning rate to 1.0000000116860975e-08.
-82/82 [==============================] - 127s 2s/step - loss: 0.2128 - acc: 0.9371 - val_loss: 0.4284 - val_acc: 0.8269
-Epoch 47/50
-82/82 [==============================] - 126s 2s/step - loss: 0.2005 - acc: 0.9415 - val_loss: 0.4272 - val_acc: 0.8285
-Epoch 48/50
-82/82 [==============================] - 125s 2s/step - loss: 0.2044 - acc: 0.9377 - val_loss: 0.4238 - val_acc: 0.8349
-Epoch 49/50
-82/82 [==============================] - 126s 2s/step - loss: 0.2101 - acc: 0.9344 - val_loss: 0.4261 - val_acc: 0.8349
-Epoch 50/50
-81/82 [============================&gt;.] - ETA: 1s - loss: 0.2068 - acc: 0.9379
-Epoch 00050: ReduceLROnPlateau reducing learning rate to 9.999999939225292e-10.
-82/82 [==============================] - 124s 2s/step - loss: 0.2061 - acc: 0.9383 - val_loss: 0.4280 - val_acc: 0.8333
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Treinar-novamente-com-lr-maior">Treinar novamente com lr maior<a class="anchor-link" href="#Treinar-novamente-com-lr-maior">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.0004</span><span class="p">),</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;acc&#39;</span><span class="p">])</span>
-<span class="n">reduce_lr</span> <span class="o">=</span> <span class="n">ReduceLROnPlateau</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                              <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_delta</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
-
-<span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_generator</span><span class="p">(</span><span class="n">train_generator</span><span class="p">,</span>
-                              <span class="n">initial_epoch</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                              <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
-                              <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                              <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">early_stop</span><span class="p">,</span> <span class="n">mcp_save</span><span class="p">,</span> <span class="n">reduce_lr</span><span class="p">,</span> <span class="n">tensorboard_logs</span><span class="p">],</span>
-                              <span class="n">validation_data</span><span class="o">=</span><span class="n">validation_generator</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>Epoch 1/50
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>WARNING: Logging before flag parsing goes to stderr.
-W0704 15:03:59.673480 140529550505728 deprecation.py:323] From /home/ivan/pybr/projeto/venv/lib/python3.5/site-packages/tensorflow/python/ops/math_grad.py:1250: add_dispatch_support.&lt;locals&gt;.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
-Instructions for updating:
-Use tf.where in 2.0, which has the same broadcast rule as np.where
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>82/82 [==============================] - 138s 2s/step - loss: 1.2333 - acc: 0.9160 - val_loss: 1.0227 - val_acc: 0.8301
-Epoch 2/50
-82/82 [==============================] - 140s 2s/step - loss: 0.7998 - acc: 0.9279 - val_loss: 0.9461 - val_acc: 0.8686
-Epoch 3/50
-81/82 [============================&gt;.] - ETA: 1s - loss: 0.7703 - acc: 0.9315
-Epoch 00003: ReduceLROnPlateau reducing learning rate to 0.00019999999494757503.
-82/82 [==============================] - 129s 2s/step - loss: 0.7716 - acc: 0.9310 - val_loss: 0.9788 - val_acc: 0.8510
-Epoch 4/50
-82/82 [==============================] - 131s 2s/step - loss: 0.4906 - acc: 0.9423 - val_loss: 0.7029 - val_acc: 0.8189
-Epoch 5/50
-82/82 [==============================] - 137s 2s/step - loss: 0.4537 - acc: 0.9411 - val_loss: 0.7324 - val_acc: 0.8093
-Epoch 6/50
-81/82 [============================&gt;.] - ETA: 1s - loss: 0.4527 - acc: 0.9439
-Epoch 00006: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-05.
-82/82 [==============================] - 137s 2s/step - loss: 0.4531 - acc: 0.9438 - val_loss: 0.8809 - val_acc: 0.7692
-Epoch 7/50
-82/82 [==============================] - 133s 2s/step - loss: 0.3368 - acc: 0.9454 - val_loss: 0.4890 - val_acc: 0.8558
-Epoch 8/50
-82/82 [==============================] - 142s 2s/step - loss: 0.3085 - acc: 0.9484 - val_loss: 0.5993 - val_acc: 0.8157
-Epoch 9/50
-81/82 [============================&gt;.] - ETA: 1s - loss: 0.3118 - acc: 0.9462
-Epoch 00009: ReduceLROnPlateau reducing learning rate to 4.999999873689376e-05.
-82/82 [==============================] - 141s 2s/step - loss: 0.3115 - acc: 0.9461 - val_loss: 0.5313 - val_acc: 0.8446
-Epoch 10/50
-82/82 [==============================] - 144s 2s/step - loss: 0.2459 - acc: 0.9500 - val_loss: 0.5032 - val_acc: 0.8221
-Epoch 11/50
-64/82 [======================&gt;.......] - ETA: 27s - loss: 0.2390 - acc: 0.9520</pre>
-</div>
-</div>
+<h3 id="Problem-Statement">Problem Statement<a class="anchor-link" href="#Problem-Statement">&#182;</a></h3><p>All the cited methods have their strenghts, but for the problem that I have in mind, I feel like that I need a different method. I have greyscale Container Cargo X-Ray Images, and these pre-trained models are trained with color photographs, very different images from what we see in papers and contests on the Internet and open courses. Also, <strong>I need a search that can capture a set of characteristics: semantic, geometry, packing, density zones, patterns, and is position invariant and translation invariant</strong>. Also, I have some images that are very similar, but not equal, like the same cargo (HS Code) but with different quantity, size or qualities.</p>
+<p>Then, I need some method that trains comparing an image with itself (like in autoencoders and hinton deep belief markov models), with its semantic (like in convolutional networks used to object detection and classification), and with its "cousins", images that are not equal but have the same cargo (like siamese models trained to classify mnist and fashion-mnist).</p>
+<p>Clarifying, I need a similarity search that, when there is a seizure, allows the fiscalization agents that are in cargo of X-ray container scanners to use the image of the problematic cargo to find other cargo that have the same menace (like a smugling, or even drugs/guns ocultation). Or may find anomalies in a lot, that was expected to be very similar. I am already using a simple linear autoencoder AND with that</p>
+<p>But these images are private, and the rules of Udacity says that I need a public dataset. So I looked for a public dataset that has some similarity with cargo XRay domain. The public datasets that looked more similar with my task are the chest XRay public datasets.</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Datasets-and-Inputs">Datasets and Inputs<a class="anchor-link" href="#Datasets-and-Inputs">&#182;</a></h3><p>I will examine public Chest XRay datasets to see what fits more in my needs.</p>
+<p><a href="https://stanfordmlgroup.github.io/competitions/chexpert/">https://stanfordmlgroup.github.io/competitions/chexpert/</a></p>
+<p><a href="https://stanfordmlgroup.github.io/projects/chexnet/">https://stanfordmlgroup.github.io/projects/chexnet/</a></p>
+<p><a href="https://www.kaggle.com/nih-chest-xrays/data/metadata">https://www.kaggle.com/nih-chest-xrays/data/metadata</a></p>
+<p><a href="https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia">https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia</a></p>
+<p>I have about 1.5 million X-Ray images, half in VGA, half in SVGA resolution. All of these were associated, by a script, with the Bill of Lading related information, that contains some information, like description of goods contained, weight, volume, HS Code, and others. Also, quite a few (only hundreds) are manually rotulated because there was a seizure (smuggling, cocaine, others). Once I can design a model that can do well on chest X-Ray, I will evaluate that on my database two.</p>
 
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-    </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Solution-Statement">Solution Statement<a class="anchor-link" href="#Solution-Statement">&#182;</a></h3><p>Using Siamese convolutuional netwoks, try to create an image similarity search engine that can do well on:</p>
+<ul>
+<li>Detecting images from same disease/lot/HS Code (classify)</li>
+<li>Detecting lot anomalies (unsimilarity larger than a threshold on same label)</li>
+<li>Finding images similar to a patient case/cargo seized</li>
+</ul>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Benchmark-Model">Benchmark Model<a class="anchor-link" href="#Benchmark-Model">&#182;</a></h3><p>I already have a very simple full conected autoencoder on production. This model will be the baseline for the similarity search.</p>
+<p>Also, I will pick a vanilla convolutional network from keras.application to be the baseline of the classification test.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Evaluation-Metrics">Evaluation Metrics<a class="anchor-link" href="#Evaluation-Metrics">&#182;</a></h3><p>The classification task will be evaluated by checking accuracy, recall, precision, confusion matrix and f1-score and comparing it to other models.</p>
+<p>For the search task, the metrics are more dificult to set. I will take the last layer of the trained network and use this layer to give me a "hash" and calculate the euclidean distance between this hash and all other hashes of all images and sort then by this distance.</p>
+<p>The simpler evaluation metric could be the mean between all distances calculated on images of same label.</p>
+<p>Another evaluation metric will be comparing with the baseline autoencoder results.</p>
+<p>One evaluation for similarity search will need to use human avaliation, like on Information Retrieval. I think in randomic choosing some images, the searcher will exibit the 10 first results and an human evaluator will give some grade (between 0 to 100 or alternatively binary), that will be multiplied by the rank position, using precision at K. <a href="https://en.wikipedia.org/wiki/Evaluation_measures_(information_retrieval)#Precision_at_K">https://en.wikipedia.org/wiki/Evaluation_measures_(information_retrieval)#Precision_at_K</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Project-Design">Project Design<a class="anchor-link" href="#Project-Design">&#182;</a></h3><p>The project has two phases: phase one is for test and evaluation with the public dataset and this will be the submitted one. Phase two will take place after submition to Udacity.</p>
+<p>The simplified project design is:</p>
+<ul>
+<li>Download the chest XRay dataset</li>
+<li>Explore the dataset:<ul>
+<li>Count the class examples</li>
+<li>Sample the classs examples (visualize)</li>
+<li>Extract some statistics, look for problems/incosistencies on data</li>
+</ul>
+</li>
+<li>Choose a model from keras.applications or from online kernels on problem</li>
+<li>Train this as the baseline. Save the metrics.</li>
+<li>Search for articles on the problem set and resume the findings</li>
+<li>Choose a simple architecture for the siamese network (maybe the same for the previous problem)</li>
+<li>Train and compare to baseline</li>
+<li>Tune the hyperparameters</li>
+<li>Once the hyperparameters are tuned, depending on the results of the evaluation metrics, change/expand the network architeture</li>
+<li>Tune the hyperparameters again if the network is changed</li>
+<li>Design the search task</li>
+<li>Evaluate the search task<ul>
+<li>The features extracted on last layers can than be reduced via PCA or T-SNE and visualized</li>
+<li>Also, they can be used to create an Index for image search, and that index can be visually evaluated and compared with baseline model</li>
+</ul>
+</li>
+</ul>
+<p>Then, a script will be designed to generate a copy of cargo the images on disk, in series of folders named on HSCode. These folders will be inspected (first by the autoencoder and then visually) to see if the images on folder really have similarity.</p>
+<p>The same procedure aplied to chest X-Ray will be tried on this dataset also.</p>
+
+</div>
+</div>
 </div>
     </div>
   </div>
