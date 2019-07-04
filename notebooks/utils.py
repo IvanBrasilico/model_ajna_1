@@ -14,6 +14,7 @@ def get_imagens_erro(pgenerator, pmodel):
     '''
     y_local = []
     y_pred = []
+    y_pred_proba = []
     X_names = []
     #  Puxando por len náo fica "preso" no loop de ImageAugmentation
     for i in range(len(pgenerator)):
@@ -22,11 +23,12 @@ def get_imagens_erro(pgenerator, pmodel):
         y_pred_batch = pmodel.predict_on_batch(X_batch)
         for ind, (one_pred, one_true) in enumerate(zip(y_pred_batch, y_batch)):
             # print(y, type(y))
-            one_pred = round(one_pred[0])
-            y_pred.append(one_pred)
-            if one_pred != one_true:
+            y_pred_proba.append(one_pred[0])
+            one_pred_round = round(one_pred[0])
+            y_pred.append(one_pred_round)
+            if one_pred_round != one_true:
                 X_names.append(pgenerator.filenames[i * pgenerator.batch_size + ind])
-    return y_local, y_pred, X_names
+    return y_local, y_pred, X_names, y_pred_proba
 
 
 def report(generator, y_test, y_pred):
@@ -39,7 +41,9 @@ def report(generator, y_test, y_pred):
     print(classification_report(y_test, y_pred))
     
     
-def plot_errors(generator, y_real, y_pred, caminho, X_names):
+def plot_errors(generator, y_real, y_pred, caminho, X_names, y_pred_proba=None):
+    if y_pred_proba == None:
+        y_pred_proba = y_pred
     classes = {v:k for k, v in generator.class_indices.items()}
     print(classes)
     y_error = list(np.nonzero(np.array(y_real) != np.array(y_pred))[0])
@@ -49,7 +53,9 @@ def plot_errors(generator, y_real, y_pred, caminho, X_names):
         axe = ax[num_img // 4, num_img % 4]
         ind = random.randint(1, len(y_error) - 1)
         choice = y_error[ind]
-        text = 'R: %s,  P: %s' % (classes[y_real[choice]], classes[y_pred[choice]])
+        text = 'R: %s,  P: %s Proba: %s' % (classes[y_real[choice]],
+                                            classes[y_pred[choice]],
+                                            y_pred_proba[choice])
         axe.axis('off')
         axe.axes.get_xaxis().set_visible(False)
         axe.axes.get_yaxis().set_visible(False)
