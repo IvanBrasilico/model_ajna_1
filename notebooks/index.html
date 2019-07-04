@@ -72,6 +72,8 @@
         
             <li><a class="toctree-l3" href="#02c-transferlearningsimplesfeatureextractionregularizer-vazio">02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio</a></li>
         
+            <li><a class="toctree-l3" href="#01-baseline-redesimples-chestxray">01-Baseline-redesimples-chestXRay</a></li>
+        
             <li><a class="toctree-l3" href="#01b-baseline-redesimples-chestxray-tamanhomaior">01b-Baseline-redesimples-chestXRay-tamanhomaior</a></li>
         
         </ul>
@@ -185,6 +187,12 @@ exemplos que parecem da classe vazio. Ou são erros de base ou são exemplos
   estes da base.
 Será criada uma cópia da base sem esses exemplos, para testar os mesmos
  algoritmos e comparar.</p>
+<h2 id="01-baseline-redesimples-chestxray">01-Baseline-redesimples-chestXRay</h2>
+<p><a href="../html/01-Baseline-redesimples-chestXRay.html" 
+target="_blank">01-Baseline-redesimples-chestXRay</a></p>
+<p>Rede convolucional bem simples treinada do zero.</p>
+<p>Input shape = 150, 150</p>
+<p>acc: 0.9279 - val_loss: 0.4564 - val_acc: 0.8285</p>
 <h2 id="01b-baseline-redesimples-chestxray-tamanhomaior">01b-Baseline-redesimples-chestXRay-tamanhomaior</h2>
 <p><a href="../html/01b-Baseline-redesimples-chestXRay-tamanhomaior.html" 
 target="_blank">H01b-Baseline-redesimples-chestXRay-tamanhomaior</a></p>
@@ -208,12 +216,16 @@ Mesmo a rede sendo simples, aparenta ligeiro overfitting</p>
  generalização, ao menos nesses exemplos e no "fine tunning"</p>
 </li>
 </ul>
-<p>Conforme a teoria previa, o sobreajuste aumentou. acc foi para 0.96 e val_acc caiu para menos de 0.80</p>
+<p>Conforme previsto pela teoria, o sobreajuste aumentou. </p>
+<p>acc foi para 0.96 e val_acc caiu para menos de 0.80</p>
 <ul>
 <li>Quarta tentativa, com regularização L1 e L2 na última camada e otimizador Adam,
 pareceu que ia conseguir melhoria, foi expandido o treinamento para 50 épocas iniciando com uma
 lr maior, mas a melhoria foi apenas marginal, com val_acc ensaiando ultrapassar 0.87 mas oscilando bastante</li>
 </ul>
+<p>Em 04/06/2019 o melhor modelo foi:</p>
+<p>Epoch 14/50
+loss: 0.1884 - acc: 0.9507 - val_loss: 0.4122 - val_acc: 0.8429</p>
 <p>Conclusões/próximos passos</p>
 <ul>
 <li>
