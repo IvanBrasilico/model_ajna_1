@@ -1,8 +1,9 @@
-# Notebooks
+# Notebooks 
 
-## Base chestXRay
+### Base chestXRay
 
-### 01-Baseline-redesimples-chestXRay
+
+#### 01-Baseline-redesimples-chestXRay
 <a href="../html/01-Baseline-redesimples-chestXRay.html" 
 target="_blank">01-Baseline-redesimples-chestXRay</a>
 
@@ -12,7 +13,7 @@ Input shape = 150, 150
 
 acc: 0.9279 - val_acc: 0.8285
 
-### 01b-Baseline-redesimples-chestXRay-tamanhomaior
+#### 01b-Baseline-redesimples-chestXRay-tamanhomaior
 <a href="../html/01b-Baseline-redesimples-chestXRay-tamanhomaior.html" 
 target="_blank">01b-Baseline-redesimples-chestXRay-tamanhomaior</a>
 
@@ -44,7 +45,7 @@ lr maior, mas a melhoria foi apenas marginal, com val_acc ensaiando ultrapassar 
 Em 04/06/2019 o melhor modelo foi:
 
 Epoch 14/50
-loss: 0.1884 - acc: 0.9507 - val_loss: 0.4122 - val_acc: 0.8429
+acc: 0.9507 val_acc: 0.8429
 
 
 Conclusões/próximos passos
@@ -56,23 +57,56 @@ Conclusões/próximos passos
 
 - Olhar exemplos de kernel no kaggle com melhor desempenho em busca de idéias
 
-### 02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay
+#### 02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay
 <a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay.html" 
 target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay</a>
 
 
-### 02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay
+Utilizar DenseNet121 como feature extraction. Treinar classificador na saída desta rede.
+
+Resultado testes:
+acc: 0.93 val_acc: 0.82
+
+Próximo passo:
+ 
+Gravar em .npy uma matriz com todas as features extraídas da base de treinamento e fazer 
+Grid Search e Random Search do melhor classificador obtido.
+
+
+#### 02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay
 <a href="../html/02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay.html" 
 target="_blank">02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay</a>
 
-### 02e-auxiliar-ImageAugmentation
+Esta rede usa como entrada uma última camada maxpooling já salva, de saída da DenseNet121 aplicada à
+base de treinamento. Como todo o processamento convolucional já está realizado, o treinamento do classificador
+é centenas de vezes mais rápido. Assim, facilita o tunning da camada classificadora.
+
+Resultado: 
+
+Foi possível obter um classificador utilizando somente a saída da DenseNet121 original com pesos da imagenet:
+
+Base original:      acc 0.95 val_acc 0.89
+recall pneumonia:       0.95         0.97
+
+
+
+#### 02e-auxiliar-ImageAugmentation
 <a href="../html/02e-auxiliar-ImageAugmentation.html" 
 target="_blank">02e-auxiliar-ImageAugmentation</a>
 
-### 02e-FineTunning-chestXRay
+Este notebook é apenas para gerar uma base aumentada pré-processada. Será utilizado pelo outro notebook 02e.
+
+O objetivo é tentar diminuir o sobreajuste / distãncia entre acc e val_acc e agilizar a fase de treinamento.
+
+#### 02e-FineTunning-chestXRay
 <a href="../html/02e-FineTunning-chestXRay.html" 
 target="_blank">02e-FineTunning-chestXRay</a>
 
+Aqui está sendo treinada uma rede DenseNet121 do 02c empilhada com o classificador do 02d. 
+
+Problemas: não ficou claro se os pesos do notebook 02d foram aproveitados. Eles são carregados, os testes dão resultado
+similar ao 02d, mas quando inicia o treinamento de fine tunning os números de acc e val_acc caem próximos de 0.5,
+para depois voltarem a subir, mesmo quando se utiliza uma lr extremamente baixa. 
 
 Melhor modelo: 
 Transfermodelweights02e_etapa2.02-0.66.hdf5
@@ -85,7 +119,7 @@ para 95% no relatório. Investigar.
 Base original:      acc 0.95 val_acc 0.89
 recall pneumonia:       0.96         0.97
 
-## Observações finais
+#### Observações finais
 
 Considero que para este tipo de problema, o mais importante é um recall alto para pneumonia.
 
@@ -93,9 +127,20 @@ O modelo final tem um recall excelente, embora o desejável neste caso seja 100%
 erro de rotulagem nem qual o erro humano, muito menos o Bayes Error. Portanto, não dá para saber se 
 é factível melhorar acima de 95-97% de recall. 
 
-## Base container vazio-nvazio
+Não foi possível obter ganhos significativos em relação ao baseline com as técnicas empregadas. 
+A melhoria foi marginal, de menos de 5% em relação à rede neural simples. Tabela abaixo.
 
-### 01-Baseline-redesimples-vazio
+REDE 01b
+Accuracy:           acc 0.95 val_acc 0.85
+recall pneumonia:       0.94         0.95
+REDE 02e
+Accuracy:           acc 0.95 val_acc 0.89
+recall pneumonia:       0.96         0.97
+
+
+### Base container vazio-nvazio
+
+#### 01-Baseline-redesimples-vazio
 <a href="../html/01-Baseline-redesimples-vazio.html" 
 target="_blank">01-Baseline-redesimples-vazio</a>
 
@@ -105,7 +150,7 @@ acc: 0.9551 - val_acc: 0.9564
 
 Este notebook também contém visualizações para tentar entender melhor o que foi aprendido pela rede.
 
-### 01b-Baseline-redesimples-vazio-tamanhomaior
+#### 01b-Baseline-redesimples-vazio-tamanhomaior
 <a href="../html/01b-Baseline-redesimples-vazio-tamanhomaior.html" 
 target="_blank">01b-Baseline-redesimples-vazio-tamanhomaior</a>
 
@@ -139,7 +184,7 @@ Conclusões:
 **O algoritmo está tentendo a ignorar cargas de contêineres declarados como vazios mas borrados/sujos ou com muito pouca carga ou com carga uniforme de espumas/materias pouco densos. Talvez fosse interessante forçar o algoritmo a ser mais tendente a diminuir este erro, mesmo que isto custasse aumento de falso positivo na classe vazio.**
     
 
-### 02-TransferLearningSimples-vazio
+#### 02-TransferLearningSimples-vazio
 <a href="../html/02-TransferLearningSimples-vazio.html" 
 target="_blank">02-TransferLearningSimples-vazio</a>
 
@@ -162,7 +207,7 @@ ImageNet-trained CNNs are biased towards texture; increasing shape bias improves
 https://arxiv.org/abs/1811.12231
 
 
-### 02b-TransferLearningSimplesRegularizer-vazio
+#### 02b-TransferLearningSimplesRegularizer-vazio
 <a href="../html/02b-TransferLearningSimplesRegularizer-vazio.html" 
 target="_blank">02b-TransferLearningSimplesRegularizer-vazio</a>
 
@@ -171,7 +216,7 @@ Rede Densenet121, pré treinada na imagenet, com regularização.
 **Não houve sucesso neste treinamento, necessário debugar posteriormente** 
 
 
-### 02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio
+#### 02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio
 <a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio.html" 
 target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio</a>
 
