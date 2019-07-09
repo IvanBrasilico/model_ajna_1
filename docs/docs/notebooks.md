@@ -91,7 +91,7 @@ recall pneumonia:       0.95         0.97
 
 
 #### 02e-auxiliar-ImageAugmentation
-<a href="../html/02e-auxiliar-ImageAugmentation.html" 
+<a href="../html/02e-auxiliar-ImageAugmentation-chestXRay.html" 
 target="_blank">02e-auxiliar-ImageAugmentation</a>
 
 Este notebook é apenas para gerar uma base aumentada pré-processada. Será utilizado pelo outro notebook 02e.
