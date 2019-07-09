@@ -6,7 +6,7 @@ from PIL import Image
 from sklearn.metrics import classification_report, confusion_matrix
 
 
-def get_imagens_erro(pgenerator, pmodel):
+def get_imagens_erro(pgenerator, pmodel, tamanho=0):
     '''Usa generator para gerar batches.
     
     Retorna y_real e y_pred de todos os exemplos do generator E
@@ -17,7 +17,9 @@ def get_imagens_erro(pgenerator, pmodel):
     y_pred_proba = []
     X_names = []
     #  Puxando por len náo fica "preso" no loop de ImageAugmentation
-    for i in range(len(pgenerator)):
+    if tamanho == 0:
+        tamanho = len(pgenerator)
+    for i in range(tamanho):
         X_batch, y_batch = next(pgenerator)
         y_local.extend(y_batch)
         y_pred_batch = pmodel.predict_on_batch(X_batch)

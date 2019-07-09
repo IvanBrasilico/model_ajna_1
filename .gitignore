@@ -6,3 +6,6 @@ venv/*
 *.zip
 *.hdf5
 *_erro_*
+kerastunerlogs/
+*.h5
+*.pkl
