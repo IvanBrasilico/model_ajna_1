@@ -1,6 +1,6 @@
-# Notebooks 
+# ChestXRay 
 
-### Base chestXRay
+### notebooks na base chestXRay
 
 
 #### 01-Baseline-redesimples-chestXRay
@@ -57,7 +57,7 @@ Conclusões/próximos passos
 
 - Olhar exemplos de kernel no kaggle com melhor desempenho em busca de idéias
 
-#### 02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay
+#### 02c-TransferLearningSimples-FeatureExtractionRegularizer-chestXRay
 <a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay.html" 
 target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay</a>
 
@@ -73,7 +73,7 @@ Gravar em .npy uma matriz com todas as features extraídas da base de treinament
 Grid Search e Random Search do melhor classificador obtido.
 
 
-#### 02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay
+#### 02d-TransferLearning-FeatureExtraction-HyperParamTuner-chestXRay
 <a href="../html/02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay.html" 
 target="_blank">02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay</a>
 
@@ -137,8 +137,9 @@ REDE 02e
 Accuracy:           acc 0.95 val_acc 0.89
 recall pneumonia:       0.96         0.97
 
+# Vazios 
 
-### Base container vazio-nvazio
+### notebooks container vazio-nvazio
 
 #### 01-Baseline-redesimples-vazio
 <a href="../html/01-Baseline-redesimples-vazio.html" 
@@ -216,7 +217,7 @@ Rede Densenet121, pré treinada na imagenet, com regularização.
 **Não houve sucesso neste treinamento, necessário debugar posteriormente** 
 
 
-#### 02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio
+#### 02c-TransferLearning-FeatureExtractionRegularizer-vazio
 <a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio.html" 
 target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio</a>
 
