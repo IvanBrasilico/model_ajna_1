@@ -185,6 +185,38 @@ Conclusões:
 **O algoritmo está tentendo a ignorar cargas de contêineres declarados como vazios mas borrados/sujos ou com muito pouca carga ou com carga uniforme de espumas/materias pouco densos. Talvez fosse interessante forçar o algoritmo a ser mais tendente a diminuir este erro, mesmo que isto custasse aumento de falso positivo na classe vazio.**
     
 
+
+#### 01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered
+<a href="../html/01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered.html" 
+target="_blank">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</a>
+
+Este notebook aplica o mesmo método que 01b, mas trocando para base aumentada e filtrada 
+(redução de erros de rótulo) produzida por 02c e o2d2, isto é, foi gerada nova base, já aumentada 
+e excluindo erros acima e abaixo de um threshold do classificador 02c, que na inspeção visual
+ficou evidente tratarem-se de erros de rotulagem, isto é, data mismatch.
+
+Base aumentada: acc: 0.97 - val_acc: 0.97
+Base original:  acc: 0.96 - val_acc: 0.96
+
+#### 01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform
+<a href="../html/01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostransform.html" 
+target="_blank">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostransform</a>
+
+Este notebook aplica o mesmo método que 01b, mas trocando para base aumentada e filtrada 
+(redução de erros de rótulo) produzida por 02c e o2d2, isto é, foi gerada nova base, já aumentada 
+e excluindo erros acima e abaixo de um threshold do classificador 02c, que na inspeção visual
+ficou evidente tratarem-se de erros de rotulagem, isto é, data mismatch.
+
+Além disso, na inspeção visual do notebook 01b2 ficou a impressão de que os erros que ainda 
+estavam ocorrendo eram: erros que mesmo o humano teria dificuldade (contêineres com espuma, por exemplo) ou
+erros de rótulo persistentes. Além desses, o algoritmo ainda erra em alguns poucos casos de contêiner
+contendo muito pouca carga, especialmente se esta se concentra apenas no solo (provavelmente confunde com 
+imagens de vazio com solo poluído por carretas) ou somente em uma das portas (provavelmente confundindo com
+reefer). Assim, neste notebook foi diminuída a amplitude das transformações de imagem aumentada para checar o resultado.
+
+Base aumentada: acc: 0.97 - val_acc: 0.98
+Base original:  acc: 0.96 - val_acc: 0.96
+
 #### 02-TransferLearningSimples-vazio
 <a href="../html/02-TransferLearningSimples-vazio.html" 
 target="_blank">02-TransferLearningSimples-vazio</a>

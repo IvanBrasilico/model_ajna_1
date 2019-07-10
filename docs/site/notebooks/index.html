@@ -115,29 +115,32 @@
         
         <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
-        <li class="first-level active"><a href="#notebooks">Notebooks</a></li>
-            <li class="second-level"><a href="#base-chestxray">Base chestXRay</a></li>
+        <li class="first-level active"><a href="#chestxray">ChestXRay</a></li>
+            <li class="second-level"><a href="#notebooks-na-base-chestxray">notebooks na base chestXRay</a></li>
                 
                 <li class="third-level"><a href="#01-baseline-redesimples-chestxray">01-Baseline-redesimples-chestXRay</a></li>
                 <li class="third-level"><a href="#01b-baseline-redesimples-chestxray-tamanhomaior">01b-Baseline-redesimples-chestXRay-tamanhomaior</a></li>
-                <li class="third-level"><a href="#02c-transferlearningsimplesfeatureextractionregularizer-chestxray">02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay</a></li>
-                <li class="third-level"><a href="#02d-transferlearningfeatureextractionhyperparamtuner-chestxray">02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay</a></li>
+                <li class="third-level"><a href="#02c-transferlearningsimples-featureextractionregularizer-chestxray">02c-TransferLearningSimples-FeatureExtractionRegularizer-chestXRay</a></li>
+                <li class="third-level"><a href="#02d-transferlearning-featureextraction-hyperparamtuner-chestxray">02d-TransferLearning-FeatureExtraction-HyperParamTuner-chestXRay</a></li>
                 <li class="third-level"><a href="#02e-auxiliar-imageaugmentation">02e-auxiliar-ImageAugmentation</a></li>
                 <li class="third-level"><a href="#02e-finetunning-chestxray">02e-FineTunning-chestXRay</a></li>
                 <li class="third-level"><a href="#observacoes-finais">Observações finais</a></li>
-            <li class="second-level"><a href="#base-container-vazio-nvazio">Base container vazio-nvazio</a></li>
+        <li class="first-level "><a href="#vazios">Vazios</a></li>
+            <li class="second-level"><a href="#notebooks-container-vazio-nvazio">notebooks container vazio-nvazio</a></li>
                 
                 <li class="third-level"><a href="#01-baseline-redesimples-vazio">01-Baseline-redesimples-vazio</a></li>
                 <li class="third-level"><a href="#01b-baseline-redesimples-vazio-tamanhomaior">01b-Baseline-redesimples-vazio-tamanhomaior</a></li>
+                <li class="third-level"><a href="#01b2-baseline-redesimples-vazio-tamanhomaior-augmented-filtered">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</a></li>
+                <li class="third-level"><a href="#01b3-baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform</a></li>
                 <li class="third-level"><a href="#02-transferlearningsimples-vazio">02-TransferLearningSimples-vazio</a></li>
                 <li class="third-level"><a href="#02b-transferlearningsimplesregularizer-vazio">02b-TransferLearningSimplesRegularizer-vazio</a></li>
-                <li class="third-level"><a href="#02c-transferlearningsimplesfeatureextractionregularizer-vazio">02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio</a></li>
+                <li class="third-level"><a href="#02c-transferlearning-featureextractionregularizer-vazio">02c-TransferLearning-FeatureExtractionRegularizer-vazio</a></li>
     </ul>
 </div></div>
         <div class="col-md-9" role="main">
 
-<h1 id="notebooks">Notebooks</h1>
-<h3 id="base-chestxray">Base chestXRay</h3>
+<h1 id="chestxray">ChestXRay</h1>
+<h3 id="notebooks-na-base-chestxray">notebooks na base chestXRay</h3>
 <h4 id="01-baseline-redesimples-chestxray">01-Baseline-redesimples-chestXRay</h4>
 <p><a href="../html/01-Baseline-redesimples-chestXRay.html" 
 target="_blank">01-Baseline-redesimples-chestXRay</a></p>
@@ -189,7 +192,7 @@ acc: 0.9507 val_acc: 0.8429</p>
 <p>Olhar exemplos de kernel no kaggle com melhor desempenho em busca de idéias</p>
 </li>
 </ul>
-<h4 id="02c-transferlearningsimplesfeatureextractionregularizer-chestxray">02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay</h4>
+<h4 id="02c-transferlearningsimples-featureextractionregularizer-chestxray">02c-TransferLearningSimples-FeatureExtractionRegularizer-chestXRay</h4>
 <p><a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay.html" 
 target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay</a></p>
 <p>Utilizar DenseNet121 como feature extraction. Treinar classificador na saída desta rede.</p>
@@ -198,7 +201,7 @@ acc: 0.93 val_acc: 0.82</p>
 <p>Próximo passo:</p>
 <p>Gravar em .npy uma matriz com todas as features extraídas da base de treinamento e fazer 
 Grid Search e Random Search do melhor classificador obtido.</p>
-<h4 id="02d-transferlearningfeatureextractionhyperparamtuner-chestxray">02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay</h4>
+<h4 id="02d-transferlearning-featureextraction-hyperparamtuner-chestxray">02d-TransferLearning-FeatureExtraction-HyperParamTuner-chestXRay</h4>
 <p><a href="../html/02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay.html" 
 target="_blank">02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay</a></p>
 <p>Esta rede usa como entrada uma última camada maxpooling já salva, de saída da DenseNet121 aplicada à
@@ -209,7 +212,7 @@ base de treinamento. Como todo o processamento convolucional já está realizado
 <p>Base original:      acc 0.95 val_acc 0.89
 recall pneumonia:       0.95         0.97</p>
 <h4 id="02e-auxiliar-imageaugmentation">02e-auxiliar-ImageAugmentation</h4>
-<p><a href="../html/02e-auxiliar-ImageAugmentation.html" 
+<p><a href="../html/02e-auxiliar-ImageAugmentation-chestXRay.html" 
 target="_blank">02e-auxiliar-ImageAugmentation</a></p>
 <p>Este notebook é apenas para gerar uma base aumentada pré-processada. Será utilizado pelo outro notebook 02e.</p>
 <p>O objetivo é tentar diminuir o sobreajuste / distãncia entre acc e val_acc e agilizar a fase de treinamento.</p>
@@ -240,7 +243,8 @@ recall pneumonia:       0.94         0.95
 REDE 02e
 Accuracy:           acc 0.95 val_acc 0.89
 recall pneumonia:       0.96         0.97</p>
-<h3 id="base-container-vazio-nvazio">Base container vazio-nvazio</h3>
+<h1 id="vazios">Vazios</h1>
+<h3 id="notebooks-container-vazio-nvazio">notebooks container vazio-nvazio</h3>
 <h4 id="01-baseline-redesimples-vazio">01-Baseline-redesimples-vazio</h4>
 <p><a href="../html/01-Baseline-redesimples-vazio.html" 
 target="_blank">01-Baseline-redesimples-vazio</a></p>
@@ -272,6 +276,30 @@ Este erro poderia ser melhorado com melhora no recorte do contêiner e na limpez
 * Necessário proibir carretas que obstruam o contêiner
 </code></pre>
 <p><strong>O algoritmo está tentendo a ignorar cargas de contêineres declarados como vazios mas borrados/sujos ou com muito pouca carga ou com carga uniforme de espumas/materias pouco densos. Talvez fosse interessante forçar o algoritmo a ser mais tendente a diminuir este erro, mesmo que isto custasse aumento de falso positivo na classe vazio.</strong></p>
+<h4 id="01b2-baseline-redesimples-vazio-tamanhomaior-augmented-filtered">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</h4>
+<p><a href="../html/01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered.html" 
+target="_blank">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</a></p>
+<p>Este notebook aplica o mesmo método que 01b, mas trocando para base aumentada e filtrada 
+(redução de erros de rótulo) produzida por 02c e o2d2, isto é, foi gerada nova base, já aumentada 
+e excluindo erros acima e abaixo de um threshold do classificador 02c, que na inspeção visual
+ficou evidente tratarem-se de erros de rotulagem, isto é, data mismatch.</p>
+<p>Base aumentada: acc: 0.97 - val_acc: 0.97
+Base original:  acc: 0.96 - val_acc: 0.96</p>
+<h4 id="01b3-baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform</h4>
+<p><a href="../html/01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostransform.html" 
+target="_blank">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostransform</a></p>
+<p>Este notebook aplica o mesmo método que 01b, mas trocando para base aumentada e filtrada 
+(redução de erros de rótulo) produzida por 02c e o2d2, isto é, foi gerada nova base, já aumentada 
+e excluindo erros acima e abaixo de um threshold do classificador 02c, que na inspeção visual
+ficou evidente tratarem-se de erros de rotulagem, isto é, data mismatch.</p>
+<p>Além disso, na inspeção visual do notebook 01b2 ficou a impressão de que os erros que ainda 
+estavam ocorrendo eram: erros que mesmo o humano teria dificuldade (contêineres com espuma, por exemplo) ou
+erros de rótulo persistentes. Além desses, o algoritmo ainda erra em alguns poucos casos de contêiner
+contendo muito pouca carga, especialmente se esta se concentra apenas no solo (provavelmente confunde com 
+imagens de vazio com solo poluído por carretas) ou somente em uma das portas (provavelmente confundindo com
+reefer). Assim, neste notebook foi diminuída a amplitude das transformações de imagem aumentada para checar o resultado.</p>
+<p>Base aumentada: acc: 0.97 - val_acc: 0.98
+Base original:  acc: 0.96 - val_acc: 0.96</p>
 <h4 id="02-transferlearningsimples-vazio">02-TransferLearningSimples-vazio</h4>
 <p><a href="../html/02-TransferLearningSimples-vazio.html" 
 target="_blank">02-TransferLearningSimples-vazio</a></p>
@@ -291,7 +319,7 @@ https://arxiv.org/abs/1811.12231</p>
 target="_blank">02b-TransferLearningSimplesRegularizer-vazio</a></p>
 <p>Rede Densenet121, pré treinada na imagenet, com regularização.</p>
 <p><strong>Não houve sucesso neste treinamento, necessário debugar posteriormente</strong> </p>
-<h4 id="02c-transferlearningsimplesfeatureextractionregularizer-vazio">02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio</h4>
+<h4 id="02c-transferlearning-featureextractionregularizer-vazio">02c-TransferLearning-FeatureExtractionRegularizer-vazio</h4>
 <p><a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio.html" 
 target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio</a></p>
 <p>Rede Densenet121, pré treinada na imagenet, com regularização.</p>
