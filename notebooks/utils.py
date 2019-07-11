@@ -41,7 +41,15 @@ def report(generator, y_test, y_pred):
     print('%s \t %d \t %d' % (classes[0], tn, fp) )
     print('%s \t %d \t %d' % (classes[1], fn, tp) )
     print(classification_report(y_test, y_pred))
-    
+
+def report_classes(classes: dict, y_test, y_pred):
+    print(classes)
+    tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+    print('R/P \t %s \t %s ' % (classes[0], classes[1]))
+    print('%s \t %d \t %d' % (classes[0], tn, fp) )
+    print('%s \t %d \t %d' % (classes[1], fn, tp) )
+    print(classification_report(y_test, y_pred))
+
     
 def plot_errors(generator, y_real, y_pred, caminho, X_names, y_pred_proba=None):
     if y_pred_proba == None:

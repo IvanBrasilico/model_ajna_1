@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>02c2-TransferLearningFeatureExtraction-Vazio</title>
+<title>02c3-TransferLearning-FeatureExtraction-Augmented-Filtered-Vazio</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13117,14 +13117,11 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Baseado-nos-testes-anteriores-com-esta-base-e-com-a-base-ChestXRay:">Baseado nos testes anteriores com esta base e com a base ChestXRay:<a class="anchor-link" href="#Baseado-nos-testes-anteriores-com-esta-base-e-com-a-base-ChestXRay:">&#182;</a></h1><ul>
-<li>Extrair features para numpy com imageaugmented bem "suave" (teste 01b3)<ul>
+<li>Extrair features para numpy a partir da base "limpa" (usada também no notebook 01b3)<ul>
 <li>Rodar com maxpool e com avgpool para poder comparar</li>
 </ul>
 </li>
 <li>Rodar keras_tuner e comparar resultados com melhor resultado da rede simples</li>
-<li>Criar matriz e testar busca interativamente com as features da imagenet</li>
-<li>Reduzir com PCA ou T-SNE e testar se prejudica busca</li>
-<li>Testar clusterização (para colocar busca em produção mesmo com dezenas de milhões de imagens)</li>
 </ul>
 <h3 id="Os-resultados-da-rede-simples-treinada-do-zero-foram-bons,-mas-caso-os-resultados-com-rede-pr&#233;-treinada-na-imagenet-sejam-bons,-pode-ser-um-m&#233;todo-universal-para-v&#225;rios-classificadores,-buscas-e-an&#225;lises-pr&#233;-extrair-features-via-rede-pr&#233;-treinada,-salvando-em-Banco-de-Dados.">Os resultados da rede simples treinada do zero foram bons, mas caso os resultados com rede pr&#233; treinada na imagenet sejam bons, pode ser um m&#233;todo universal para v&#225;rios classificadores, buscas e an&#225;lises pr&#233; extrair features via rede pr&#233; treinada, salvando em Banco de Dados.<a class="anchor-link" href="#Os-resultados-da-rede-simples-treinada-do-zero-foram-bons,-mas-caso-os-resultados-com-rede-pr&#233;-treinada-na-imagenet-sejam-bons,-pode-ser-um-m&#233;todo-universal-para-v&#225;rios-classificadores,-buscas-e-an&#225;lises-pr&#233;-extrair-features-via-rede-pr&#233;-treinada,-salvando-em-Banco-de-Dados.">&#182;</a></h3>
 </div>
@@ -13132,7 +13129,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -13148,18 +13145,18 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">time</span>
 
 
-<span class="n">caminho_bases</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;bases&#39;</span><span class="p">,</span> <span class="s1">&#39;vazios&#39;</span><span class="p">)</span>
+<span class="n">caminho_bases</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;bases&#39;</span><span class="p">,</span> <span class="s1">&#39;vazios_augmented2&#39;</span><span class="p">)</span>
 <span class="n">caminho_train</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">caminho_bases</span><span class="p">,</span> <span class="s1">&#39;train&#39;</span><span class="p">)</span>
 <span class="n">caminho_test</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">caminho_bases</span><span class="p">,</span> <span class="s1">&#39;test&#39;</span><span class="p">)</span>
 
 <span class="n">MODEL_DIR</span> <span class="o">=</span> <span class="s1">&#39;../models_featureextraction&#39;</span>
-<span class="n">LOG_DIR</span> <span class="o">=</span> <span class="s1">&#39;../logs/02c2/&#39;</span>
+<span class="n">LOG_DIR</span> <span class="o">=</span> <span class="s1">&#39;../logs/02c3/&#39;</span>
 <span class="n">SIZE</span> <span class="o">=</span> <span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)</span>
-<span class="n">destino_bases</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;bases&#39;</span><span class="p">,</span> <span class="s1">&#39;vazios_featureextraction&#39;</span><span class="p">)</span>
+<span class="n">destino_bases</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;bases&#39;</span><span class="p">,</span> <span class="s1">&#39;vazios_featureextraction_filtered&#39;</span><span class="p">)</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">MODEL_DIR</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">MODEL_DIR</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">caminho_bases</span><span class="p">):</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">caminho_bases</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">destino_bases</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">destino_bases</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13176,14 +13173,14 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tensorboard_logs</span> <span class="o">=</span> <span class="n">TensorBoard</span><span class="p">(</span><span class="n">log_dir</span><span class="o">=</span><span class="n">LOG_DIR</span><span class="p">,</span> <span class="n">histogram_freq</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                <span class="n">write_graph</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">write_images</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="n">update_freq</span><span class="o">=</span><span class="s1">&#39;epoch&#39;</span><span class="p">)</span>
 <span class="n">mcp_save</span> <span class="o">=</span> <span class="n">ModelCheckpoint</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">MODEL_DIR</span><span class="p">,</span> 
-                                        <span class="s1">&#39;Transfermodelweights02c2.</span><span class="si">{epoch:02d}</span><span class="s1">-</span><span class="si">{val_loss:.2f}</span><span class="s1">.hdf5&#39;</span><span class="p">),</span>
+                                        <span class="s1">&#39;Transfermodelweights02c3.</span><span class="si">{epoch:02d}</span><span class="s1">-</span><span class="si">{val_loss:.2f}</span><span class="s1">.hdf5&#39;</span><span class="p">),</span>
                            <span class="n">save_best_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
 <span class="n">early_stop</span> <span class="o">=</span> <span class="n">EarlyStopping</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;min&#39;</span><span class="p">)</span>
 <span class="n">reduce_lr</span> <span class="o">=</span> <span class="n">ReduceLROnPlateau</span><span class="p">(</span><span class="n">monitor</span><span class="o">=</span><span class="s1">&#39;val_loss&#39;</span><span class="p">,</span> <span class="n">factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">patience</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
@@ -13204,7 +13201,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create the base pre-trained model</span>
@@ -13228,16 +13225,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_datagen</span> <span class="o">=</span> <span class="n">ImageDataGenerator</span><span class="p">(</span>
     <span class="n">rescale</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span>
-    <span class="n">width_shift_range</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-    <span class="n">height_shift_range</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
-    <span class="n">brightness_range</span><span class="o">=</span><span class="p">[</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">],</span>
-    <span class="n">fill_mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
-    <span class="n">horizontal_flip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">train_generator</span> <span class="o">=</span> <span class="n">train_datagen</span><span class="o">.</span><span class="n">flow_from_directory</span><span class="p">(</span>
     <span class="n">caminho_train</span><span class="p">,</span>
@@ -13262,7 +13254,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Found 20845 images belonging to 2 classes.
+<pre>Found 41016 images belonging to 2 classes.
 </pre>
 </div>
 </div>
@@ -13273,16 +13265,11 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">validation_datagen</span> <span class="o">=</span> <span class="n">ImageDataGenerator</span><span class="p">(</span>
     <span class="n">rescale</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="mi">255</span><span class="p">,</span>
-    <span class="n">width_shift_range</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
-    <span class="n">height_shift_range</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
-    <span class="n">brightness_range</span><span class="o">=</span><span class="p">[</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">],</span>
-    <span class="n">fill_mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
-    <span class="n">horizontal_flip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">validation_generator</span> <span class="o">=</span> <span class="n">validation_datagen</span><span class="o">.</span><span class="n">flow_from_directory</span><span class="p">(</span>
@@ -13308,7 +13295,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Found 2317 images belonging to 2 classes.
+<pre>Found 4544 images belonging to 2 classes.
 </pre>
 </div>
 </div>
@@ -13326,7 +13313,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">FEATURES_DIR</span> <span class="o">=</span> <span class="n">destino_bases</span>
@@ -13360,7 +13347,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">extract_features</span><span class="p">(</span><span class="n">generator</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
@@ -13388,7 +13375,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">features_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="n">extract_features</span><span class="p">(</span><span class="n">train_generator</span><span class="p">,</span> <span class="n">base_model</span><span class="p">)</span>
@@ -13408,8 +13395,8 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>20845 20800 64 325
-last batch setted elements 20736:20800
+<pre>41016 40960 64 640
+last batch setted elements 40896:40960
 </pre>
 </div>
 </div>
@@ -13420,7 +13407,7 @@ last batch setted elements 20736:20800
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">features_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -13441,8 +13428,8 @@ last batch setted elements 20736:20800
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(20800, 1024)
-(20800, 1)
+<pre>(40960, 1024)
+(40960, 1)
 </pre>
 </div>
 </div>
@@ -13453,7 +13440,7 @@ last batch setted elements 20736:20800
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">features_test</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">extract_features</span><span class="p">(</span><span class="n">validation_generator</span><span class="p">,</span> <span class="n">base_model</span><span class="p">)</span>
@@ -13473,8 +13460,8 @@ last batch setted elements 20736:20800
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>2317 2304 64 36
-last batch setted elements 2240:2304
+<pre>4544 4544 64 71
+last batch setted elements 4480:4544
 </pre>
 </div>
 </div>
@@ -13485,7 +13472,7 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">features_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -13506,8 +13493,8 @@ last batch setted elements 2240:2304
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(2304, 1024)
-(2304, 1)
+<pre>(4544, 1024)
+(4544, 1)
 </pre>
 </div>
 </div>
@@ -13518,7 +13505,40 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">FEATURES_DIR</span><span class="p">,</span> <span class="s1">&#39;features_train.np&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[12]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;../bases/vazios_featureextraction_filtered/features_train.np&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">FEATURES_DIR</span><span class="p">,</span> <span class="s1">&#39;features_train.np&#39;</span><span class="p">),</span> <span class="s1">&#39;bw&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">features_out</span><span class="p">:</span>
@@ -13534,7 +13554,7 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[41]:</div>
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">FEATURES_DIR</span><span class="p">,</span> <span class="s1">&#39;features_test.np&#39;</span><span class="p">),</span> <span class="s1">&#39;bw&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">features_out</span><span class="p">:</span>
@@ -13557,7 +13577,7 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[42]:</div>
+<div class="prompt input_prompt">In&nbsp;[17]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create the base pre-trained model</span>
@@ -13602,7 +13622,7 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[43]:</div>
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">features_train_avg</span><span class="p">,</span> <span class="n">y_train_avg</span> <span class="o">=</span> <span class="n">extract_features</span><span class="p">(</span><span class="n">train_generator</span><span class="p">,</span> <span class="n">base_model_avg</span><span class="p">)</span>
@@ -13622,8 +13642,8 @@ last batch setted elements 2240:2304
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>20845 20800 64 325
-last batch setted elements 20736:20800
+<pre>41016 40960 64 640
+last batch setted elements 40896:40960
 </pre>
 </div>
 </div>
@@ -13634,7 +13654,7 @@ last batch setted elements 20736:20800
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[44]:</div>
+<div class="prompt input_prompt">In&nbsp;[19]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">features_train_avg</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -13655,8 +13675,8 @@ last batch setted elements 20736:20800
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(20800, 1024)
-(20800, 1)
+<pre>(40960, 1024)
+(40960, 1)
 </pre>
 </div>
 </div>
@@ -13667,7 +13687,7 @@ last batch setted elements 20736:20800
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[45]:</div>
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">features_test_avg</span><span class="p">,</span> <span class="n">y_test_avg</span> <span class="o">=</span> <span class="n">extract_features</span><span class="p">(</span><span class="n">validation_generator</span><span class="p">,</span> <span class="n">base_model_avg</span><span class="p">)</span>
@@ -13687,8 +13707,8 @@ last batch setted elements 20736:20800
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>2317 2304 64 36
-last batch setted elements 2240:2304
+<pre>4544 4544 64 71
+last batch setted elements 4480:4544
 </pre>
 </div>
 </div>
@@ -13699,7 +13719,7 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[46]:</div>
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">features_test_avg</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -13720,8 +13740,8 @@ last batch setted elements 2240:2304
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>(2304, 1024)
-(2304, 1)
+<pre>(4544, 1024)
+(4544, 1)
 </pre>
 </div>
 </div>
@@ -13732,7 +13752,7 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">FEATURES_DIR</span><span class="p">,</span> <span class="s1">&#39;features_train_avg.np&#39;</span><span class="p">),</span> <span class="s1">&#39;bw&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">features_out</span><span class="p">:</span>
@@ -13748,7 +13768,7 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">FEATURES_DIR</span><span class="p">,</span> <span class="s1">&#39;features_test_avg.np&#39;</span><span class="p">),</span> <span class="s1">&#39;bw&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">features_out</span><span class="p">:</span>
@@ -13771,7 +13791,7 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[49]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">del</span> <span class="n">base_model</span>
@@ -13792,7 +13812,7 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[86]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">kerastuner.tuners</span> <span class="k">import</span> <span class="n">RandomSearch</span>
@@ -13805,7 +13825,7 @@ last batch setted elements 2240:2304
     <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
     <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
                            <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">))</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">Choice</span><span class="p">(</span><span class="s1">&#39;lrate&#39;</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="n">hp</span><span class="o">.</span><span class="n">Choice</span><span class="p">(</span><span class="s1">&#39;rate&#39;</span><span class="p">,</span>
                                       <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">])))</span>
     <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">))</span>
     <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
@@ -13824,7 +13844,7 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[79]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tuner</span> <span class="o">=</span> <span class="n">RandomSearch</span><span class="p">(</span>
@@ -13843,7 +13863,7 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[80]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tuner</span><span class="o">.</span><span class="n">search_space_summary</span><span class="p">()</span>
@@ -13876,7 +13896,43 @@ last batch setted elements 2240:2304
 
 
 <div class="output_html rendered_html output_subarea ">
-<span style="color:cyan"> |-Default search space size: 1</span>
+<span style="color:cyan"> |-Default search space size: 2</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">rate (Choice)</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:cyan"> |-default: 0.2</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:blue"> |-values: [0.2, 0.4]</span>
 </div>
 
 </div>
@@ -13930,13 +13986,3341 @@ last batch setted elements 2240:2304
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[81]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tuner</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features_train</span><span class="p">,</span>
              <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
              <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
              <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">features_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">),</span>
+            <span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#4527A0"><h1 style="font-size:18px">New model</h1></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#4527A0"><h1 style="font-size:18px">Trial summary</h1></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Hp values:</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:cyan"> |-learning_rate: 0.0001</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:blue"> |-rate: 0.2</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 1/2</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>WARNING: Logging before flag parsing goes to stderr.
+W0711 10:36:41.924328 139874563942144 deprecation.py:323] From /home/ivan/pybr/projeto/venv/lib/python3.5/site-packages/tensorflow/python/ops/math_grad.py:1250: add_dispatch_support.&lt;locals&gt;.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="0cd662a4-f838-4bb8-bf1b-3906c9a08691"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#0cd662a4-f838-4bb8-bf1b-3906c9a08691');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b727b928454f4301802ad5ad0ba74e0c", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="033a7d66-7659-4d57-b5c7-07e944382e8f"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#033a7d66-7659-4d57-b5c7-07e944382e8f');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "0e6e97b231334a81a2de5b74b57d0f59", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="0b929f6f-5bb4-4b60-b6a2-3e52e83aaf27"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#0b929f6f-5bb4-4b60-b6a2-3e52e83aaf27');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "0180f85beba74096ab2f48147807c70a", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="93bad935-09cd-40f3-a46f-530418e00a54"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#93bad935-09cd-40f3-a46f-530418e00a54');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "f58a9f45f6e9415b971583b8d82d71ea", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="24a5bde5-388f-4c3c-8cbe-2536828e6008"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#24a5bde5-388f-4c3c-8cbe-2536828e6008');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "5d8d4be0ff8f447aa7cff44976dd992b", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="3c8b35e6-fd16-4e14-b920-34d28c4335c2"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#3c8b35e6-fd16-4e14-b920-34d28c4335c2');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "207afe31b1b641cc8dc16021818f4b5a", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="3a693be0-cfb5-4bde-8b8b-9ba3c776c30f"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#3a693be0-cfb5-4bde-8b8b-9ba3c776c30f');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "78882f7a1cd5481bb1cb0da730ec2989", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>W0711 10:37:37.166069 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.153246). Check your callbacks.
+W0711 10:37:37.295309 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.150812). Check your callbacks.
+W0711 10:37:37.399058 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.150812). Check your callbacks.
+W0711 10:37:37.653579 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.195113). Check your callbacks.
+W0711 10:37:37.679944 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.195113). Check your callbacks.
+W0711 10:37:38.036134 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.225051). Check your callbacks.
+W0711 10:37:38.264166 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.212972). Check your callbacks.
+W0711 10:37:38.289293 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.195113). Check your callbacks.
+W0711 10:37:38.385463 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.150812). Check your callbacks.
+W0711 10:37:38.412355 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.105854). Check your callbacks.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="c8cb7e05-9ed4-475f-bb7e-9f3542543df1"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#c8cb7e05-9ed4-475f-bb7e-9f3542543df1');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "647c42c633f8435f9692cedf2d6c5640", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="2450bfb4-2bce-47df-bc25-20f7308eaf6d"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#2450bfb4-2bce-47df-bc25-20f7308eaf6d');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "44aae8924bc24b869c8018a1d54d5cee", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="b358ccbf-10af-47a4-8139-f3e7b90616a0"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#b358ccbf-10af-47a4-8139-f3e7b90616a0');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "1f960949db954e34870b7c779c016605", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 2/2</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="c764bea8-c16a-44bc-a028-0e301dd961c4"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#c764bea8-c16a-44bc-a028-0e301dd961c4');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "6ed31f9740164e82a25b4cad9e6f7099", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="f2228d4e-e6d0-472d-b7a3-ef40e804aea9"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#f2228d4e-e6d0-472d-b7a3-ef40e804aea9');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "5ea2bb3755fa477a9cb64e078c8355ec", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="26836361-0d4b-46ab-a7ef-3884d87d1109"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#26836361-0d4b-46ab-a7ef-3884d87d1109');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "73e6dcff5047432083771305b58bdbe4", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="fdcef118-9c23-46bc-9859-b142b0d1ccd6"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#fdcef118-9c23-46bc-9859-b142b0d1ccd6');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "d65b27647f794a54842bee7ce38eadbc", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="070acfad-3465-483d-a8ce-b32b6451bb55"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#070acfad-3465-483d-a8ce-b32b6451bb55');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "40429062ef6b48b0baa638f368f83b6c", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>W0711 10:38:49.651655 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.156142). Check your callbacks.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="1ab02e0f-393b-4d19-ae24-503bf7a83afc"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#1ab02e0f-393b-4d19-ae24-503bf7a83afc');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "58df693e2ae04856b9ae919b93d525b5", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="a03b3654-1f6e-4e03-83bb-02e815027631"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#a03b3654-1f6e-4e03-83bb-02e815027631');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "c1d6496f4f01466da01c108087f4dd6f", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="17eb878a-35a7-45c9-9760-608bfdbb6755"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#17eb878a-35a7-45c9-9760-608bfdbb6755');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "4105f5c59ddb4fe3b0c148c7b062005a", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="85f31869-0e32-4555-814a-d4ac2fe1d7e6"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#85f31869-0e32-4555-814a-d4ac2fe1d7e6');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "a8e7790858b94dc4ab681cb7a11e85b1", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="7e46a073-2237-4211-b7b1-228c7e6bffe4"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#7e46a073-2237-4211-b7b1-228c7e6bffe4');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "1b3f75a2bb4d4d89bcdff1beb92a987a", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<table>
+<thead>
+<tr><th>Name                                         </th><th>Best model                             </th><th>Current model                          </th></tr>
+</thead>
+<tbody>
+<tr><td>accuracy                                     </td><td>0.9725                                 </td><td>0.9725                                 </td></tr>
+<tr><td><span style="color:green">val_accuracy</span></td><td><span style="color:green">0.9769</span></td><td><span style="color:green">0.9769</span></td></tr>
+<tr><td>val_loss                                     </td><td>0.0856                                 </td><td>0.0856                                 </td></tr>
+<tr><td>loss                                         </td><td>0.096                                  </td><td>0.096                                  </td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#64DD17"><span style="font-size:14px"><b>3/4 trials left</b></span></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#4527A0"><h1 style="font-size:18px">New model</h1></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#4527A0"><h1 style="font-size:18px">Trial summary</h1></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Hp values:</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:cyan"> |-learning_rate: 4e-05</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:blue"> |-rate: 0.2</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 1/2</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="06940a1b-a667-4909-8cb8-b482af664e7b"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#06940a1b-a667-4909-8cb8-b482af664e7b');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "3e8a82a15e6f4d668f0806dfe27be0ad", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="4ea2e653-6868-4f82-b26a-c836037d35e1"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#4ea2e653-6868-4f82-b26a-c836037d35e1');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "a46e08f4485b4aa79abf33397f860502", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="29fe3538-dda8-4fed-a649-a0c94ef3bacb"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#29fe3538-dda8-4fed-a649-a0c94ef3bacb');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "2661c340270748b28f28cb43b77236c4", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="a1aabf61-dadd-42ba-9e7e-6e7c2374205e"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#a1aabf61-dadd-42ba-9e7e-6e7c2374205e');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "5570c2bced354244ba1eebd769375de4", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="5199f740-044c-4962-9d1e-eb005558ea25"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#5199f740-044c-4962-9d1e-eb005558ea25');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "12b7c6220c9a40688fca76b22e4f9008", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="900216a7-f08c-4d68-a138-056b42887fca"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#900216a7-f08c-4d68-a138-056b42887fca');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b014e2f44d41427da90d6efb4f8f384d", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="3254a490-474d-43c6-b966-1e954a7fdd4c"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#3254a490-474d-43c6-b966-1e954a7fdd4c');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b086ff1be19f432a8ae7488bd95a2216", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="b292bdbc-ad2d-444b-87b4-b764f2929c93"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#b292bdbc-ad2d-444b-87b4-b764f2929c93');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "726a25992fbf4802bddf61e8926b723b", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="d356308c-5b3e-4a90-9343-26f5865170ca"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#d356308c-5b3e-4a90-9343-26f5865170ca');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "6f361dfa30ab41908082202804f34af2", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="6e7403e5-0155-4c24-8acb-c5b410ff1cf5"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#6e7403e5-0155-4c24-8acb-c5b410ff1cf5');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "1185d8c1c2ec49d2a35540c8fdaefe5c", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 2/2</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="11afbc6a-2cbd-4ff0-9507-04ffdfe32dd7"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#11afbc6a-2cbd-4ff0-9507-04ffdfe32dd7');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "a528d33e9c654b37976a8971328f5975", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="ab2ebeca-f068-4bcd-ba1e-d8ecf1d41b31"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#ab2ebeca-f068-4bcd-ba1e-d8ecf1d41b31');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "1bf82b22f2524f448a6fe9fd2f3ba511", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="f6769fee-28fc-4c4b-b208-0d6261a83f62"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#f6769fee-28fc-4c4b-b208-0d6261a83f62');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "38cde0f93eea47de9d4ea4ca337bd694", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="7ed75a66-0daf-41f9-92be-673c23fd67be"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#7ed75a66-0daf-41f9-92be-673c23fd67be');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "01c9e322da414c1fb4333972d61dab19", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="dfa5f2e2-e5aa-476e-a2b6-2d0fffcbf09b"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#dfa5f2e2-e5aa-476e-a2b6-2d0fffcbf09b');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "16ce1ea3b03b4ff7959f4b97c5d72aec", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="e5e97fd1-4d36-415d-b408-b97be9d30ff0"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#e5e97fd1-4d36-415d-b408-b97be9d30ff0');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "c9c9def7f70b4140886dc1c89b717858", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="9c6890c8-346f-4c0c-8b43-63cac7a020b9"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#9c6890c8-346f-4c0c-8b43-63cac7a020b9');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "9ebb520c57074d28a056ab947b0f60e3", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>W0711 10:43:28.109876 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.119309). Check your callbacks.
+W0711 10:43:28.129471 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.119309). Check your callbacks.
+W0711 10:43:28.146935 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.119309). Check your callbacks.
+W0711 10:43:28.164630 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.119309). Check your callbacks.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="68cc9b63-2977-4a76-b85f-525c60b256d7"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#68cc9b63-2977-4a76-b85f-525c60b256d7');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "e847f994f3fc46d9b555324d9570f565", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="1a563817-e7d5-4670-a9df-4f54440da31b"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#1a563817-e7d5-4670-a9df-4f54440da31b');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "29b7abff2e6e42199daba189b9979afc", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="cd6fefa2-0596-4df8-b782-8d5c3897639a"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#cd6fefa2-0596-4df8-b782-8d5c3897639a');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "d9a76792bc48431a866af92e813545c3", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<table>
+<thead>
+<tr><th>Name                                       </th><th>Best model                           </th><th>Current model                        </th></tr>
+</thead>
+<tbody>
+<tr><td>accuracy                                   </td><td>0.9725                               </td><td>0.9707                               </td></tr>
+<tr><td><span style="color:red">val_accuracy</span></td><td><span style="color:red">0.9769</span></td><td><span style="color:red">0.9765</span></td></tr>
+<tr><td>val_loss                                   </td><td>0.085                                </td><td>0.085                                </td></tr>
+<tr><td>loss                                       </td><td>0.096                                </td><td>0.104                                </td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#64DD17"><span style="font-size:14px"><b>2/4 trials left</b></span></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#4527A0"><h1 style="font-size:18px">New model</h1></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#4527A0"><h1 style="font-size:18px">Trial summary</h1></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Hp values:</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:cyan"> |-learning_rate: 1e-05</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:blue"> |-rate: 0.2</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 1/2</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="0b1a43e9-b81c-4971-b8b7-b3db80a90394"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#0b1a43e9-b81c-4971-b8b7-b3db80a90394');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "5d615d69b3e14898bb645f5ac5f6be23", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="b6524ccd-7631-4ed2-8d05-cc06f7c4751c"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#b6524ccd-7631-4ed2-8d05-cc06f7c4751c');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "6d9a7f7d31c749a59890af4c5b109846", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>W0711 10:44:30.771238 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.137267). Check your callbacks.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="fea9c667-86cf-442a-9700-89ae24cefd5c"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#fea9c667-86cf-442a-9700-89ae24cefd5c');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "ea8d88d5e9c246acab3b116b312c50c1", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="0182b0be-5395-4d14-bc21-544846497bdf"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#0182b0be-5395-4d14-bc21-544846497bdf');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "583b5864ab3b4721b87f5b87a8b5ee8d", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="d68fc926-c553-4e1c-a23e-44f96d4ec6ab"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#d68fc926-c553-4e1c-a23e-44f96d4ec6ab');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "c95bcec2f19246d29a1ffdbacaf54776", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="d9ac56e2-14f8-4db0-a2d8-d3808c0536a1"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#d9ac56e2-14f8-4db0-a2d8-d3808c0536a1');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "17b4021a5f844a6280e9847ba10e8f2d", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="b840fe45-b206-4ae2-bf37-2914e5002c66"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#b840fe45-b206-4ae2-bf37-2914e5002c66');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "5c579aafe19043fd98d892689046b02c", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="2bcd17cf-1fda-4513-976c-0564fdd79484"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#2bcd17cf-1fda-4513-976c-0564fdd79484');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "e3720c0b01fb4f359d2dc0de9b17ded8", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="74892cd7-70ac-499e-ae62-89d89c278050"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#74892cd7-70ac-499e-ae62-89d89c278050');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "2fcb86c5029f4387a1159568e164d9c0", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="2d47d43a-09a1-4a51-8e06-87781a592356"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#2d47d43a-09a1-4a51-8e06-87781a592356');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "61d16265949049408dddc99911e56109", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>W0711 10:46:42.989434 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.222543). Check your callbacks.
+W0711 10:46:43.028332 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.126002). Check your callbacks.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 2/2</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="2fdc695b-acce-4066-8fd8-071817916f01"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#2fdc695b-acce-4066-8fd8-071817916f01');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "fe08595a849f4d37ba2d8e6054c21690", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="ff887674-f31e-4eed-97d8-217fe9fdd8c0"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#ff887674-f31e-4eed-97d8-217fe9fdd8c0');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "ce7de101548a453d99b3e5ca566acd6a", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="67cf695b-feb2-48a9-9a11-7f3a4f78c980"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#67cf695b-feb2-48a9-9a11-7f3a4f78c980');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b54a4f6e901a4ad89947b5c53ae2fe1d", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="7c774df2-4101-4dde-b5e0-3e70b4b31f6d"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#7c774df2-4101-4dde-b5e0-3e70b4b31f6d');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "7f81913f0e7044a9b69203d3e6ada8a5", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="84ead859-a4a8-42fc-96f9-8d4eabe99484"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#84ead859-a4a8-42fc-96f9-8d4eabe99484');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b822161200ec4dbabdb4eec288a67a1a", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="17db9d2a-d7c3-421a-8b76-56ac864b9f3a"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#17db9d2a-d7c3-421a-8b76-56ac864b9f3a');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "712216f881d0449e8899b69a6dca09f5", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>W0711 10:48:46.912892 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.137347). Check your callbacks.
+W0711 10:48:47.057203 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.157456). Check your callbacks.
+W0711 10:48:47.181962 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.157456). Check your callbacks.
+W0711 10:48:47.322173 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.157975). Check your callbacks.
+W0711 10:48:47.491384 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.171870). Check your callbacks.
+W0711 10:48:47.619903 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.146793). Check your callbacks.
+W0711 10:48:47.757087 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.132380). Check your callbacks.
+W0711 10:48:47.874465 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.130730). Check your callbacks.
+W0711 10:48:47.998641 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.124701). Check your callbacks.
+W0711 10:48:48.026426 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.124701). Check your callbacks.
+W0711 10:48:48.049613 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.118323). Check your callbacks.
+W0711 10:48:48.067902 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.116823). Check your callbacks.
+W0711 10:48:48.082764 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.113296). Check your callbacks.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="51ceb8d0-be7d-4016-93c1-4111626e3a2b"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#51ceb8d0-be7d-4016-93c1-4111626e3a2b');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "a3b9c56d343a42dd956bf52ebe07d332", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="013d9813-cc90-4e2a-bcb6-c2cfe3e21616"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#013d9813-cc90-4e2a-bcb6-c2cfe3e21616');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "c5da54aa39394e0399ffbc2f9be966b7", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="47c06d3a-54ae-4e28-b940-49ad850e493e"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#47c06d3a-54ae-4e28-b940-49ad850e493e');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "ec705506bdcf4f22b37cbbbabcaba501", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="3a540f18-3749-4814-92d1-a23dab788da1"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#3a540f18-3749-4814-92d1-a23dab788da1');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "41ffb35425f543128c61b784bc57ef83", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<table>
+<thead>
+<tr><th>Name                                       </th><th>Best model                           </th><th>Current model                        </th></tr>
+</thead>
+<tbody>
+<tr><td>accuracy                                   </td><td>0.9725                               </td><td>0.9634                               </td></tr>
+<tr><td><span style="color:red">val_accuracy</span></td><td><span style="color:red">0.9769</span></td><td><span style="color:red">0.9735</span></td></tr>
+<tr><td>val_loss                                   </td><td>0.085                                </td><td>0.0982                               </td></tr>
+<tr><td>loss                                       </td><td>0.096                                </td><td>0.1293                               </td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#64DD17"><span style="font-size:14px"><b>1/4 trials left</b></span></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#4527A0"><h1 style="font-size:18px">New model</h1></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#4527A0"><h1 style="font-size:18px">Trial summary</h1></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Hp values:</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:cyan"> |-learning_rate: 1e-05</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:blue"> |-rate: 0.4</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 1/2</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="77c0099e-91bb-44d1-a672-fc89354f11d1"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#77c0099e-91bb-44d1-a672-fc89354f11d1');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "af8b3830fb684cfc91e72ac4eaeea35f", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="2eb2ff4d-7dbd-4cff-9505-6be98d9aadbb"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#2eb2ff4d-7dbd-4cff-9505-6be98d9aadbb');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "97ddb9edb3ad4e1b8f5f1c9d7703b824", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="b00202e3-a4a1-4aa4-9dd0-040b35b6f093"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#b00202e3-a4a1-4aa4-9dd0-040b35b6f093');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "c1117b8bef1a42df9c55860db2c4589f", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="5cd7b814-c260-48da-9d99-456e6d55af40"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#5cd7b814-c260-48da-9d99-456e6d55af40');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b2509d70259e4db794caa6a35ea34b29", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="345487f8-37df-4864-b2c4-e774d1443b40"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#345487f8-37df-4864-b2c4-e774d1443b40');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "2e249d96d81540cf8b1391431275b3b7", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="c387160f-46b6-4e85-89a2-28f1a341fab8"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#c387160f-46b6-4e85-89a2-28f1a341fab8');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "32128b4730c348bfa9ad6467efcf4b1e", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="72e263ef-be7d-4417-9b30-b5d3c389e548"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#72e263ef-be7d-4417-9b30-b5d3c389e548');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "d544232df4f5440dade76fbc99215ca7", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="9cf57c12-231d-4078-94a1-64f87434c608"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#9cf57c12-231d-4078-94a1-64f87434c608');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "4265617a30404e2e9e7b1479935cc222", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="091f6b97-7f70-4208-a314-3348dcfa0d55"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#091f6b97-7f70-4208-a314-3348dcfa0d55');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "4cf6f2eb8e744828a0757ee911723188", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="94bee7eb-17d1-4296-be80-eb1c276ffe36"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#94bee7eb-17d1-4296-be80-eb1c276ffe36');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "fc4bd122d78d43efb611464715b705ce", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 2/2</h2></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="d2479f1c-a425-484b-ab53-2c1464c9fecb"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#d2479f1c-a425-484b-ab53-2c1464c9fecb');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "a6cdefb747ea4bb0b22dea1c5ffd7bae", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="0478dd3f-f3d3-47b6-ba7b-c227c8207b0a"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#0478dd3f-f3d3-47b6-ba7b-c227c8207b0a');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "56e2bfc7560546d2b9fce566e6f6eaaf", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="f7fe11cf-0f7b-4e99-b3dc-7d97b3342c3d"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#f7fe11cf-0f7b-4e99-b3dc-7d97b3342c3d');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "1e396e1669fb4a43aab2b45495845f05", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="dc40053c-aaa2-497b-a842-c298611568c1"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#dc40053c-aaa2-497b-a842-c298611568c1');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "e7c82a94939f4fd1b4895d0fb49adc47", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="97bdcba6-5a47-49b1-bb13-9628dba00b08"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#97bdcba6-5a47-49b1-bb13-9628dba00b08');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "ec825fa641ad4196beab51e9634fce8c", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="b1f5e131-7dd6-41d4-ba19-c6ac36599601"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#b1f5e131-7dd6-41d4-ba19-c6ac36599601');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "654d4de1049f438ca27f38fe48215378", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="8677d22f-6d5d-4441-ac73-6dfb04b50da6"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#8677d22f-6d5d-4441-ac73-6dfb04b50da6');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "ff156f8a60ba4e9e8e920d91d4d780a0", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="2f41e734-b682-411e-a82e-6c84ff01954a"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#2f41e734-b682-411e-a82e-6c84ff01954a');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "a42f5965114142a289cf5404034779ab", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="fd453e8d-4717-4f00-b779-016f923edcc6"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#fd453e8d-4717-4f00-b779-016f923edcc6');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "524ef9f771584482b2379a36c2fd8674", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="d258261c-b8fb-45cf-95e4-7f4cd3f309ab"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#d258261c-b8fb-45cf-95e4-7f4cd3f309ab');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "3044cef953bb4bcb833bcb6360b05f72", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<table>
+<thead>
+<tr><th>Name                                       </th><th>Best model                           </th><th>Current model                        </th></tr>
+</thead>
+<tbody>
+<tr><td>accuracy                                   </td><td>0.9725                               </td><td>0.962                                </td></tr>
+<tr><td><span style="color:red">val_accuracy</span></td><td><span style="color:red">0.9769</span></td><td><span style="color:red">0.9722</span></td></tr>
+<tr><td>val_loss                                   </td><td>0.085                                </td><td>0.1023                               </td></tr>
+<tr><td>loss                                       </td><td>0.096                                </td><td>0.1375                               </td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#64DD17"><span style="font-size:14px"><b>Hypertuning complete - results in kerastunerlogs/Vazios</b></span></span>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tuner</span><span class="o">.</span><span class="n">results_summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:#4527A0"><h1 style="font-size:18px">Results summary</h1></span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:cyan"> |-Results in kerastunerlogs/Vazios</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:cyan"> |-Ran 4 trials</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:cyan"> |-Ran 8 executions (2 per trial)</span>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<span style="color:cyan"> |-Best val_accuracy: 0.9769</span>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Tuner---Teste-com-AvgPool">Tuner - Teste com AvgPool<a class="anchor-link" href="#Tuner---Teste-com-AvgPool">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tuner</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features_train_avg</span><span class="p">,</span>
+             <span class="n">y</span><span class="o">=</span><span class="n">y_train_avg</span><span class="p">,</span>
+             <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+             <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">features_test_avg</span><span class="p">,</span> <span class="n">y_test_avg</span><span class="p">),</span>
             <span class="p">)</span>
 </pre></div>
 
@@ -14003,553 +17387,7 @@ last batch setted elements 2240:2304
 
 
 <div class="output_html rendered_html output_subarea ">
-<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 1/2</h2></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="8dfe5bc7-98e1-438b-bfce-5ee14545ca48"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#8dfe5bc7-98e1-438b-bfce-5ee14545ca48');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "96e2a65c871447bb84a7ecefd0e0d226", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="2bf3ebf0-0b95-440d-b029-57a544554620"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#2bf3ebf0-0b95-440d-b029-57a544554620');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "9af64c55bd444f70a8c1138a8c06d279", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="e242bdc8-b323-4332-bfc8-f295486880c7"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#e242bdc8-b323-4332-bfc8-f295486880c7');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "6b87268791834e44a40e9574a329a054", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="c54596bf-415b-43d1-b6e7-7872ba00657c"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#c54596bf-415b-43d1-b6e7-7872ba00657c');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "49543cd494a8406582e3ab7d81f96da6", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="44790d6e-8a47-4ec2-b53a-44a753f8c824"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#44790d6e-8a47-4ec2-b53a-44a753f8c824');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "e211eb46e479422091ebde13a2d35dcf", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="8b7ad611-d927-429e-9d12-35cfb9833267"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#8b7ad611-d927-429e-9d12-35cfb9833267');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "2ec09681eef246b9b09c147caecfa42c", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="7bc72177-e006-41c1-8037-0f957bdc6c71"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#7bc72177-e006-41c1-8037-0f957bdc6c71');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "8093a94c7fa34f989c537c4bf0c8fbf7", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="055018f2-165c-427e-a6e9-479845a949ea"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#055018f2-165c-427e-a6e9-479845a949ea');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "5389b022dbe64539bdba3a84226e1b2b", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="2ab617ab-141f-4a7e-9a80-71cffd29afd3"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#2ab617ab-141f-4a7e-9a80-71cffd29afd3');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "66397e0d60c64fd092f9f95809d9803c", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="43af726d-0b6d-4acf-a181-7fef75ac35f5"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#43af726d-0b6d-4acf-a181-7fef75ac35f5');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "52fa180dfa0443f8ac04038975bb80fd", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 2/2</h2></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="963b2fc3-bc06-482d-b153-bfb789738dd0"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#963b2fc3-bc06-482d-b153-bfb789738dd0');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "07a570c739d740d9bfba4b2a8b57ca86", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="a5b10487-3ec0-4c71-a3df-40ba775d891a"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#a5b10487-3ec0-4c71-a3df-40ba775d891a');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "73c362f76f8f42b09ee15467a68e7d77", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="78c1d8f5-e872-40fd-a72c-c1f250744710"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#78c1d8f5-e872-40fd-a72c-c1f250744710');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "76063c72f2054f7c8961eb9788e8bed7", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="1d480524-3f1d-4a1f-84b0-452c25e21f0c"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#1d480524-3f1d-4a1f-84b0-452c25e21f0c');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "e25e758895dc48fcaaa4854d84ca8673", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="f878f767-d228-4c8c-9457-3f06d661d27f"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#f878f767-d228-4c8c-9457-3f06d661d27f');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "dc8ab620bbf34424bed0197d937326f5", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>W0710 12:10:39.228868 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.157958). Check your callbacks.
-W0710 12:10:39.291945 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.104327). Check your callbacks.
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="d7afd451-b7f8-4f61-a52c-6edb341c553b"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#d7afd451-b7f8-4f61-a52c-6edb341c553b');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "17c35b9e7e3d495490d0967908ed8ddc", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="86afbb14-92e9-4e1c-af21-173310f673de"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#86afbb14-92e9-4e1c-af21-173310f673de');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "08d4e4c7c9c6481195b8a33163c63ad2", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="c63b3c72-77e1-4df6-95ac-c566bbf5edf4"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#c63b3c72-77e1-4df6-95ac-c566bbf5edf4');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "184e4943ed4c4753a4cfc2a4bb2adef9", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="084ab8fb-04f2-4e9a-aefe-e94d62c1e735"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#084ab8fb-04f2-4e9a-aefe-e94d62c1e735');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "098a0ff7863b4a969bc4434295db0cad", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="1a42b80b-c1ca-435d-8a6c-0c14cf47c1ab"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#1a42b80b-c1ca-435d-8a6c-0c14cf47c1ab');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "eaf84908868749e7964cff5fe371a039", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<table>
-<thead>
-<tr><th>Name                                         </th><th>Best model                            </th><th>Current model                         </th></tr>
-</thead>
-<tbody>
-<tr><td>accuracy                                     </td><td>0.9501                                </td><td>0.9501                                </td></tr>
-<tr><td>val_loss                                     </td><td>0.1445                                </td><td>0.1445                                </td></tr>
-<tr><td>loss                                         </td><td>0.1635                                </td><td>0.1635                                </td></tr>
-<tr><td><span style="color:green">val_accuracy</span></td><td><span style="color:green">0.954</span></td><td><span style="color:green">0.954</span></td></tr>
-</tbody>
-</table>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#64DD17"><span style="font-size:14px"><b>3/4 trials left</b></span></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#4527A0"><h1 style="font-size:18px">New model</h1></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#4527A0"><h1 style="font-size:18px">Trial summary</h1></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#7E57C2"><h2 style="font-size:16px">Hp values:</h2></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:cyan"> |-learning_rate: 0.0001</span>
+<span style="color:blue"> |-rate: 0.4</span>
 </div>
 
 </div>
@@ -14576,211 +17414,13 @@ var element = $('#1a42b80b-c1ca-435d-8a6c-0c14cf47c1ab');
 
  
  
-<div id="27aa143f-4308-4bf4-9b02-fb64603bc8bb"></div>
+<div id="7ce75432-a671-4b40-964e-2e589f4f2e95"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#27aa143f-4308-4bf4-9b02-fb64603bc8bb');
+var element = $('#7ce75432-a671-4b40-964e-2e589f4f2e95');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "6a1624d2ec054a6abc5206fb816cdc8c", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="674786c9-f390-47b0-addc-cf227a2cdfae"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#674786c9-f390-47b0-addc-cf227a2cdfae');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "7eb4987903524fc19fca2eb3c941f13f", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="f073231f-3ca1-4d4f-8998-11e0d9cf9b92"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#f073231f-3ca1-4d4f-8998-11e0d9cf9b92');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "1a4c3dc6b57344f889d23537f60ce965", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="e867fb42-2533-44e6-a01a-2e3bb86fc437"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#e867fb42-2533-44e6-a01a-2e3bb86fc437');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "c02994e10ec44e958dd8b0a0012ea284", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="7a377e02-564b-42e8-92fd-b7d755e8db07"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#7a377e02-564b-42e8-92fd-b7d755e8db07');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "57a7c4fa175848d580b77a222473c1aa", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="dc02fec5-8d56-4555-a2aa-2903565953e2"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#dc02fec5-8d56-4555-a2aa-2903565953e2');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "63bcb3f1cd034e4fbe1631fc735686db", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="85cc8f65-d7df-4167-96c5-bc2dfb83d611"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#85cc8f65-d7df-4167-96c5-bc2dfb83d611');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "8148898028a04d1d90dbf11569383c21", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="c50a1811-56bf-413c-a9f2-ea4d1eaa1271"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#c50a1811-56bf-413c-a9f2-ea4d1eaa1271');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "2e683088b25f468e833f14c9c2d6ec48", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="1271ca26-13f9-4a1b-8af6-2d79069a1a14"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#1271ca26-13f9-4a1b-8af6-2d79069a1a14');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "1c6b5ed068364585b368b492a6cf20b9", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="8cad8dd3-1fae-4589-ad0f-5c09e03b5a3d"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#8cad8dd3-1fae-4589-ad0f-5c09e03b5a3d');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "d574e3c768da4aebbcdb04adc7ddecaa", "version_minor": 0, "version_major": 2}
+{"model_id": "acc37474676c41a69b62d959dbed54f8", "version_minor": 0, "version_major": 2}
 </script>
 </div>
 
@@ -14792,10 +17432,30 @@ var element = $('#8cad8dd3-1fae-4589-ad0f-5c09e03b5a3d');
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>W0710 12:11:46.608629 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.106839). Check your callbacks.
-W0710 12:11:46.638159 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.106839). Check your callbacks.
-W0710 12:11:46.678763 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.106839). Check your callbacks.
-W0710 12:11:46.700974 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.106839). Check your callbacks.
+<pre>W0711 10:57:56.335516 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.117355). Check your callbacks.
+W0711 10:57:56.358429 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.117355). Check your callbacks.
+W0711 10:57:56.461843 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.117355). Check your callbacks.
+W0711 10:57:56.586942 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.121989). Check your callbacks.
+W0711 10:57:56.638264 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.121989). Check your callbacks.
+W0711 10:57:56.661169 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.121989). Check your callbacks.
+W0711 10:57:56.780300 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.116439). Check your callbacks.
+W0711 10:57:56.885229 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.106412). Check your callbacks.
+W0711 10:57:57.418838 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.106412). Check your callbacks.
+W0711 10:57:57.705025 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.106412). Check your callbacks.
+W0711 10:57:57.921012 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.115850). Check your callbacks.
+W0711 10:57:57.963384 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.115850). Check your callbacks.
+W0711 10:57:57.993691 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.108889). Check your callbacks.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
 </pre>
 </div>
 </div>
@@ -14806,32 +17466,46 @@ W0710 12:11:46.700974 139904768079616 callbacks.py:241] Method (on_train_batch_e
 
 
 
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 2/2</h2></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
 
 
  
  
-<div id="fe3904bf-1d65-434e-906d-57ed4448e283"></div>
+<div id="22f5a55e-141e-4fbc-96ef-e3d2fbff5779"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#fe3904bf-1d65-434e-906d-57ed4448e283');
+var element = $('#22f5a55e-141e-4fbc-96ef-e3d2fbff5779');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "5ea08a0a192a4edeba6346f1363c38fa", "version_minor": 0, "version_major": 2}
+{"model_id": "472b97f884c54ad1ba2367e69bbc7b4e", "version_minor": 0, "version_major": 2}
 </script>
 </div>
 
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>W0711 10:58:03.945088 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.121260). Check your callbacks.
+W0711 10:58:04.076936 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.107612). Check your callbacks.
+W0711 10:58:04.195679 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.110261). Check your callbacks.
+W0711 10:58:04.218309 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.107612). Check your callbacks.
+W0711 10:58:04.369776 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.107612). Check your callbacks.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
 </div>
 
 <div class="output_area">
@@ -14844,224 +17518,14 @@ var element = $('#fe3904bf-1d65-434e-906d-57ed4448e283');
 
  
  
-<div id="96608e57-da3b-4932-986f-ae711bbe46fe"></div>
+<div id="b7a55a1f-41bb-41a4-9e4d-ed6cc7f0f6e0"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#96608e57-da3b-4932-986f-ae711bbe46fe');
+var element = $('#b7a55a1f-41bb-41a4-9e4d-ed6cc7f0f6e0');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "0f4bcd50348d458ab6f5b0ba7ea4a833", "version_minor": 0, "version_major": 2}
+{"model_id": "60c68b64aabd4d2082081bcd649a1477", "version_minor": 0, "version_major": 2}
 </script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="7c0d43ec-fb22-4eea-918a-ccbbf9fa8222"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#7c0d43ec-fb22-4eea-918a-ccbbf9fa8222');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "b246a2e0ea0e4e529531452eda0ce807", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="ad917f33-8341-43b8-a722-0a77918c7e50"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#ad917f33-8341-43b8-a722-0a77918c7e50');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "e8b839f6d63c4b4ea2961d23cc00c50f", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="7c738151-7dd1-4e04-a360-d69766ec68eb"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#7c738151-7dd1-4e04-a360-d69766ec68eb');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f323130ca8b947e9aac4b80de9443ee2", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="bbbc8bb8-bbdc-452e-a9aa-67aac5140ca8"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#bbbc8bb8-bbdc-452e-a9aa-67aac5140ca8');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "aef223f2bb2b42b1b5131217d1670933", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="b2f9baaf-4038-4008-8ecd-751664601c45"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#b2f9baaf-4038-4008-8ecd-751664601c45');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "0e74820743db499d809aa436d73dc4a9", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="5ea70262-421b-4e73-85cf-dc58f32e5d21"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#5ea70262-421b-4e73-85cf-dc58f32e5d21');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "1f3610fb33474b02b6b3a00c78bb5d0b", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="20e2d2b2-cd2f-4493-8c99-5216a3c2e9bb"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#20e2d2b2-cd2f-4493-8c99-5216a3c2e9bb');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "20f6e1654e674e169e3aa3293fde5b9c", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="a2c9ca8a-3e0a-4384-9ea6-4093042d123c"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#a2c9ca8a-3e0a-4384-9ea6-4093042d123c');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "fbf6a7792b9241fa8b13ad9357bea520", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<table>
-<thead>
-<tr><th>Name                                         </th><th>Best model                             </th><th>Current model                          </th></tr>
-</thead>
-<tbody>
-<tr><td>accuracy                                     </td><td>0.9549                                 </td><td>0.9549                                 </td></tr>
-<tr><td>val_loss                                     </td><td>0.1402                                 </td><td>0.1402                                 </td></tr>
-<tr><td>loss                                         </td><td>0.1461                                 </td><td>0.1461                                 </td></tr>
-<tr><td><span style="color:green">val_accuracy</span></td><td><span style="color:green">0.9557</span></td><td><span style="color:green">0.9557</span></td></tr>
-</tbody>
-</table>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#64DD17"><span style="font-size:14px"><b>2/4 trials left</b></span></span>
 </div>
 
 </div>
@@ -15072,300 +17536,7 @@ var element = $('#a2c9ca8a-3e0a-4384-9ea6-4093042d123c');
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Oracle triggered exit
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[82]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tuner</span><span class="o">.</span><span class="n">results_summary</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#4527A0"><h1 style="font-size:18px">Results summary</h1></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:cyan"> |-Results in kerastunerlogs/Vazios</span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:cyan"> |-Ran 2 trials</span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:cyan"> |-Ran 4 executions (2 per trial)</span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:cyan"> |-Best val_accuracy: 0.9557</span>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Tuner---Teste-com-AvgPool">Tuner - Teste com AvgPool<a class="anchor-link" href="#Tuner---Teste-com-AvgPool">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[83]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tuner</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">features_train_avg</span><span class="p">,</span>
-             <span class="n">y</span><span class="o">=</span><span class="n">y_train_avg</span><span class="p">,</span>
-             <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-             <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">features_test_avg</span><span class="p">,</span> <span class="n">y_test_avg</span><span class="p">),</span>
-            <span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#4527A0"><h1 style="font-size:18px">New model</h1></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#4527A0"><h1 style="font-size:18px">Trial summary</h1></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#7E57C2"><h2 style="font-size:16px">Hp values:</h2></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:cyan"> |-learning_rate: 1e-05</span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#7E57C2"><h2 style="font-size:16px">Execution 1/2</h2></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="18e1e8b7-55ba-4f8a-9909-136cedce3945"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#18e1e8b7-55ba-4f8a-9909-136cedce3945');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "5a8ee1039fe04cf294a0864f099ca580", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="bfc04e17-5599-47e7-8342-752ea33d1137"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#bfc04e17-5599-47e7-8342-752ea33d1137');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "1c1f156aa7324f0db4556e6e2c9c9ee4", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="417b98ff-4454-4f4c-8d1a-78af7aec8080"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#417b98ff-4454-4f4c-8d1a-78af7aec8080');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "3cae8d97c02e4b9ca74b07cdb3856f4f", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="82202622-2c0f-4eb5-a1ee-0a03f71f6880"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#82202622-2c0f-4eb5-a1ee-0a03f71f6880');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "9fdfa7ea0a4445f3a9e0642fd076e95b", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="ab3b8b01-249c-4d26-9be9-826761092f63"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#ab3b8b01-249c-4d26-9be9-826761092f63');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f0a62389dfe44502a7dbd485c255074f", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>W0710 12:13:16.168517 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.200158). Check your callbacks.
-W0710 12:13:16.202365 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.109022). Check your callbacks.
+<pre>
 </pre>
 </div>
 </div>
@@ -15380,13 +17551,13 @@ W0710 12:13:16.202365 139904768079616 callbacks.py:241] Method (on_train_batch_e
 
  
  
-<div id="c3fe6084-21de-4b59-88ae-1c87be0c3772"></div>
+<div id="19ea79aa-ab52-48e5-825d-487d4a38b303"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#c3fe6084-21de-4b59-88ae-1c87be0c3772');
+var element = $('#19ea79aa-ab52-48e5-825d-487d4a38b303');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "e31b0a898c524973aeb577a46106296e", "version_minor": 0, "version_major": 2}
+{"model_id": "d48fc0ecca1e44cdb6c28f08d99c80ca", "version_minor": 0, "version_major": 2}
 </script>
 </div>
 
@@ -15397,59 +17568,8 @@ var element = $('#c3fe6084-21de-4b59-88ae-1c87be0c3772');
     <div class="prompt"></div>
 
 
-
-
-
- 
- 
-<div id="ceeb7842-fbce-4b23-98e4-8f9e5574885e"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#ceeb7842-fbce-4b23-98e4-8f9e5574885e');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "2ca808c8abe840a99c34b999dd3e7baf", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="01a61b22-8c3b-4228-859d-b16e1e0055db"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#01a61b22-8c3b-4228-859d-b16e1e0055db');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "2d001c12a9ea49beb2350b3a4162ed13", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>W0710 12:13:35.043132 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.109354). Check your callbacks.
-W0710 12:13:35.259618 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.112996). Check your callbacks.
-W0710 12:13:35.408587 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.112996). Check your callbacks.
-W0710 12:13:35.523991 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.112996). Check your callbacks.
-W0710 12:13:35.559537 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.107065). Check your callbacks.
-W0710 12:13:35.689697 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.107065). Check your callbacks.
-W0710 12:13:35.719903 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.107065). Check your callbacks.
-W0710 12:13:35.737459 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.107065). Check your callbacks.
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
 </pre>
 </div>
 </div>
@@ -15464,13 +17584,13 @@ W0710 12:13:35.737459 139904768079616 callbacks.py:241] Method (on_train_batch_e
 
  
  
-<div id="24ead6f1-c5c0-4d1d-adc5-78f4d4ea2d87"></div>
+<div id="98cb37be-cbf1-41a5-a73c-84d742c2a168"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#24ead6f1-c5c0-4d1d-adc5-78f4d4ea2d87');
+var element = $('#98cb37be-cbf1-41a5-a73c-84d742c2a168');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "1e4e35692dde46938ff6920562c53060", "version_minor": 0, "version_major": 2}
+{"model_id": "75f11bad6f1e4b579fbfe883d441b035", "version_minor": 0, "version_major": 2}
 </script>
 </div>
 
@@ -15481,13 +17601,8 @@ var element = $('#24ead6f1-c5c0-4d1d-adc5-78f4d4ea2d87');
     <div class="prompt"></div>
 
 
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>W0710 12:13:49.451974 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.119044). Check your callbacks.
-W0710 12:13:49.608206 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.138525). Check your callbacks.
-W0710 12:13:49.729732 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.138525). Check your callbacks.
-W0710 12:13:49.766310 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.138525). Check your callbacks.
-W0710 12:13:49.778784 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.127418). Check your callbacks.
-W0710 12:13:49.791177 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.107937). Check your callbacks.
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
 </pre>
 </div>
 </div>
@@ -15502,16 +17617,159 @@ W0710 12:13:49.791177 139904768079616 callbacks.py:241] Method (on_train_batch_e
 
  
  
-<div id="d2240bab-b03f-4da9-a713-3c3eb1e71521"></div>
+<div id="15d0b074-12cd-46de-91cb-d087afab3381"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#d2240bab-b03f-4da9-a713-3c3eb1e71521');
+var element = $('#15d0b074-12cd-46de-91cb-d087afab3381');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "d293979b79044b0fbcfef97c590b1e8b", "version_minor": 0, "version_major": 2}
+{"model_id": "60d01414bbf34fd7b0e0bf9a18f7b027", "version_minor": 0, "version_major": 2}
 </script>
 </div>
 
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="271cfedf-76d3-45e7-a246-2687a2de8005"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#271cfedf-76d3-45e7-a246-2687a2de8005');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "169ba0f434bf4bbf8ceddbdb7590a09c", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="6b7e7df0-c39a-465c-9fe4-a80b11c13cf3"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#6b7e7df0-c39a-465c-9fe4-a80b11c13cf3');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "7945e5b60de6433fa4decd925989ebce", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="1362477f-7981-444d-8b8a-b709cac368bd"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#1362477f-7981-444d-8b8a-b709cac368bd');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "f97f4836ef414fe6ad04e757b43c61b5", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="17de05b3-dd21-4f61-9e56-aa0eb8c8728f"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#17de05b3-dd21-4f61-9e56-aa0eb8c8728f');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b59546e4b31a4af0a2a29dcdb6e0950b", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
 </div>
 
 <div class="output_area">
@@ -15536,123 +17794,13 @@ var element = $('#d2240bab-b03f-4da9-a713-3c3eb1e71521');
 
  
  
-<div id="577c6251-e949-41bc-90ec-076f6f5558c6"></div>
+<div id="6aa8a61f-af76-4019-8cbd-4e5b9e825c77"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#577c6251-e949-41bc-90ec-076f6f5558c6');
+var element = $('#6aa8a61f-af76-4019-8cbd-4e5b9e825c77');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "c328434656984450ab275e2bae28032a", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="11221d6d-fe27-4c54-9c06-eb83350d185e"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#11221d6d-fe27-4c54-9c06-eb83350d185e');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "96940fc105b54e678013ec8f5c7754fd", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="13f70c71-14e6-4d48-87cc-025b4a00f205"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#13f70c71-14e6-4d48-87cc-025b4a00f205');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "900e0645960c4fe0a8102782020b2814", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="6055c621-ca3c-4ee4-bb0e-0b4ecded8143"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#6055c621-ca3c-4ee4-bb0e-0b4ecded8143');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "40df6f2927d449469fe558c85e852b32", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="4073b5f2-af5b-4b51-8303-13b13263b21d"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#4073b5f2-af5b-4b51-8303-13b13263b21d');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "62d83ea5e6dd49e88cc22430f2315aec", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="ee6e1359-f365-4648-b143-44aaf124f7b9"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#ee6e1359-f365-4648-b143-44aaf124f7b9');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "e70e6f570c9b435da3ca78c31c5aab8c", "version_minor": 0, "version_major": 2}
+{"model_id": "25f8b79263ed4a0980f5dcb94b5ca13e", "version_minor": 0, "version_major": 2}
 </script>
 </div>
 
@@ -15664,16 +17812,23 @@ var element = $('#ee6e1359-f365-4648-b143-44aaf124f7b9');
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>W0710 12:14:32.717909 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.112083). Check your callbacks.
-W0710 12:14:32.837350 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.112083). Check your callbacks.
-W0710 12:14:32.963488 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.114096). Check your callbacks.
-W0710 12:14:33.090873 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.114168). Check your callbacks.
-W0710 12:14:33.219648 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.115007). Check your callbacks.
-W0710 12:14:33.356442 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.115007). Check your callbacks.
-W0710 12:14:33.384125 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.114168). Check your callbacks.
-W0710 12:14:33.399267 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.114168). Check your callbacks.
-W0710 12:14:33.411853 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.113596). Check your callbacks.
-W0710 12:14:33.433620 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.109790). Check your callbacks.
+<pre>W0711 11:01:53.845341 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.103318). Check your callbacks.
+W0711 11:01:53.867009 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.103318). Check your callbacks.
+W0711 11:01:53.892662 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.105550). Check your callbacks.
+W0711 11:01:53.923131 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.107287). Check your callbacks.
+W0711 11:01:53.943017 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.107287). Check your callbacks.
+W0711 11:01:53.965296 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.107287). Check your callbacks.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
 </pre>
 </div>
 </div>
@@ -15688,131 +17843,14 @@ W0710 12:14:33.433620 139904768079616 callbacks.py:241] Method (on_train_batch_e
 
  
  
-<div id="b1c1d98b-0828-4f7d-8059-759784e53b6f"></div>
+<div id="03c55a0d-b3d8-4fd3-aeda-8c9bd95cf289"></div>
 <div class="output_subarea output_widget_view ">
 <script type="text/javascript">
-var element = $('#b1c1d98b-0828-4f7d-8059-759784e53b6f');
+var element = $('#03c55a0d-b3d8-4fd3-aeda-8c9bd95cf289');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "6f467ea9e35549e1a2430be8fbd7dc5e", "version_minor": 0, "version_major": 2}
+{"model_id": "0fe39c467e944dfbb05d2d4170226d9e", "version_minor": 0, "version_major": 2}
 </script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="b56b3070-75b1-4f93-ac65-e7c4636e624c"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#b56b3070-75b1-4f93-ac65-e7c4636e624c');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "70210535c3814be781c0adba256edfb9", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="d6e06436-bb4a-4520-b7ea-70781345dea4"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#d6e06436-bb4a-4520-b7ea-70781345dea4');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "c51d36ab2a234e749a4c5df201f5c2cd", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>W0710 12:14:55.397021 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.303431). Check your callbacks.
-W0710 12:14:55.409013 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.155027). Check your callbacks.
-W0710 12:15:03.769032 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.135326). Check your callbacks.
-W0710 12:15:03.797059 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.135326). Check your callbacks.
-W0710 12:15:03.810311 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.135326). Check your callbacks.
-W0710 12:15:03.820936 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.135326). Check your callbacks.
-W0710 12:15:03.832063 139904768079616 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.135326). Check your callbacks.
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-
-
- 
- 
-<div id="4bcd4110-aa03-4c94-8640-f492ef35d595"></div>
-<div class="output_subarea output_widget_view ">
-<script type="text/javascript">
-var element = $('#4bcd4110-aa03-4c94-8640-f492ef35d595');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "8526512b76c34dd6aef97d993a100924", "version_minor": 0, "version_major": 2}
-</script>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<table>
-<thead>
-<tr><th>Name                                       </th><th>Best model                           </th><th>Current model                        </th></tr>
-</thead>
-<tbody>
-<tr><td>accuracy                                   </td><td>0.9549                               </td><td>0.933                                </td></tr>
-<tr><td>val_loss                                   </td><td>0.1402                               </td><td>0.1718                               </td></tr>
-<tr><td>loss                                       </td><td>0.1461                               </td><td>0.2085                               </td></tr>
-<tr><td><span style="color:red">val_accuracy</span></td><td><span style="color:red">0.9557</span></td><td><span style="color:red">0.9481</span></td></tr>
-</tbody>
-</table>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#64DD17"><span style="font-size:14px"><b>1/4 trials left</b></span></span>
 </div>
 
 </div>
@@ -15823,9 +17861,204 @@ var element = $('#4bcd4110-aa03-4c94-8640-f492ef35d595');
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>Oracle triggered exit
+<pre>
 </pre>
 </div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="cf6742f3-3232-4a46-9974-da258e10633d"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#cf6742f3-3232-4a46-9974-da258e10633d');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "3af9a9ceaec943a9bf50631f5a795692", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="19fec81a-9cdf-480b-ac72-baf0a40f5c04"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#19fec81a-9cdf-480b-ac72-baf0a40f5c04');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b59424c82db14c8bb49e0f583c649f1a", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>W0711 11:03:12.925754 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.104201). Check your callbacks.
+W0711 11:03:13.281525 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.123613). Check your callbacks.
+W0711 11:03:13.498928 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.149945). Check your callbacks.
+W0711 11:03:13.623450 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.149945). Check your callbacks.
+W0711 11:03:13.827644 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.179289). Check your callbacks.
+W0711 11:03:14.034577 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.190520). Check your callbacks.
+W0711 11:03:14.133625 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.187301). Check your callbacks.
+W0711 11:03:14.355458 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.199289). Check your callbacks.
+W0711 11:03:14.549424 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.199289). Check your callbacks.
+W0711 11:03:14.780410 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.199832). Check your callbacks.
+W0711 11:03:15.046502 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.206365). Check your callbacks.
+W0711 11:03:15.195679 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.199832). Check your callbacks.
+W0711 11:03:15.224530 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.194159). Check your callbacks.
+W0711 11:03:15.249138 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.194159). Check your callbacks.
+W0711 11:03:15.270509 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.164633). Check your callbacks.
+W0711 11:03:15.291456 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.116435). Check your callbacks.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="fbd4c643-f332-48b0-a6d3-691bf3f56fec"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#fbd4c643-f332-48b0-a6d3-691bf3f56fec');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "ed2e3b44a6f64998aa329923d5c3130e", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>W0711 11:03:53.027588 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.114199). Check your callbacks.
+W0711 11:03:53.051122 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.114199). Check your callbacks.
+W0711 11:03:53.074674 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.114199). Check your callbacks.
+W0711 11:03:53.096460 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.114199). Check your callbacks.
+W0711 11:03:53.118197 139874563942144 callbacks.py:241] Method (on_train_batch_end) is slow compared to the batch update (0.114199). Check your callbacks.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="79cd9799-88e5-4d42-b8ce-1e59c2074984"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#79cd9799-88e5-4d42-b8ce-1e59c2074984');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "2b6d3442b67941338118078adeecd1ce", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+
+
+
+ 
+ 
+<div id="1e1b7d70-3c53-4223-a013-bd1a3d00292f"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#1e1b7d70-3c53-4223-a013-bd1a3d00292f');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b62d8317f439407eb4f7fa66b9a50c10", "version_minor": 0, "version_major": 2}
+</script>
+</div>
+
 </div>
 
 </div>
@@ -15834,80 +18067,13 @@ var element = $('#4bcd4110-aa03-4c94-8640-f492ef35d595');
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[84]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tuner</span><span class="o">.</span><span class="n">results_summary</span><span class="p">()</span>
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:#4527A0"><h1 style="font-size:18px">Results summary</h1></span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:cyan"> |-Results in kerastunerlogs/Vazios</span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:cyan"> |-Ran 3 trials</span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:cyan"> |-Ran 6 executions (2 per trial)</span>
-</div>
-
-</div>
-
-<div class="output_area">
-
-    <div class="prompt"></div>
-
-
-
-<div class="output_html rendered_html output_subarea ">
-<span style="color:cyan"> |-Best val_accuracy: 0.9557</span>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -15921,7 +18087,7 @@ var element = $('#4bcd4110-aa03-4c94-8640-f492ef35d595');
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Sequential</span><span class="p">()</span>

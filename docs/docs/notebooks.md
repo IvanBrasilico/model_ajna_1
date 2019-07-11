@@ -274,7 +274,94 @@ exemplos que parecem da classe vazio. Ou são erros de base ou são exemplos
 Será criada uma cópia da base sem esses exemplos, para testar os mesmos
  algoritmos e comparar.
 
-### 
+
+#### 02c2-TransferLearningFeatureExtraction-Vazio
+<a href="../html/02c2-TransferLearningFeatureExtraction-Vazio.html" 
+target="_blank">02c2-TransferLearningFeatureExtraction-Vazio</a>
+
+* Extrair features para numpy com imageaugmented bem "suave" (teste 01b3) produzida por 02c e o2d2
+   * Rodar com maxpool e com avgpool para poder comparar
+* Rodar keras_tuner e comparar resultados com melhor resultado da rede simples
+
+Base original maxpool:  acc: 0.9604 - val_acc: 0.9566
+Base original avgpool:  acc: 0.9594 - val_acc: 0.9588
+
+
+**Parece que não importa o que se tente, há um platô em torno de 0.96 para accuracy na base original.**
+
+Com a base "limpa" de alguns erros de rotulagem, foi possível subir este platô para um pouco mais de 97%.
+Como a maioria dos erros é na classe vazio, antes de prosseguir:
+    * Testar neste mesmo notebook treinamento com class_weigth
+    * Copiar este notebook e repetir mesmos passos na base gerada por 02d2 
+
+O uso de class_weight 3 para a classe 0 (não vazio) causou queda marginal na accuracy total, mas distribuindo melhor
+os erros, conforme tabela abaixo ( a accuracy caiu nas casas centesimais, em torno de 4 centésimos):
+
+BASE TEST
+
+Sem class_weight
+
+              precision    recall  f1-score   support
+
+         0.0       0.99      0.92      0.96      1166
+         1.0       0.93      0.99      0.96      1138
+
+Com class_weight
+         
+              precision    recall  f1-score   support
+
+         0.0       0.97      0.94      0.95      1166
+         1.0       0.94      0.97      0.95      1138
+
+
+BASE TRAIN
+
+Sem class_weight
+
+              precision    recall  f1-score   support
+
+         0.0       1.00      0.93      0.96     10494
+         1.0       0.93      1.00      0.96     10306
+         
+Com class_weight
+
+              precision    recall  f1-score   support
+
+         0.0       0.98      0.95      0.96     10494
+         1.0       0.95      0.98      0.96     10306
+
+#### 02d-auxiliar-ImageAugmentation-Vazios
+<a href="../html/02d-auxiliar-ImageAugmentation-Vazios.html" 
+target="_blank">02d-auxiliar-ImageAugmentation-Vazios</a>
+
+Notebook auxiliar para gerar uma base aumentada.
+
+
+#### 02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios 
+<a href="../html/02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios.html" 
+target="_blank">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a>
+
+Notebook auxiliar para gerar uma base aumentada com poucas transformações.
+
+#### 02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios 
+<a href="../html/02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios.html" 
+target="_blank">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a>
+
+Notebook auxiliar para gerar uma base aumentada com poucas transformações.
+
+
+#### Observações
+
+Os resultados da rede simples treinada do zero foram similares ao uso de rede DenseNet, 
+mas a extração de features com rede pré treinada na imagenet pode ser um método universal
+ base para vários classificadores, buscas e análises.
+ 
+Assim, quando uma imagem entrar no Banco de Dados, pré extrair as features via uma rede pré treinada,
+ salvando no Banco de Dados, pode servir como ponto de entrada para vários tipos de classificadores e 
+ comparações, salvando memória e processamento posterior.
+ 
+
+#### 
 <a href="../html/.html" 
 target="_blank"></a>
 
