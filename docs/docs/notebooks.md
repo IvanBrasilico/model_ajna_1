@@ -330,6 +330,22 @@ Com class_weight
          0.0       0.98      0.95      0.96     10494
          1.0       0.95      0.98      0.96     10306
 
+
+
+#### 02c3-TransferLearningFeatureExtraction-Vazio
+<a href="../html/02c2-TransferLearningFeatureExtraction-Vazio.html" 
+target="_blank">02c2-TransferLearningFeatureExtraction-Vazio</a>
+
+* Extrair features para numpy com imageaugmented bem "suave" e filtrado (mesma base que notebook 01b3)
+   * Rodar com maxpool e com avgpool para poder comparar
+* Rodar keras_tuner e comparar resultados com melhor resultado da rede simples
+
+Detalhes no notebook. Resumindo, os resultados foram muito similares ao notebook 01b3:
+
+  * aumento de 2% em accuracy em relação à base original, provavelmente pela correção de erros de rótulo
+  * De resto, resultados similares ao notebook 02c2, em todas as tabelas (com o aumento de quase 2%)
+  
+ 
 #### 02d-auxiliar-ImageAugmentation-Vazios
 <a href="../html/02d-auxiliar-ImageAugmentation-Vazios.html" 
 target="_blank">02d-auxiliar-ImageAugmentation-Vazios</a>
@@ -359,6 +375,9 @@ mas a extração de features com rede pré treinada na imagenet pode ser um mét
 Assim, quando uma imagem entrar no Banco de Dados, pré extrair as features via uma rede pré treinada,
  salvando no Banco de Dados, pode servir como ponto de entrada para vários tipos de classificadores e 
  comparações, salvando memória e processamento posterior.
+ 
+Os resultados utilizando maxpool e avgpool como extrator de características foram muito similares, com
+leve vantagem para avgpoll nos resultados e menor tempo de convergência. 
  
 
 #### 

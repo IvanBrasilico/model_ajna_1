@@ -13643,7 +13643,7 @@ weighted avg       0.98      0.98      0.98      4544
     <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">)</span>
 
-<span class="n">s</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">validation_generator</span><span class="p">)</span> <span class="o">*</span> <span class="mi">128</span>
+<span class="n">s</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_generator</span><span class="p">)</span> <span class="o">*</span> <span class="mi">128</span>
 <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
 
 <span class="n">y_train</span><span class="p">,</span> <span class="n">y_pred_train</span><span class="p">,</span> <span class="n">X_names_train</span><span class="p">,</span> <span class="n">y_pred_train_proba</span> <span class="o">=</span> <span class="n">get_imagens_erro</span><span class="p">(</span><span class="n">train_generator</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
