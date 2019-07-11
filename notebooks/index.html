@@ -1,159 +1,165 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Followup do treinamento de novos modelos para o AJNA com TensorFlow2.0">
-    
-    
-    <link rel="../img/favicon.ico">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>Relatório - Projeto AJNA - Treinamento de modelos</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
-    
-    <title>Relatório - Projeto AJNA - Treinamento de modelos</title>
-    
-
-    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.min.css">
-    <link href='//fonts.googleapis.com/css?family=PT+Sans:400,400italic,700,700italic&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
-    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,600,700&subset=latin-ext,latin' rel='stylesheet' type='text/css'>
-    <link href="../css/bootstrap-custom.min.css" rel="stylesheet">
-    <link href="../css/base.min.css" rel="stylesheet">
-    <link href="../css/cinder.min.css" rel="stylesheet">
-    <link href="../css/highlight.min.css" rel="stylesheet">
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-            <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
-        <![endif]-->
-
-    <script src="//ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
-    <script>
-    WebFont.load({
-        google: {
-            families: ['Open Sans', 'PT Sans']
-        }
-    });
-    </script>
-
-    
-
-     
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Relat\u00f3rio";
+    var mkdocs_page_input_path = "notebooks.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
 </head>
 
-<body>
+<body class="wy-body-for-nav" role="document">
 
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
+  <div class="wy-grid-for-nav">
 
-        <!-- Collapsed navigation -->
-        <div class="navbar-header">
-            <!-- Expander button -->
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            
-
-            <!-- Main title -->
-
-            <a class="navbar-brand" href="..">Projeto AJNA - Treinamento de modelos</a>
-        </div>
-
-        <!-- Expanded navigation -->
-        <div class="navbar-collapse collapse">
-                <!-- Main navigation -->
-                <ul class="nav navbar-nav">
-                
-                
-                    <li >
-                        <a href="..">Home</a>
-                    </li>
-                
-                
-                
-                    <li class="active">
-                        <a href="./">Relatório</a>
-                    </li>
-                
-                
-                
-                    <li >
-                        <a href="../sobre/">Sobre</a>
-                    </li>
-                
-                
-                </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
-                            <i class="fas fa-search"></i> Search
-                        </a>
-                    </li>
-                    <li >
-                        <a rel="prev" href="..">
-                            <i class="fas fa-arrow-left"></i> Previous
-                        </a>
-                    </li>
-                    <li >
-                        <a rel="next" href="../sobre/">
-                            Next <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </li>
-            </ul>
-        </div>
-    </div>
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> Projeto AJNA - Treinamento de modelos</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
 </div>
+      </div>
 
-    <div class="container">
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">Relatório</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#base-chestxray">==  BASE ChestXRay =========</a></li>
+    
+        <ul>
         
+            <li><a class="toctree-l3" href="#01-baseline-redesimples-chestxray">01-Baseline-redesimples-chestXRay</a></li>
         
-        <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
-    <ul class="nav bs-sidenav">
-        <li class="first-level active"><a href="#chestxray">ChestXRay</a></li>
-            <li class="second-level"><a href="#notebooks-na-base-chestxray">notebooks na base chestXRay</a></li>
-                
-                <li class="third-level"><a href="#01-baseline-redesimples-chestxray">01-Baseline-redesimples-chestXRay</a></li>
-                <li class="third-level"><a href="#01b-baseline-redesimples-chestxray-tamanhomaior">01b-Baseline-redesimples-chestXRay-tamanhomaior</a></li>
-                <li class="third-level"><a href="#02c-transferlearningsimples-featureextractionregularizer-chestxray">02c-TransferLearningSimples-FeatureExtractionRegularizer-chestXRay</a></li>
-                <li class="third-level"><a href="#02d-transferlearning-featureextraction-hyperparamtuner-chestxray">02d-TransferLearning-FeatureExtraction-HyperParamTuner-chestXRay</a></li>
-                <li class="third-level"><a href="#02e-auxiliar-imageaugmentation">02e-auxiliar-ImageAugmentation</a></li>
-                <li class="third-level"><a href="#02e-finetunning-chestxray">02e-FineTunning-chestXRay</a></li>
-                <li class="third-level"><a href="#observacoes-finais">Observações finais</a></li>
-        <li class="first-level "><a href="#vazios">Vazios</a></li>
-            <li class="second-level"><a href="#notebooks-container-vazio-nvazio">notebooks container vazio-nvazio</a></li>
-                
-                <li class="third-level"><a href="#01-baseline-redesimples-vazio">01-Baseline-redesimples-vazio</a></li>
-                <li class="third-level"><a href="#01b-baseline-redesimples-vazio-tamanhomaior">01b-Baseline-redesimples-vazio-tamanhomaior</a></li>
-                <li class="third-level"><a href="#01b2-baseline-redesimples-vazio-tamanhomaior-augmented-filtered">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</a></li>
-                <li class="third-level"><a href="#01b3-baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform</a></li>
-                <li class="third-level"><a href="#02-transferlearningsimples-vazio">02-TransferLearningSimples-vazio</a></li>
-                <li class="third-level"><a href="#02b-transferlearningsimplesregularizer-vazio">02b-TransferLearningSimplesRegularizer-vazio</a></li>
-                <li class="third-level"><a href="#02c-transferlearning-featureextractionregularizer-vazio">02c-TransferLearning-FeatureExtractionRegularizer-vazio</a></li>
-                <li class="third-level"><a href="#02c2-transferlearningfeatureextraction-vazio">02c2-TransferLearningFeatureExtraction-Vazio</a></li>
-                <li class="third-level"><a href="#02c3-transferlearningfeatureextraction-vazio">02c3-TransferLearningFeatureExtraction-Vazio</a></li>
-                <li class="third-level"><a href="#02d-auxiliar-imageaugmentation-vazios">02d-auxiliar-ImageAugmentation-Vazios</a></li>
-                <li class="third-level"><a href="#02d2-auxiliar-imageaugmentationmenostransfom-vazios">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a></li>
-                <li class="third-level"><a href="#02d2-auxiliar-imageaugmentationmenostransfom-vazios_1">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a></li>
-                <li class="third-level"><a href="#observacoes">Observações</a></li>
+            <li><a class="toctree-l3" href="#01b-baseline-redesimples-chestxray-tamanhomaior">01b-Baseline-redesimples-chestXRay-tamanhomaior</a></li>
+        
+            <li><a class="toctree-l3" href="#02c-transferlearningsimples-featureextractionregularizer-chestxray">02c-TransferLearningSimples-FeatureExtractionRegularizer-chestXRay</a></li>
+        
+            <li><a class="toctree-l3" href="#02d-transferlearning-featureextraction-hyperparamtuner-chestxray">02d-TransferLearning-FeatureExtraction-HyperParamTuner-chestXRay</a></li>
+        
+            <li><a class="toctree-l3" href="#02e-auxiliar-imageaugmentation">02e-auxiliar-ImageAugmentation</a></li>
+        
+            <li><a class="toctree-l3" href="#02e-finetunning-chestxray">02e-FineTunning-chestXRay</a></li>
+        
+            <li><a class="toctree-l3" href="#observacoes-finais">Observações finais</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l2"><a href="#base-vazios">== BASE Vazios ===========</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#01-baseline-redesimples-vazio">01-Baseline-redesimples-vazio</a></li>
+        
+            <li><a class="toctree-l3" href="#01b-baseline-redesimples-vazio-tamanhomaior">01b-Baseline-redesimples-vazio-tamanhomaior</a></li>
+        
+            <li><a class="toctree-l3" href="#01b2-baseline-redesimples-vazio-tamanhomaior-augmented-filtered">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</a></li>
+        
+            <li><a class="toctree-l3" href="#01b3-baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform</a></li>
+        
+            <li><a class="toctree-l3" href="#02-transferlearningsimples-vazio">02-TransferLearningSimples-vazio</a></li>
+        
+            <li><a class="toctree-l3" href="#02b-transferlearningsimplesregularizer-vazio">02b-TransferLearningSimplesRegularizer-vazio</a></li>
+        
+            <li><a class="toctree-l3" href="#02c-transferlearning-featureextractionregularizer-vazio">02c-TransferLearning-FeatureExtractionRegularizer-vazio</a></li>
+        
+            <li><a class="toctree-l3" href="#02c2-transferlearningfeatureextraction-vazio">02c2-TransferLearningFeatureExtraction-Vazio</a></li>
+        
+            <li><a class="toctree-l3" href="#02c3-transferlearningfeatureextraction-vazio">02c3-TransferLearningFeatureExtraction-Vazio</a></li>
+        
+            <li><a class="toctree-l3" href="#02d-auxiliar-imageaugmentation-vazios">02d-auxiliar-ImageAugmentation-Vazios</a></li>
+        
+            <li><a class="toctree-l3" href="#02d2-auxiliar-imageaugmentationmenostransfom-vazios">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a></li>
+        
+            <li><a class="toctree-l3" href="#02d2-auxiliar-imageaugmentationmenostransfom-vazios_1">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a></li>
+        
+            <li><a class="toctree-l3" href="#observacoes">Observações</a></li>
+        
+        </ul>
+    
+
     </ul>
-</div></div>
-        <div class="col-md-9" role="main">
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../sobre/">Sobre</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
 
-<h1 id="chestxray">ChestXRay</h1>
-<h3 id="notebooks-na-base-chestxray">notebooks na base chestXRay</h3>
-<h4 id="01-baseline-redesimples-chestxray">01-Baseline-redesimples-chestXRay</h4>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">Projeto AJNA - Treinamento de modelos</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>Relatório</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="base-chestxray">==  BASE ChestXRay =========</h1>
+<h2 id="01-baseline-redesimples-chestxray">01-Baseline-redesimples-chestXRay</h2>
 <p><a href="../html/01-Baseline-redesimples-chestXRay.html" 
 target="_blank">01-Baseline-redesimples-chestXRay</a></p>
 <p>Rede convolucional bem simples treinada do zero.</p>
 <p>Input shape = 150, 150</p>
 <p>acc: 0.9279 - val_acc: 0.8285</p>
-<h4 id="01b-baseline-redesimples-chestxray-tamanhomaior">01b-Baseline-redesimples-chestXRay-tamanhomaior</h4>
+<h2 id="01b-baseline-redesimples-chestxray-tamanhomaior">01b-Baseline-redesimples-chestXRay-tamanhomaior</h2>
 <p><a href="../html/01b-Baseline-redesimples-chestXRay-tamanhomaior.html" 
 target="_blank">01b-Baseline-redesimples-chestXRay-tamanhomaior</a></p>
 <p>Rede convolucional bem simples treinada do zero.
@@ -198,7 +204,7 @@ acc: 0.9507 val_acc: 0.8429</p>
 <p>Olhar exemplos de kernel no kaggle com melhor desempenho em busca de idéias</p>
 </li>
 </ul>
-<h4 id="02c-transferlearningsimples-featureextractionregularizer-chestxray">02c-TransferLearningSimples-FeatureExtractionRegularizer-chestXRay</h4>
+<h2 id="02c-transferlearningsimples-featureextractionregularizer-chestxray">02c-TransferLearningSimples-FeatureExtractionRegularizer-chestXRay</h2>
 <p><a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay.html" 
 target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay</a></p>
 <p>Utilizar DenseNet121 como feature extraction. Treinar classificador na saída desta rede.</p>
@@ -207,7 +213,7 @@ acc: 0.93 val_acc: 0.82</p>
 <p>Próximo passo:</p>
 <p>Gravar em .npy uma matriz com todas as features extraídas da base de treinamento e fazer 
 Grid Search e Random Search do melhor classificador obtido.</p>
-<h4 id="02d-transferlearning-featureextraction-hyperparamtuner-chestxray">02d-TransferLearning-FeatureExtraction-HyperParamTuner-chestXRay</h4>
+<h2 id="02d-transferlearning-featureextraction-hyperparamtuner-chestxray">02d-TransferLearning-FeatureExtraction-HyperParamTuner-chestXRay</h2>
 <p><a href="../html/02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay.html" 
 target="_blank">02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay</a></p>
 <p>Esta rede usa como entrada uma última camada maxpooling já salva, de saída da DenseNet121 aplicada à
@@ -217,12 +223,12 @@ base de treinamento. Como todo o processamento convolucional já está realizado
 <p>Foi possível obter um classificador utilizando somente a saída da DenseNet121 original com pesos da imagenet:</p>
 <p>Base original:      acc 0.95 val_acc 0.89
 recall pneumonia:       0.95         0.97</p>
-<h4 id="02e-auxiliar-imageaugmentation">02e-auxiliar-ImageAugmentation</h4>
+<h2 id="02e-auxiliar-imageaugmentation">02e-auxiliar-ImageAugmentation</h2>
 <p><a href="../html/02e-auxiliar-ImageAugmentation-chestXRay.html" 
 target="_blank">02e-auxiliar-ImageAugmentation</a></p>
 <p>Este notebook é apenas para gerar uma base aumentada pré-processada. Será utilizado pelo outro notebook 02e.</p>
 <p>O objetivo é tentar diminuir o sobreajuste / distãncia entre acc e val_acc e agilizar a fase de treinamento.</p>
-<h4 id="02e-finetunning-chestxray">02e-FineTunning-chestXRay</h4>
+<h2 id="02e-finetunning-chestxray">02e-FineTunning-chestXRay</h2>
 <p><a href="../html/02e-FineTunning-chestXRay.html" 
 target="_blank">02e-FineTunning-chestXRay</a></p>
 <p>Aqui está sendo treinada uma rede DenseNet121 do 02c empilhada com o classificador do 02d. </p>
@@ -236,7 +242,7 @@ Transfermodelweights02e_etapa2.02-0.66.hdf5</p>
 para 95% no relatório. Investigar. </p>
 <p>Base original:      acc 0.95 val_acc 0.89
 recall pneumonia:       0.96         0.97</p>
-<h4 id="observacoes-finais">Observações finais</h4>
+<h2 id="observacoes-finais">Observações finais</h2>
 <p>Considero que para este tipo de problema, o mais importante é um recall alto para pneumonia.</p>
 <p>O modelo final tem um recall excelente, embora o desejável neste caso seja 100%, não sabemos se há
 erro de rotulagem nem qual o erro humano, muito menos o Bayes Error. Portanto, não dá para saber se 
@@ -249,15 +255,14 @@ recall pneumonia:       0.94         0.95
 REDE 02e
 Accuracy:           acc 0.95 val_acc 0.89
 recall pneumonia:       0.96         0.97</p>
-<h1 id="vazios">Vazios</h1>
-<h3 id="notebooks-container-vazio-nvazio">notebooks container vazio-nvazio</h3>
-<h4 id="01-baseline-redesimples-vazio">01-Baseline-redesimples-vazio</h4>
+<h1 id="base-vazios">== BASE Vazios ===========</h1>
+<h2 id="01-baseline-redesimples-vazio">01-Baseline-redesimples-vazio</h2>
 <p><a href="../html/01-Baseline-redesimples-vazio.html" 
 target="_blank">01-Baseline-redesimples-vazio</a></p>
 <p>Rede convolucional bem simples treinada do zero.</p>
 <p>acc: 0.9551 - val_acc: 0.9564</p>
 <p>Este notebook também contém visualizações para tentar entender melhor o que foi aprendido pela rede.</p>
-<h4 id="01b-baseline-redesimples-vazio-tamanhomaior">01b-Baseline-redesimples-vazio-tamanhomaior</h4>
+<h2 id="01b-baseline-redesimples-vazio-tamanhomaior">01b-Baseline-redesimples-vazio-tamanhomaior</h2>
 <p><a href="../html/01b-Baseline-redesimples-vazio-tamanhomaior.html" 
 target="_blank">01b-Baseline-redesimples-vazio-tamanhomaior</a></p>
 <p>Mesma rede convolucional, mas treinada com entrada maior (224x224). 
@@ -282,7 +287,7 @@ Este erro poderia ser melhorado com melhora no recorte do contêiner e na limpez
 * Necessário proibir carretas que obstruam o contêiner
 </code></pre>
 <p><strong>O algoritmo está tentendo a ignorar cargas de contêineres declarados como vazios mas borrados/sujos ou com muito pouca carga ou com carga uniforme de espumas/materias pouco densos. Talvez fosse interessante forçar o algoritmo a ser mais tendente a diminuir este erro, mesmo que isto custasse aumento de falso positivo na classe vazio.</strong></p>
-<h4 id="01b2-baseline-redesimples-vazio-tamanhomaior-augmented-filtered">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</h4>
+<h2 id="01b2-baseline-redesimples-vazio-tamanhomaior-augmented-filtered">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</h2>
 <p><a href="../html/01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered.html" 
 target="_blank">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</a></p>
 <p>Este notebook aplica o mesmo método que 01b, mas trocando para base aumentada e filtrada 
@@ -291,7 +296,7 @@ e excluindo erros acima e abaixo de um threshold do classificador 02c, que na in
 ficou evidente tratarem-se de erros de rotulagem, isto é, data mismatch.</p>
 <p>Base aumentada: acc: 0.97 - val_acc: 0.97
 Base original:  acc: 0.96 - val_acc: 0.96</p>
-<h4 id="01b3-baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform</h4>
+<h2 id="01b3-baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform</h2>
 <p><a href="../html/01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostransform.html" 
 target="_blank">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostransform</a></p>
 <p>Este notebook aplica o mesmo método que 01b, mas trocando para base aumentada e filtrada 
@@ -306,7 +311,7 @@ imagens de vazio com solo poluído por carretas) ou somente em uma das portas (p
 reefer). Assim, neste notebook foi diminuída a amplitude das transformações de imagem aumentada para checar o resultado.</p>
 <p>Base aumentada: acc: 0.97 - val_acc: 0.98
 Base original:  acc: 0.96 - val_acc: 0.96</p>
-<h4 id="02-transferlearningsimples-vazio">02-TransferLearningSimples-vazio</h4>
+<h2 id="02-transferlearningsimples-vazio">02-TransferLearningSimples-vazio</h2>
 <p><a href="../html/02-TransferLearningSimples-vazio.html" 
 target="_blank">02-TransferLearningSimples-vazio</a></p>
 <p>Rede Densenet121, pré treinada na imagenet.</p>
@@ -320,11 +325,11 @@ A dificuldade pode ser devido ao bias em textura da imagenet. Note-se que esta b
 importante.</p>
 <p>ImageNet-trained CNNs are biased towards texture; increasing shape bias improves accuracy and robustness
 https://arxiv.org/abs/1811.12231</p>
-<h4 id="02b-transferlearningsimplesregularizer-vazio">02b-TransferLearningSimplesRegularizer-vazio</h4>
+<h2 id="02b-transferlearningsimplesregularizer-vazio">02b-TransferLearningSimplesRegularizer-vazio</h2>
 <p><a href="../html/02b-TransferLearningSimplesRegularizer-vazio.html" 
 target="_blank">02b-TransferLearningSimplesRegularizer-vazio</a></p>
 <p>Rede Densenet121, pré treinada na imagenet, com regularização.</p>
-<h4 id="02c-transferlearning-featureextractionregularizer-vazio">02c-TransferLearning-FeatureExtractionRegularizer-vazio</h4>
+<h2 id="02c-transferlearning-featureextractionregularizer-vazio">02c-TransferLearning-FeatureExtractionRegularizer-vazio</h2>
 <p><a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio.html" 
 target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio</a></p>
 <p>Rede Densenet121, pré treinada na imagenet, com regularização.</p>
@@ -341,7 +346,7 @@ exemplos que parecem da classe vazio. Ou são erros de base ou são exemplos
   estes da base.
 Será criada uma cópia da base sem esses exemplos, para testar os mesmos
  algoritmos e comparar.</p>
-<h4 id="02c2-transferlearningfeatureextraction-vazio">02c2-TransferLearningFeatureExtraction-Vazio</h4>
+<h2 id="02c2-transferlearningfeatureextraction-vazio">02c2-TransferLearningFeatureExtraction-Vazio</h2>
 <p><a href="../html/02c2-TransferLearningFeatureExtraction-Vazio.html" 
 target="_blank">02c2-TransferLearningFeatureExtraction-Vazio</a></p>
 <ul>
@@ -384,7 +389,7 @@ os erros, conforme tabela abaixo ( a accuracy caiu nas casas centesimais, em tor
      0.0       0.98      0.95      0.96     10494
      1.0       0.95      0.98      0.96     10306
 </code></pre>
-<h4 id="02c3-transferlearningfeatureextraction-vazio">02c3-TransferLearningFeatureExtraction-Vazio</h4>
+<h2 id="02c3-transferlearningfeatureextraction-vazio">02c3-TransferLearningFeatureExtraction-Vazio</h2>
 <p><a href="../html/02c2-TransferLearningFeatureExtraction-Vazio.html" 
 target="_blank">02c2-TransferLearningFeatureExtraction-Vazio</a></p>
 <ul>
@@ -397,19 +402,19 @@ target="_blank">02c2-TransferLearningFeatureExtraction-Vazio</a></p>
 <li>aumento de 2% em accuracy em relação à base original, provavelmente pela correção de erros de rótulo</li>
 <li>De resto, resultados similares ao notebook 02c2, em todas as tabelas (com o aumento de quase 2%)</li>
 </ul>
-<h4 id="02d-auxiliar-imageaugmentation-vazios">02d-auxiliar-ImageAugmentation-Vazios</h4>
+<h2 id="02d-auxiliar-imageaugmentation-vazios">02d-auxiliar-ImageAugmentation-Vazios</h2>
 <p><a href="../html/02d-auxiliar-ImageAugmentation-Vazios.html" 
 target="_blank">02d-auxiliar-ImageAugmentation-Vazios</a></p>
 <p>Notebook auxiliar para gerar uma base aumentada.</p>
-<h4 id="02d2-auxiliar-imageaugmentationmenostransfom-vazios">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</h4>
+<h2 id="02d2-auxiliar-imageaugmentationmenostransfom-vazios">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</h2>
 <p><a href="../html/02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios.html" 
 target="_blank">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a></p>
 <p>Notebook auxiliar para gerar uma base aumentada com poucas transformações.</p>
-<h4 id="02d2-auxiliar-imageaugmentationmenostransfom-vazios_1">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</h4>
+<h2 id="02d2-auxiliar-imageaugmentationmenostransfom-vazios_1">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</h2>
 <p><a href="../html/02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios.html" 
 target="_blank">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a></p>
 <p>Notebook auxiliar para gerar uma base aumentada com poucas transformações.</p>
-<h4 id="observacoes">Observações</h4>
+<h2 id="observacoes">Observações</h2>
 <p>Os resultados da rede simples treinada do zero foram similares ao uso de rede DenseNet, 
 mas a extração de features com rede pré treinada na imagenet pode ser um método universal
  base para vários classificadores, buscas e análises.</p>
@@ -418,94 +423,55 @@ mas a extração de features com rede pré treinada na imagenet pode ser um mét
  comparações, salvando memória e processamento posterior.</p>
 <p>Os resultados utilizando maxpool e avgpool como extrator de características foram muito similares, com
 leve vantagem para avgpool nos resultados e menor tempo de convergência. </p>
-<h4 id="_1"></h4>
+<h2 id="_1"></h2>
 <p><a href="../html/.html" 
-target="_blank"></a></p></div>
-        
-        
+target="_blank"></a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../sobre/" class="btn btn-neutral float-right" title="Sobre">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
     </div>
+  
 
-    <footer class="col-md-12 text-center">
-        
-        <hr>
-        <p>
-        <small>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</p></small>
+  <hr/>
 
-        
-        
-    </footer>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="../js/bootstrap-3.0.3.min.js"></script>
-    <script src="../js/highlight.pack.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-    <script>var base_url = ".."</script>
+  <div role="contentinfo">
+    <!-- Copyright etc -->
     
-    <script src="../js/base.js"></script>
-    <script src="../search/main.js"></script>
+  </div>
 
-    <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Search</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-                <p>
-                    From here you can search these documents. Enter
-                    your search terms below.
-                </p>
-                <form>
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
-                    </div>
-                </form>
-                <div id="mkdocs-search-results"></div>
-            </div>
-            <div class="modal-footer">
-            </div>
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
         </div>
-    </div>
-</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-            </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="width: 20%;">Keys</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
-                  </tr>
-                  <tr>
-                    <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
-                  </tr>
-                  <tr>
-                    <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
-                  </tr>
-                  <tr>
-                    <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
-    </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../sobre/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
 </div>
-    </body>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js" defer></script>
+      <script src="../search/main.js" defer></script>
 
+</body>
 </html>
