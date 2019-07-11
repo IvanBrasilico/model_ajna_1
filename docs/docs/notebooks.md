@@ -1,9 +1,6 @@
-# ChestXRay 
+# ==  BASE ChestXRay ========= 
 
-### notebooks na base chestXRay
-
-
-#### 01-Baseline-redesimples-chestXRay
+## 01-Baseline-redesimples-chestXRay
 <a href="../html/01-Baseline-redesimples-chestXRay.html" 
 target="_blank">01-Baseline-redesimples-chestXRay</a>
 
@@ -13,7 +10,7 @@ Input shape = 150, 150
 
 acc: 0.9279 - val_acc: 0.8285
 
-#### 01b-Baseline-redesimples-chestXRay-tamanhomaior
+## 01b-Baseline-redesimples-chestXRay-tamanhomaior
 <a href="../html/01b-Baseline-redesimples-chestXRay-tamanhomaior.html" 
 target="_blank">01b-Baseline-redesimples-chestXRay-tamanhomaior</a>
 
@@ -57,7 +54,7 @@ Conclusões/próximos passos
 
 - Olhar exemplos de kernel no kaggle com melhor desempenho em busca de idéias
 
-#### 02c-TransferLearningSimples-FeatureExtractionRegularizer-chestXRay
+## 02c-TransferLearningSimples-FeatureExtractionRegularizer-chestXRay
 <a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay.html" 
 target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-chestXRay</a>
 
@@ -73,7 +70,7 @@ Gravar em .npy uma matriz com todas as features extraídas da base de treinament
 Grid Search e Random Search do melhor classificador obtido.
 
 
-#### 02d-TransferLearning-FeatureExtraction-HyperParamTuner-chestXRay
+## 02d-TransferLearning-FeatureExtraction-HyperParamTuner-chestXRay
 <a href="../html/02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay.html" 
 target="_blank">02d-TransferLearningFeatureExtractionHyperParamTuner-chestXRay</a>
 
@@ -90,7 +87,7 @@ recall pneumonia:       0.95         0.97
 
 
 
-#### 02e-auxiliar-ImageAugmentation
+## 02e-auxiliar-ImageAugmentation
 <a href="../html/02e-auxiliar-ImageAugmentation-chestXRay.html" 
 target="_blank">02e-auxiliar-ImageAugmentation</a>
 
@@ -98,7 +95,7 @@ Este notebook é apenas para gerar uma base aumentada pré-processada. Será uti
 
 O objetivo é tentar diminuir o sobreajuste / distãncia entre acc e val_acc e agilizar a fase de treinamento.
 
-#### 02e-FineTunning-chestXRay
+## 02e-FineTunning-chestXRay
 <a href="../html/02e-FineTunning-chestXRay.html" 
 target="_blank">02e-FineTunning-chestXRay</a>
 
@@ -119,7 +116,7 @@ para 95% no relatório. Investigar.
 Base original:      acc 0.95 val_acc 0.89
 recall pneumonia:       0.96         0.97
 
-#### Observações finais
+## Observações finais
 
 Considero que para este tipo de problema, o mais importante é um recall alto para pneumonia.
 
@@ -137,11 +134,9 @@ REDE 02e
 Accuracy:           acc 0.95 val_acc 0.89
 recall pneumonia:       0.96         0.97
 
-# Vazios 
+# == BASE Vazios =========== 
 
-### notebooks container vazio-nvazio
-
-#### 01-Baseline-redesimples-vazio
+## 01-Baseline-redesimples-vazio
 <a href="../html/01-Baseline-redesimples-vazio.html" 
 target="_blank">01-Baseline-redesimples-vazio</a>
 
@@ -151,7 +146,7 @@ acc: 0.9551 - val_acc: 0.9564
 
 Este notebook também contém visualizações para tentar entender melhor o que foi aprendido pela rede.
 
-#### 01b-Baseline-redesimples-vazio-tamanhomaior
+## 01b-Baseline-redesimples-vazio-tamanhomaior
 <a href="../html/01b-Baseline-redesimples-vazio-tamanhomaior.html" 
 target="_blank">01b-Baseline-redesimples-vazio-tamanhomaior</a>
 
@@ -186,7 +181,7 @@ Conclusões:
     
 
 
-#### 01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered
+## 01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered
 <a href="../html/01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered.html" 
 target="_blank">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</a>
 
@@ -198,7 +193,7 @@ ficou evidente tratarem-se de erros de rotulagem, isto é, data mismatch.
 Base aumentada: acc: 0.97 - val_acc: 0.97
 Base original:  acc: 0.96 - val_acc: 0.96
 
-#### 01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform
+## 01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform
 <a href="../html/01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostransform.html" 
 target="_blank">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostransform</a>
 
@@ -217,7 +212,7 @@ reefer). Assim, neste notebook foi diminuída a amplitude das transformações d
 Base aumentada: acc: 0.97 - val_acc: 0.98
 Base original:  acc: 0.96 - val_acc: 0.96
 
-#### 02-TransferLearningSimples-vazio
+## 02-TransferLearningSimples-vazio
 <a href="../html/02-TransferLearningSimples-vazio.html" 
 target="_blank">02-TransferLearningSimples-vazio</a>
 
@@ -240,16 +235,13 @@ ImageNet-trained CNNs are biased towards texture; increasing shape bias improves
 https://arxiv.org/abs/1811.12231
 
 
-#### 02b-TransferLearningSimplesRegularizer-vazio
+## 02b-TransferLearningSimplesRegularizer-vazio
 <a href="../html/02b-TransferLearningSimplesRegularizer-vazio.html" 
 target="_blank">02b-TransferLearningSimplesRegularizer-vazio</a>
 
 Rede Densenet121, pré treinada na imagenet, com regularização.
 
-**Não houve sucesso neste treinamento, necessário debugar posteriormente** 
-
-
-#### 02c-TransferLearning-FeatureExtractionRegularizer-vazio
+## 02c-TransferLearning-FeatureExtractionRegularizer-vazio
 <a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio.html" 
 target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio</a>
 
@@ -275,7 +267,7 @@ Será criada uma cópia da base sem esses exemplos, para testar os mesmos
  algoritmos e comparar.
 
 
-#### 02c2-TransferLearningFeatureExtraction-Vazio
+## 02c2-TransferLearningFeatureExtraction-Vazio
 <a href="../html/02c2-TransferLearningFeatureExtraction-Vazio.html" 
 target="_blank">02c2-TransferLearningFeatureExtraction-Vazio</a>
 
@@ -332,7 +324,7 @@ Com class_weight
 
 
 
-#### 02c3-TransferLearningFeatureExtraction-Vazio
+## 02c3-TransferLearningFeatureExtraction-Vazio
 <a href="../html/02c2-TransferLearningFeatureExtraction-Vazio.html" 
 target="_blank">02c2-TransferLearningFeatureExtraction-Vazio</a>
 
@@ -346,27 +338,27 @@ Detalhes no notebook. Resumindo, os resultados foram muito similares ao notebook
   * De resto, resultados similares ao notebook 02c2, em todas as tabelas (com o aumento de quase 2%)
   
  
-#### 02d-auxiliar-ImageAugmentation-Vazios
+## 02d-auxiliar-ImageAugmentation-Vazios
 <a href="../html/02d-auxiliar-ImageAugmentation-Vazios.html" 
 target="_blank">02d-auxiliar-ImageAugmentation-Vazios</a>
 
 Notebook auxiliar para gerar uma base aumentada.
 
 
-#### 02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios 
+## 02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios 
 <a href="../html/02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios.html" 
 target="_blank">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a>
 
 Notebook auxiliar para gerar uma base aumentada com poucas transformações.
 
-#### 02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios 
+## 02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios 
 <a href="../html/02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios.html" 
 target="_blank">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a>
 
 Notebook auxiliar para gerar uma base aumentada com poucas transformações.
 
 
-#### Observações
+## Observações
 
 Os resultados da rede simples treinada do zero foram similares ao uso de rede DenseNet, 
 mas a extração de features com rede pré treinada na imagenet pode ser um método universal
@@ -377,10 +369,10 @@ Assim, quando uma imagem entrar no Banco de Dados, pré extrair as features via 
  comparações, salvando memória e processamento posterior.
  
 Os resultados utilizando maxpool e avgpool como extrator de características foram muito similares, com
-leve vantagem para avgpoll nos resultados e menor tempo de convergência. 
+leve vantagem para avgpool nos resultados e menor tempo de convergência. 
  
 
-#### 
+## 
 <a href="../html/.html" 
 target="_blank"></a>
 
