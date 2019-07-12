@@ -2,8 +2,18 @@
  
 ## Classificação, busca, simillaridade, reutilização de extração de características
 
+### **Nota para a visualização em PDF** 
+
+O site [https://ivanbrasilico.github.io/projeto/](https://ivanbrasilico.github.io/projeto/) permite uma
+melhor navegação e visualização mais completa, incluindo cópia HTML de todos os notebooks.
+ 
+O código-fonte completo do projeto está no GitHub:
+
+[https://github.com/IvanBrasilico/projeto](https://github.com/IvanBrasilico/projeto ) 
+
 
 ## Introdução
+
 
 Nestes documentos estão centralizadas as anotações e histórico detalhado do treinamento e testes
 de alguns modelos de visão computacional.
@@ -58,3 +68,13 @@ Assim:
 
 Conforme detalhado em CapstoneProject, serão treinadas redes convolucionais simples do zero, modelos 
 sofisticados com transfer learning, e redes siamesas. As bases utilizadas serão chestXRay, vazios e ncmsunicos.
+
+Além da tarefa de classificação, o objetivo do projeto é tentar, com reaproveitamento, reutilizar artefatos obtidos em 
+novas classificações e também validar o uso para agrupamento e similaridade. Assim, será possível economizar recurso
+computacional e humano em um ambiente de produção.
+
+Adicionalmente, uma tendência atual da IA é a busca de "Sistemas de Inteligência Aumentada", ou IA "Centauro".
+Assim, os algoritmos são utilizados para empoderar operadores humanos. Com isso, além da classificação, prover agrupamento
+e busca de casos similares pode aumentar o poder de operadores humanos. Como exemplo, um médico pode procurar pacientes com
+casos similares para comparar prontuários e tratamentos, ou um analista de risco pode buscar imagens de escaneamento similares
+no rastro de uma fraude.

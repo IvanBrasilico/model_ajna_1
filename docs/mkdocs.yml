@@ -4,7 +4,8 @@ site_description: Followup do treinamento de novos modelos para o AJNA com Tenso
 nav:
     - Intro: index.md
     - Resumo: resumo.md
-    - Relatório: notebooks.md
+    - Relatório ChestXRay: notebooks.md
+    - Relatório Vazios: notebooks_vazios.md
     - Conclusões: conclusao.md
     - Sobre: sobre.md
 

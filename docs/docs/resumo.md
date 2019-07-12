@@ -1,6 +1,8 @@
-# BASE ChestXRay
+# Resumo
 
-A base chestXRay é composta de 5216 imagens na base de treinamento e 624 imagens na base teste.\
+## BASE ChestXRay
+
+A base chestXRay é composta de 5216 imagens na base de treinamento e 624 imagens na base teste.
 
 São imagens de raio X de tórax, rotulados como paciente NORMAL e paciente com PNEUMONIA.
 
@@ -13,7 +15,7 @@ A base é levemente desbalanceada, havendo quase 3 vezes mais exemplos de pneumo
 
 
 
-# BASE Vazios 
+## BASE Vazios 
  
 Esta base é composta por 20845 imagens de treinamento e 2317 imagens de validação. A base é balanceada.
 
@@ -33,7 +35,7 @@ pode ser considerado que para esta tarefa foi obtido um classificador excelente.
 ![Samples Vazios](images/vazios.png)
    
 
-# BASE NCMs únicos
+## BASE NCMs únicos
 
 Esta base é composta de 41809 imagens de 868 categorias.
  

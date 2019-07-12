@@ -1,4 +1,4 @@
-# BASE Vazios 
+# Relatórios da BASE Vazios 
 
 ## 01-Baseline-redesimples-vazio
 <a href="../html/01-Baseline-redesimples-vazio.html" 
@@ -230,9 +230,38 @@ Teste do uso das features extraídas de uma rede pré-treinada como hash para bu
 
 Métricas utilizadas:
 
-- Dos 10 primeiros e dos 10 20 primeiros resultados(de um total de 256 e 512(, quantos pertencem à mesma classe?
-  
+- Dos 10 primeiros e dos 20 primeiros resultados(de um total de 512), quantos pertencem à mesma classe?
 
+Uma tendência atual da IA é a busca de "Sistemas de Inteligência Aumentada", ou IA "Centauro".
+Assim, os algoritmos são utilizados para empoderar operadores humanos. Com isso, além 
+
+Foram rodadas 1.000 simulações aleatórias de busca para vários batchs diferentes, de 512 itens para base train e 
+256 itens para base. No final foram rodadas 1.000 simulações para 10 batches da base treinamento.
+
+A avaliação foi realizada por coincidência de classe nos primeiros 10 e 20 itens e também foi realizada
+avaliação visual interativa.
+
+A avaliação visual demonstrou precisão alta na comparação de vazios. Mas a comparação de contêineres com Carga, 
+imagem com mais informação, pareceu bem mais prejudicada.
+
+A avaliação por classe deu uma coincidência de pouco mais de 80%, considerada insuficiente. 
+Também foi extraída a estatística por classe: 
+
+0 = Não vazio 1 = Vazio
+
+**Resultados utilizando MaxPooling**
+
+* Acerto classe 0: 70719 de 99920 (0.71)
+* Acerto classe 1: 85712 de 100080 (0.86)
+
+**Resultados utilizando AvgPooling**
+
+* Acerto classe 0: 79105 de 107680 (0.73)
+* Acerto classe 1: 83533 de 92320 (0.90)  
+
+Assim, as *features* extraídas da rede treinada na ImageNet se mostraram insuficientes para busca.
+Não obstante, podem ser um ponto de partida, para treinamento de autoencoders ou outras funções
+ para gerar um hash para busca de similaridade.  
 
 ## Observações
 
@@ -246,7 +275,22 @@ Assim, quando uma imagem entrar no Banco de Dados, pré extrair as features via 
  
 Os resultados utilizando maxpool e avgpool como extrator de características foram muito similares, com
 leve vantagem para avgpool nos resultados e menor tempo de convergência. 
+
+
+Os melhores resultados obtidos foram de 96% de accuracy e 96% de f1-score, sendo que a base parece ter 
+em torno de 2% de erros de rotulagem. Com a base limpa, o resultado subiu a quase 98%.
+Embora pela visualização haja espaço para melhora (alguns contêineres não vazios com muito pouca carga
+mas facilmente identifiáveis pelo olho humano classificados como vazios), o modelo está muito próximo de um
+candidato a colocação em produção. Outro ponto interessante é que foi demostrado ser possível utilizar
+um classificador extremamente simples e rápido, que utiliza como ponto de entrada apenas 1024 números que
+podem ser pré-extraídos das imagens pela rede DenseNet121 e ocupa apenas 14MB de RAM por batch. 
+
+              precision    recall  f1-score   support
+
+         0.0       0.98      0.95      0.96     10494
+         1.0       0.95      0.98      0.96     10306
  
+
 
 ## 
 <a href="../html/.html" 

@@ -18,7 +18,7 @@
 <meta content="[\s\-]+" name="lang:search.tokenizer"/>
 <link href="../assets/images/favicon.png" rel="shortcut icon"/>
 <meta content="mkdocs-1.0.4, mkdocs-material-4.4.0" name="generator"/>
-<title>Relatório - Projeto AJNA - Treinamento de modelos</title>
+<title>Relatório ChestXRay - Projeto AJNA - Treinamento de modelos</title>
 <link href="../assets/stylesheets/application.0284f74d.css" rel="stylesheet"/>
 <script src="../assets/javascripts/modernizr.74668098.js"></script>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -34,7 +34,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
-<a class="md-skip" href="#base-chestxray" tabindex="1">
+<a class="md-skip" href="#relatorios-da-base-chestxray" tabindex="1">
         Skip to content
       </a>
 <header class="md-header" data-md-component="header">
@@ -55,7 +55,7 @@
             </span>
 <span class="md-header-nav__topic">
               
-                Relatório
+                Relatório ChestXRay
               
             </span>
 </div>
@@ -103,17 +103,22 @@
   </label>
 <ul class="md-nav__list" data-md-scrollfix="">
 <li class="md-nav__item">
-<a class="md-nav__link" href=".." title="Home">
-      Home
+<a class="md-nav__link" href=".." title="Intro">
+      Intro
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../resumo/" title="Resumo">
+      Resumo
     </a>
 </li>
 <li class="md-nav__item md-nav__item--active">
 <input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
 <label class="md-nav__link md-nav__link--active" for="__toc">
-        Relatório
+        Relatório ChestXRay
       </label>
-<a class="md-nav__link md-nav__link--active" href="./" title="Relatório">
-      Relatório
+<a class="md-nav__link md-nav__link--active" href="./" title="Relatório ChestXRay">
+      Relatório ChestXRay
     </a>
 <nav class="md-nav md-nav--secondary">
 <label class="md-nav__title" for="__toc">Table of contents</label>
@@ -149,12 +154,27 @@
   </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#03-busca-transferlearning-imagenet-chestxray" title="03-Busca-TransferLearning-Imagenet-chestXRay">
+    03-Busca-TransferLearning-Imagenet-chestXRay
+  </a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#observacoes-finais" title="Observações finais">
     Observações finais
   </a>
 </li>
 </ul>
 </nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../notebooks_vazios/" title="Relatório Vazios">
+      Relatório Vazios
+    </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../conclusao/" title="Conclusões">
+      Conclusões
+    </a>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../sobre/" title="Sobre">
@@ -203,6 +223,11 @@
   </a>
 </li>
 <li class="md-nav__item">
+<a class="md-nav__link" href="#03-busca-transferlearning-imagenet-chestxray" title="03-Busca-TransferLearning-Imagenet-chestXRay">
+    03-Busca-TransferLearning-Imagenet-chestXRay
+  </a>
+</li>
+<li class="md-nav__item">
 <a class="md-nav__link" href="#observacoes-finais" title="Observações finais">
     Observações finais
   </a>
@@ -214,7 +239,7 @@
 </div>
 <div class="md-content">
 <article class="md-content__inner md-typeset"><a class="md-icon md-content__icon" download href="../pdf/combined.pdf" title="PDF Export"></a>
-<h1 id="base-chestxray">==  BASE ChestXRay =========</h1>
+<h1 id="relatorios-da-base-chestxray">Relatórios da BASE ChestXRay</h1>
 <h2 id="01-baseline-redesimples-chestxray">01-Baseline-redesimples-chestXRay</h2>
 <p><a href="../html/01-Baseline-redesimples-chestXRay.html" target="_blank">01-Baseline-redesimples-chestXRay</a></p>
 <p>Rede convolucional bem simples treinada do zero.</p>
@@ -298,8 +323,36 @@ Transfermodelweights02e_etapa2.02-0.66.hdf5</p>
 para 95% no relatório. Investigar. </p>
 <p>Base original:      acc 0.95 val_acc 0.89
 recall pneumonia:       0.96         0.97</p>
+<h2 id="03-busca-transferlearning-imagenet-chestxray">03-Busca-TransferLearning-Imagenet-chestXRay</h2>
+<p><a href="../html/03-Busca-TransferLearning-Imagenet-chestXRay.html" target="_blank">03-Busca-TransferLearning-Imagenet-chestXRay</a></p>
+<p>Teste do uso das features extraídas de uma rede pré-treinada como hash para busca de similaridade.</p>
+<p>Uma tendência atual da IA é a busca de "Sistemas de Inteligência Aumentada", ou IA "Centauro".
+Assim, os algoritmos são utilizados para empoderar operadores humanos. Com isso, além </p>
+<p>Testar através de distância euclidiana se a última camada de rede neural DenseNet121 possui informação interessante
+para possibilitar busca por similaridade.</p>
+<p>Foram rodadas 1.000 simulações aleatórias de busca para vários batchs diferentes, de 512 itens para base train e 
+256 itens para base. No final foram rodadas 1.000 simulações para 10 batches da base treinamento.</p>
+<p>A avaliação foi realizada por coincidência de classe nos primeiros 10 e 20 itens e também foi realizada
+avaliação visual interativa.</p>
+<p>A avaliação visual é muito difícil, precisaria de um especialista médico para avaliar.</p>
+<p>A avaliação por classe deu uma coincidência média de menos de 80%, considerada insuficiente. 
+Também foi extraída a estatística por classe: </p>
+<p>0 = NORMAL 1 = PNEUMONIA</p>
+<p><strong>Resultados utilizando MaxPooling</strong></p>
+<ul>
+<li>Acerto classe 0: 53959 de 72780 (0.74)</li>
+<li>Acerto classe 1: 103373 de 127220 (0.81)</li>
+</ul>
+<p><strong>Resultados utilizando AvgPooling</strong></p>
+<ul>
+<li>Acerto classe 0: 55893 de 75900 (0.74)</li>
+<li>Acerto classe 1: 103782 de 124100 (0.84)</li>
+</ul>
+<p>Assim, as <em>features</em> extraídas da rede treinada na ImageNet se mostraram insuficientes para busca.
+Não obstante, podem ser um ponto de partida, para treinamento de autoencoders ou outras funções
+ para gerar um hash para busca de similaridade.  </p>
 <h2 id="observacoes-finais">Observações finais</h2>
-<p>Considero que para este tipo de problema, o mais importante é um recall alto para pneumonia.</p>
+<p>Considerando que para este tipo de problema o mais importante é um recall alto para pneumonia.</p>
 <p>O modelo final tem um recall excelente, embora o desejável neste caso seja 100%, não sabemos se há
 erro de rotulagem nem qual o erro humano, muito menos o Bayes Error. Portanto, não dá para saber se 
 é factível melhorar acima de 95-97% de recall. </p>
@@ -311,169 +364,12 @@ recall pneumonia:       0.94         0.95
 REDE 02e
 Accuracy:           acc 0.95 val_acc 0.89
 recall pneumonia:       0.96         0.97</p>
-<h1 id="base-vazios">== BASE Vazios ===========</h1>
-<h2 id="01-baseline-redesimples-vazio">01-Baseline-redesimples-vazio</h2>
-<p><a href="../html/01-Baseline-redesimples-vazio.html" target="_blank">01-Baseline-redesimples-vazio</a></p>
-<p>Rede convolucional bem simples treinada do zero.</p>
-<p>acc: 0.9551 - val_acc: 0.9564</p>
-<p>Este notebook também contém visualizações para tentar entender melhor o que foi aprendido pela rede.</p>
-<h2 id="01b-baseline-redesimples-vazio-tamanhomaior">01b-Baseline-redesimples-vazio-tamanhomaior</h2>
-<p><a href="../html/01b-Baseline-redesimples-vazio-tamanhomaior.html" target="_blank">01b-Baseline-redesimples-vazio-tamanhomaior</a></p>
-<p>Mesma rede convolucional, mas treinada com entrada maior (224x224). 
-O tamanho de entrada é o mesmo da maioria dos modelos treinados na imagenet.</p>
-<p>acc: 0.9589 - val_acc: 0.9616</p>
-<p>Em 26/06/2019:</p>
-<p>Rodada três vezes a sequência acima, 99, 101 e 103 erros de classificação 
-(a mudança é devido a técnicas de image augmentation). 
-Precisão de 100% na classe 0 e recall 91% ou seja 9% de erros tipo II falso negativo (predição 1 rótulo 0).</p>
-<p>Analisando visualmente o diretório, pelo menos 25% dos erros são de rotulagem 
-(os contêineres realmente não contém carga. Dos 70-75 erros restantes, 
-em 20% do total o contêiner está escuro, parecendo ter carga de espuma.
- Em torno de 30% do total também há diversos tipos de ruídos na imagem,
-  desde carretas que invadem a área do contêiner até borrões laterais na imagem, mas não carga.
-   Então também é contêiner efetivamente vazio. Nos erros restantes (apenas 20% de 9%) 
-   parece haver erro de classificação, mas o contêiner contém pouca carga.</p>
-<p>Conclusões:</p>
-<pre><code>* O erro real do algoritmo pode ser de apenas 2-4% e apenas na classe Não Vazio. 
-Este erro poderia ser melhorado com melhora no recorte do contêiner e na limpeza da imagem original.
-* Dos 9% de erros, 2% são aparentemente "fraudes": contêineres não continham carga
-* Dos 9% de erros, 2% podem ser "fraude" ou falha no escâner
-* Necessário proibir carretas que obstruam o contêiner
-</code></pre>
-<p><strong>O algoritmo está tentendo a ignorar cargas de contêineres declarados como vazios mas borrados/sujos ou com muito pouca carga ou com carga uniforme de espumas/materias pouco densos. Talvez fosse interessante forçar o algoritmo a ser mais tendente a diminuir este erro, mesmo que isto custasse aumento de falso positivo na classe vazio.</strong></p>
-<h2 id="01b2-baseline-redesimples-vazio-tamanhomaior-augmented-filtered">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</h2>
-<p><a href="../html/01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered.html" target="_blank">01b2-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered</a></p>
-<p>Este notebook aplica o mesmo método que 01b, mas trocando para base aumentada e filtrada 
-(redução de erros de rótulo) produzida por 02c e o2d2, isto é, foi gerada nova base, já aumentada 
-e excluindo erros acima e abaixo de um threshold do classificador 02c, que na inspeção visual
-ficou evidente tratarem-se de erros de rotulagem, isto é, data mismatch.</p>
-<p>Base aumentada: acc: 0.97 - val_acc: 0.97
-Base original:  acc: 0.96 - val_acc: 0.96</p>
-<h2 id="01b3-baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostranform</h2>
-<p><a href="../html/01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostransform.html" target="_blank">01b3-Baseline-redesimples-vazio-tamanhomaior-augmented-filtered-menostransform</a></p>
-<p>Este notebook aplica o mesmo método que 01b, mas trocando para base aumentada e filtrada 
-(redução de erros de rótulo) produzida por 02c e o2d2, isto é, foi gerada nova base, já aumentada 
-e excluindo erros acima e abaixo de um threshold do classificador 02c, que na inspeção visual
-ficou evidente tratarem-se de erros de rotulagem, isto é, data mismatch.</p>
-<p>Além disso, na inspeção visual do notebook 01b2 ficou a impressão de que os erros que ainda 
-estavam ocorrendo eram: erros que mesmo o humano teria dificuldade (contêineres com espuma, por exemplo) ou
-erros de rótulo persistentes. Além desses, o algoritmo ainda erra em alguns poucos casos de contêiner
-contendo muito pouca carga, especialmente se esta se concentra apenas no solo (provavelmente confunde com 
-imagens de vazio com solo poluído por carretas) ou somente em uma das portas (provavelmente confundindo com
-reefer). Assim, neste notebook foi diminuída a amplitude das transformações de imagem aumentada para checar o resultado.</p>
-<p>Base aumentada: acc: 0.97 - val_acc: 0.98
-Base original:  acc: 0.96 - val_acc: 0.96</p>
-<h2 id="02-transferlearningsimples-vazio">02-TransferLearningSimples-vazio</h2>
-<p><a href="../html/02-TransferLearningSimples-vazio.html" target="_blank">02-TransferLearningSimples-vazio</a></p>
-<p>Rede Densenet121, pré treinada na imagenet.</p>
-<p>acc: 0.9545 - val_acc: 0.7126</p>
-<p>Claramente, houve um sobreajuste muito grande. Os erros de classificação cometidos são gritantes.</p>
-<p>Foi realizado fine tunning do último bloco convolucional (conv5):</p>
-<p>acc: 0.9523 - val_acc: 0.8045</p>
-<p>Apesar dos resultados ruins na generalização, necessário explorar mais esta possibilidade.
-A dificuldade pode ser devido ao bias em textura da imagenet. Note-se que esta base
-é em tons de cinza, e o mais importante é a geometria. Imagenet é colorida e textura é 
-importante.</p>
-<p>ImageNet-trained CNNs are biased towards texture; increasing shape bias improves accuracy and robustness
-https://arxiv.org/abs/1811.12231</p>
-<h2 id="02b-transferlearningsimplesregularizer-vazio">02b-TransferLearningSimplesRegularizer-vazio</h2>
-<p><a href="../html/02b-TransferLearningSimplesRegularizer-vazio.html" target="_blank">02b-TransferLearningSimplesRegularizer-vazio</a></p>
-<p>Rede Densenet121, pré treinada na imagenet, com regularização.</p>
-<h2 id="02c-transferlearning-featureextractionregularizer-vazio">02c-TransferLearning-FeatureExtractionRegularizer-vazio</h2>
-<p><a href="../html/02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio.html" target="_blank">02c-TransferLearningSimplesFeatureExtractionRegularizer-vazio</a></p>
-<p>Rede Densenet121, pré treinada na imagenet, com regularização.</p>
-<p>acc: 0.9408 - val_acc: 0.9514</p>
-<p>Neste caso, se optou por utilizar as camadas pré treinadas para feature extraction, e,
-foi utilizada Max Pooling na última camada em vez de Avg Pooling.</p>
-<p>Observações:</p>
-<p>Após a extração das features das imagens, o treinamento do classificador é <strong>centenas de
-vezes</strong> mais rápido. Assim, a extração separada dos features permitirá treinar vários
- classificadores, fazer grid search e cross validation, entre outros.  </p>
-<p>Conforme demonstrado acima, há entre as imagens da classe nvazio diversos 
-exemplos que parecem da classe vazio. Ou são erros de base ou são exemplos
- extremamente similares aos vazios. O aprendizado deve melhorar eliminando
-  estes da base.
-Será criada uma cópia da base sem esses exemplos, para testar os mesmos
- algoritmos e comparar.</p>
-<h2 id="02c2-transferlearningfeatureextraction-vazio">02c2-TransferLearningFeatureExtraction-Vazio</h2>
-<p><a href="../html/02c2-TransferLearningFeatureExtraction-Vazio.html" target="_blank">02c2-TransferLearningFeatureExtraction-Vazio</a></p>
-<ul>
-<li>Extrair features para numpy com imageaugmented bem "suave" (teste 01b3) produzida por 02c e o2d2</li>
-<li>Rodar com maxpool e com avgpool para poder comparar</li>
-<li>Rodar keras_tuner e comparar resultados com melhor resultado da rede simples</li>
-</ul>
-<p>Base original maxpool:  acc: 0.9604 - val_acc: 0.9566
-Base original avgpool:  acc: 0.9594 - val_acc: 0.9588</p>
-<p><strong>Parece que não importa o que se tente, há um platô em torno de 0.96 para accuracy na base original.</strong></p>
-<p>Com a base "limpa" de alguns erros de rotulagem, foi possível subir este platô para um pouco mais de 97%.
-Como a maioria dos erros é na classe vazio, antes de prosseguir:
-    * Testar neste mesmo notebook treinamento com class_weigth
-    * Copiar este notebook e repetir mesmos passos na base gerada por 02d2 </p>
-<p>O uso de class_weight 3 para a classe 0 (não vazio) causou queda marginal na accuracy total, mas distribuindo melhor
-os erros, conforme tabela abaixo ( a accuracy caiu nas casas centesimais, em torno de 4 centésimos):</p>
-<p>BASE TEST</p>
-<p>Sem class_weight</p>
-<pre><code>          precision    recall  f1-score   support
-
-     0.0       0.99      0.92      0.96      1166
-     1.0       0.93      0.99      0.96      1138
-</code></pre>
-<p>Com class_weight</p>
-<pre><code>          precision    recall  f1-score   support
-
-     0.0       0.97      0.94      0.95      1166
-     1.0       0.94      0.97      0.95      1138
-</code></pre>
-<p>BASE TRAIN</p>
-<p>Sem class_weight</p>
-<pre><code>          precision    recall  f1-score   support
-
-     0.0       1.00      0.93      0.96     10494
-     1.0       0.93      1.00      0.96     10306
-</code></pre>
-<p>Com class_weight</p>
-<pre><code>          precision    recall  f1-score   support
-
-     0.0       0.98      0.95      0.96     10494
-     1.0       0.95      0.98      0.96     10306
-</code></pre>
-<h2 id="02c3-transferlearningfeatureextraction-vazio">02c3-TransferLearningFeatureExtraction-Vazio</h2>
-<p><a href="../html/02c2-TransferLearningFeatureExtraction-Vazio.html" target="_blank">02c2-TransferLearningFeatureExtraction-Vazio</a></p>
-<ul>
-<li>Extrair features para numpy com imageaugmented bem "suave" e filtrado (mesma base que notebook 01b3)</li>
-<li>Rodar com maxpool e com avgpool para poder comparar</li>
-<li>Rodar keras_tuner e comparar resultados com melhor resultado da rede simples</li>
-</ul>
-<p>Detalhes no notebook. Resumindo, os resultados foram muito similares ao notebook 01b3:</p>
-<ul>
-<li>aumento de 2% em accuracy em relação à base original, provavelmente pela correção de erros de rótulo</li>
-<li>De resto, resultados similares ao notebook 02c2, em todas as tabelas (com o aumento de quase 2%)</li>
-</ul>
-<h2 id="02d-auxiliar-imageaugmentation-vazios">02d-auxiliar-ImageAugmentation-Vazios</h2>
-<p><a href="../html/02d-auxiliar-ImageAugmentation-Vazios.html" target="_blank">02d-auxiliar-ImageAugmentation-Vazios</a></p>
-<p>Notebook auxiliar para gerar uma base aumentada.</p>
-<h2 id="02d2-auxiliar-imageaugmentationmenostransfom-vazios">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</h2>
-<p><a href="../html/02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios.html" target="_blank">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a></p>
-<p>Notebook auxiliar para gerar uma base aumentada com poucas transformações.</p>
-<h2 id="02d2-auxiliar-imageaugmentationmenostransfom-vazios_1">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</h2>
-<p><a href="../html/02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios.html" target="_blank">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a></p>
-<p>Notebook auxiliar para gerar uma base aumentada com poucas transformações.</p>
-<h2 id="03-busca-transferlearning-imagenet-vaziosipynb">03-Busca-TransferLearning-Imagenet-Vazios.ipynb</h2>
-<p><a href="../html/03-Busca-TransferLearning-Imagenet-Vazios.html" target="_blank">03-Busca-TransferLearning-Imagenet-Vazios</a></p>
-<p>Teste do uso das features extraídas de uma rede pré-treinada como hash para busca de similaridade.</p>
-<p>Métricas utilizadas:</p>
-<ul>
-<li>Dos 10 primeiros e dos 10 20 primeiros resultados(de um total de 256 e 512(, quantos pertencem à mesma classe?</li>
-</ul>
-<h2 id="observacoes">Observações</h2>
-<p>Os resultados da rede simples treinada do zero foram similares ao uso de rede DenseNet, 
-mas a extração de features com rede pré treinada na imagenet pode ser um método universal
- base para vários classificadores, buscas e análises.</p>
-<p>Assim, quando uma imagem entrar no Banco de Dados, pré extrair as features via uma rede pré treinada,
- salvando no Banco de Dados, pode servir como ponto de entrada para vários tipos de classificadores e 
- comparações, salvando memória e processamento posterior.</p>
-<p>Os resultados utilizando maxpool e avgpool como extrator de características foram muito similares, com
-leve vantagem para avgpool nos resultados e menor tempo de convergência. </p>
+<p>A diferença entre treinamento e validação demonstra uma variância grande, mas pelos testes na base seria importante checar
+se não se trata de um  <em>data mismatch</em>. Esta base parece ter problemas de balanceamento e também de distribuição. Como
+próximo passo, seria interessante fundir todos os exemplos da base orginal (train, val, test) em uma base única e fazer um
+<em>resample</em> das bases de treinamento e validação, rodando cópias destes notebooks e comparando os resultados. Além disso,
+testar técnicas adicionais de <em>image augmentation</em> e balanceamento de classes (parâmetro <em>class weight</em> ou aumento de uma
+categoria).s</p>
 <h2 id="_1"></h2>
 <p><a href="../html/.html" target="_blank"></a></p>
 </article>
@@ -483,7 +379,7 @@ leve vantagem para avgpool nos resultados e menor tempo de convergência. </p>
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a class="md-flex md-footer-nav__link md-footer-nav__link--prev" href=".." rel="prev" title="Home">
+<a class="md-flex md-footer-nav__link md-footer-nav__link--prev" href="../resumo/" rel="prev" title="Resumo">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -492,17 +388,17 @@ leve vantagem para avgpool nos resultados e menor tempo de convergência. </p>
 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Home
+                Resumo
               </span>
 </div>
 </a>
-<a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="../sobre/" rel="next" title="Sobre">
+<a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="../notebooks_vazios/" rel="next" title="Relatório Vazios">
 <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
 <span class="md-flex__ellipsis">
 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Sobre
+                Relatório Vazios
               </span>
 </div>
 <div class="md-flex__cell md-flex__cell--shrink">
