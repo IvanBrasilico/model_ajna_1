@@ -14,7 +14,6 @@ A base é levemente desbalanceada, havendo quase 3 vezes mais exemplos de pneumo
 
 
 
-
 ## BASE Vazios 
  
 Esta base é composta por 20845 imagens de treinamento e 2317 imagens de validação. A base é balanceada.

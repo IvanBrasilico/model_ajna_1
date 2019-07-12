@@ -122,9 +122,6 @@ target="_blank">03-Busca-TransferLearning-Imagenet-chestXRay</a>
 
 Teste do uso das features extraídas de uma rede pré-treinada como hash para busca de similaridade.
 
-Uma tendência atual da IA é a busca de "Sistemas de Inteligência Aumentada", ou IA "Centauro".
-Assim, os algoritmos são utilizados para empoderar operadores humanos. Com isso, além 
-
 Testar através de distância euclidiana se a última camada de rede neural DenseNet121 possui informação interessante
 para possibilitar busca por similaridade.
 
@@ -179,7 +176,7 @@ se não se trata de um  *data mismatch*. Esta base parece ter problemas de balan
 próximo passo, seria interessante fundir todos os exemplos da base orginal (train, val, test) em uma base única e fazer um
 *resample* das bases de treinamento e validação, rodando cópias destes notebooks e comparando os resultados. Além disso,
 testar técnicas adicionais de *image augmentation* e balanceamento de classes (parâmetro *class weight* ou aumento de uma
-categoria).s
+categoria).
 
 ## 
 <a href="../html/.html" 

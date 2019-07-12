@@ -232,9 +232,6 @@ Métricas utilizadas:
 
 - Dos 10 primeiros e dos 20 primeiros resultados(de um total de 512), quantos pertencem à mesma classe?
 
-Uma tendência atual da IA é a busca de "Sistemas de Inteligência Aumentada", ou IA "Centauro".
-Assim, os algoritmos são utilizados para empoderar operadores humanos. Com isso, além 
-
 Foram rodadas 1.000 simulações aleatórias de busca para vários batchs diferentes, de 512 itens para base train e 
 256 itens para base. No final foram rodadas 1.000 simulações para 10 batches da base treinamento.
 
