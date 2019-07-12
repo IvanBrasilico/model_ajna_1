@@ -27,7 +27,7 @@ Linhas gerais:
 
 * Proposta do projeto - <a href="../html/CapstoneProject.html" target="_blank">Capstone Proposal</a>
 * [Relatório resumido](resumo.md)
-* Relatório com detalhes dos [modelos desenvolvidos e exploração de dados](notebooks.md)
+* Relatório com detalhes da exploração de dados, modelos desenvolvidos, testes e iterações 
 * [Conclusões finais](conclusao.md)
 * <a href="https://github.com/IvanBrasilico/projeto" target="_blank">Código Fonte do Projeto</a>
 
