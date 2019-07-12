@@ -18,7 +18,7 @@
 <meta content="[\s\-]+" name="lang:search.tokenizer"/>
 <link href="../assets/images/favicon.png" rel="shortcut icon"/>
 <meta content="mkdocs-1.0.4, mkdocs-material-4.4.0" name="generator"/>
-<title>Sobre - Projeto AJNA - Treinamento de modelos</title>
+<title>Resumo - Projeto AJNA - Treinamento de modelos</title>
 <link href="../assets/stylesheets/application.0284f74d.css" rel="stylesheet"/>
 <script src="../assets/javascripts/modernizr.74668098.js"></script>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
@@ -34,7 +34,7 @@
 <input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
 <input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
 <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
-<a class="md-skip" href="#desenvolvido-na-rfb-dentro-do-escopo-do-sistema-ajna" tabindex="1">
+<a class="md-skip" href="#resumo" tabindex="1">
         Skip to content
       </a>
 <header class="md-header" data-md-component="header">
@@ -55,7 +55,7 @@
             </span>
 <span class="md-header-nav__topic">
               
-                Sobre
+                Resumo
               
             </span>
 </div>
@@ -107,10 +107,34 @@
       Intro
     </a>
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="../resumo/" title="Resumo">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+        Resumo
+      </label>
+<a class="md-nav__link md-nav__link--active" href="./" title="Resumo">
       Resumo
     </a>
+<nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#base-chestxray" title="BASE ChestXRay">
+    BASE ChestXRay
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#base-vazios" title="BASE Vazios">
+    BASE Vazios
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#base-ncms-unicos" title="BASE NCMs únicos">
+    BASE NCMs únicos
+  </a>
+</li>
+</ul>
+</nav>
 </li>
 <li class="md-nav__item">
 <a class="md-nav__link" href="../notebooks/" title="Relatório ChestXRay">
@@ -127,9 +151,8 @@
       Conclusões
     </a>
 </li>
-<li class="md-nav__item md-nav__item--active">
-<input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
-<a class="md-nav__link md-nav__link--active" href="./" title="Sobre">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../sobre/" title="Sobre">
       Sobre
     </a>
 </li>
@@ -142,18 +165,51 @@
 <div class="md-sidebar__scrollwrap">
 <div class="md-sidebar__inner">
 <nav class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">Table of contents</label>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#base-chestxray" title="BASE ChestXRay">
+    BASE ChestXRay
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#base-vazios" title="BASE Vazios">
+    BASE Vazios
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#base-ncms-unicos" title="BASE NCMs únicos">
+    BASE NCMs únicos
+  </a>
+</li>
+</ul>
 </nav>
 </div>
 </div>
 </div>
 <div class="md-content">
 <article class="md-content__inner md-typeset"><a class="md-icon md-content__icon" download href="../pdf/combined.pdf" title="PDF Export"></a>
-<h1 id="desenvolvido-na-rfb-dentro-do-escopo-do-sistema-ajna">Desenvolvido na RFB dentro do escopo do Sistema AJNA</h1>
-<p>Ivan da Silva Brasílico</p>
-<p><a href="https://github.com/IvanBrasilico/projeto">Código Fonte no GitHub</a></p>
-<ul>
-<li>Apresentado como Capstone Project no curso de Engenheiro de Machine Learning, Udacity.</li>
-</ul>
+<h1 id="resumo">Resumo</h1>
+<h2 id="base-chestxray">BASE ChestXRay</h2>
+<p>A base chestXRay é composta de 5216 imagens na base de treinamento e 624 imagens na base teste.</p>
+<p>São imagens de raio X de tórax, rotulados como paciente NORMAL e paciente com PNEUMONIA.</p>
+<p>A base é levemente desbalanceada, havendo quase 3 vezes mais exemplos de pneumonia.</p>
+<p><img alt="Samples ChestXRay" src="../images/chest_xray.png"/></p>
+<h2 id="base-vazios">BASE Vazios</h2>
+<p>Esta base é composta por 20845 imagens de treinamento e 2317 imagens de validação. A base é balanceada.</p>
+<p>São duas categorias: nvazio - contêineres contendo algum tipo de carga, mesmo que mínimo,
+e vazio - contêineres vazios.</p>
+<p>Foram inseridos propositalmente, somando à extração aleatória, 3000 imagens de contêineres 
+de "classificação difícil", imagens que algoritmos anteriores falharam para classificar.</p>
+<p>Além disso, durante a exploração, foram descobertas em torno de 2,5% de imagens rotuladas erradamente
+e 2% de imagens que mesmo a visão humana teria dificuldade de saber se está vazio ou não.</p>
+<p>Assim, como o melhor desempenho obtido foi próximo de 98% para base "limpa" e de 96% 
+para base completa (ver detalhes no relatório detalhado e nos respectivos notebooks)
+pode ser considerado que para esta tarefa foi obtido um classificador excelente.</p>
+<p><img alt="Samples Vazios" src="../images/vazios.png"/></p>
+<h2 id="base-ncms-unicos">BASE NCMs únicos</h2>
+<p>Esta base é composta de 41809 imagens de 868 categorias.</p>
+<p>São imagens de inspeção não invasiva de contêineres.   </p>
 </article>
 </div>
 </div>
@@ -161,7 +217,7 @@
 <footer class="md-footer">
 <div class="md-footer-nav">
 <nav class="md-footer-nav__inner md-grid">
-<a class="md-flex md-footer-nav__link md-footer-nav__link--prev" href="../conclusao/" rel="prev" title="Conclusões">
+<a class="md-flex md-footer-nav__link md-footer-nav__link--prev" href=".." rel="prev" title="Intro">
 <div class="md-flex__cell md-flex__cell--shrink">
 <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
 </div>
@@ -170,8 +226,21 @@
 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Conclusões
+                Intro
               </span>
+</div>
+</a>
+<a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="../notebooks/" rel="next" title="Relatório ChestXRay">
+<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+<span class="md-flex__ellipsis">
+<span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Relatório ChestXRay
+              </span>
+</div>
+<div class="md-flex__cell md-flex__cell--shrink">
+<i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
 </div>
 </a>
 </nav>
