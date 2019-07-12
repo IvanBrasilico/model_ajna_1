@@ -28,6 +28,7 @@ google-pasta==0.1.7
 grpcio==1.22.0
 h5py==2.9.0
 html5lib==1.0.1
+htmlmin==0.1.12
 hyperlink==19.0.0
 idna==2.8
 incremental==17.5.0
@@ -38,6 +39,7 @@ ipywidgets==7.5.0
 jedi==0.13.3
 Jinja2==2.10.1
 joblib==0.13.2
+jsmin==2.2.2
 jsonschema==3.0.1
 jupyter==1.0.0
 jupyter-client==5.2.4
@@ -54,7 +56,8 @@ MarkupSafe==1.1.1
 matplotlib==3.0.3
 mistune==0.8.4
 mkdocs==1.0.4
-mkdocs-cinder==0.17.0
+mkdocs-material==4.4.0
+mkdocs-minify-plugin==0.2.1
 mkdocs-pdf-export-plugin==0.5.5
 nbconvert==5.5.0
 nbdime==1.0.6
@@ -78,6 +81,7 @@ pycparser==2.19
 PyDispatcher==2.0.5
 Pygments==2.4.0
 PyHamcrest==1.9.0
+pymdown-extensions==6.0
 pyOpenSSL==19.0.0
 pyparsing==2.4.0
 Pyphen==0.9.5
