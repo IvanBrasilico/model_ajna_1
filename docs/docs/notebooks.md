@@ -358,6 +358,18 @@ target="_blank">02d2-auxiliar-ImageAugmentationMenosTransfom-Vazios</a>
 Notebook auxiliar para gerar uma base aumentada com poucas transformações.
 
 
+## 03-Busca-TransferLearning-Imagenet-Vazios.ipynb
+<a href="../html/03-Busca-TransferLearning-Imagenet-Vazios.html" 
+target="_blank">03-Busca-TransferLearning-Imagenet-Vazios</a>
+
+Teste do uso das features extraídas de uma rede pré-treinada como hash para busca de similaridade.
+
+Métricas utilizadas:
+
+- Dos 10 primeiros e dos 10 20 primeiros resultados(de um total de 256 e 512(, quantos pertencem à mesma classe?
+  
+
+
 ## Observações
 
 Os resultados da rede simples treinada do zero foram similares ao uso de rede DenseNet, 
