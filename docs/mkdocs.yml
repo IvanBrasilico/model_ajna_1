@@ -2,8 +2,8 @@ site_name: Projeto AJNA - Treinamento de modelos
 site_description: Followup do treinamento de novos modelos para o AJNA com TensorFlow2.0
 
 nav:
-    - Intro: index.md
-    - Resumo: resumo.md
+    - Definição: index.md
+    - Análise: resumo.md
     - Relatório ChestXRay: notebooks.md
     - Relatório Vazios: notebooks_vazios.md
     - Conclusões: conclusao.md
@@ -15,5 +15,6 @@ theme: material
 
 plugins:
     - search
-    - pdf-export:
-        combined: true
+    - git-revision-date
+    #- pdf-export:
+    #    combined: true

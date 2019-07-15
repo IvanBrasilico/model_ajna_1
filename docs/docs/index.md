@@ -2,7 +2,12 @@
  
 ## Classificação, busca, simillaridade, reutilização de extração de características
 
-### **Nota para a visualização em PDF** 
+
+Ivan da Silva Brasílico
+
+{{ git_revision_date }}
+ 
+### **Notas para a visualização em PDF** 
 
 O site [https://ivanbrasilico.github.io/projeto/](https://ivanbrasilico.github.io/projeto/) permite uma
 melhor navegação e visualização mais completa, incluindo cópia HTML de todos os notebooks.
@@ -12,7 +17,7 @@ O código-fonte completo do projeto está no GitHub:
 [https://github.com/IvanBrasilico/projeto](https://github.com/IvanBrasilico/projeto ) 
 
 
-## Introdução
+## Visão geral
 
 
 Nestes documentos estão centralizadas as anotações e histórico detalhado do treinamento e testes
@@ -64,7 +69,7 @@ Assim:
 
 01b-RedeSimples-vazios é a mesma rede/técnica do 01 mas com algumas modificações
 
-## Modelos/bases
+## Descrição do problema e das bases
 
 Conforme detalhado em CapstoneProject, serão treinadas redes convolucionais simples do zero, modelos 
 sofisticados com transfer learning, e redes siamesas. As bases utilizadas serão chestXRay, vazios e ncmsunicos.
@@ -78,3 +83,23 @@ Assim, os algoritmos são utilizados para empoderar operadores humanos. Com isso
 e busca de casos similares pode aumentar o poder de operadores humanos. Como exemplo, um médico pode procurar pacientes com
 casos similares para comparar prontuários e tratamentos, ou um analista de risco pode buscar imagens de escaneamento similares
 no rastro de uma fraude.
+
+## Métricas
+
+Utilizando as definições de Andrew Ng em deeplearning.ai, primeiramente tentaremos definir um erro "aceitável". Para isso,
+será estimado o erro humano, em seguida será avaliado o erro de um modelo baseline e avaliados visualmente os erros cometidos.
+ 
+Primeiramente será avaliada o acerto geral do modelo na base treinamento (accuracy), mas vigiando sempre a função custo (loss)
+e também os equivalentes na base validation (val_loss e val_accuracy). Assim, primeiramente se terá como meta a redução do
+"bias evitável" e ter certeza de estar com um modelo promissor. Em seguida será avaliada a variância e sobreajuste, isso é,
+se o "gap" entre acc e val_acc é alto. Caso sejam, será avaliado se é um problema de sobreajuste ou um vício/erro nas bases
+de dados.
+
+Após esta primeira fase, passará a se olhar também outras métricas (precisão, recall e f1-score) de uma das classes ou
+ das duas, conforme for mais importante para a visão de negócio.
+
+Como o projeto visa permitir reaproveitamento dos artefatos gerados e também gerar índices de similaridade para busca,
+serão avaliados também uso de disco, memória e velocidade de cada modelo.
+
+Adicionalmente, para métrica de busca por similaridade, será utilizada avaliação visual pela escolha randômica de alguns
+exemplos e se o rótulo é coincidente para os primeiros resultados de uma busca por similaridade.    

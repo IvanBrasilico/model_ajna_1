@@ -1,4 +1,4 @@
-# Resumo
+# Exploração
 
 ## BASE ChestXRay
 
@@ -41,3 +41,29 @@ Esta base é composta de 41809 imagens de 868 categorias.
 São imagens de inspeção não invasiva de contêineres.   
 
 
+
+# Benchmark
+
+O primeiro modelo a ser treinado será sempre uma rede convolucional bem simples. 
+
+Além disso, na base Vazios, há um modelo em produção, uma SVM, que poderá ser comparada.
+
+
+# Metodologia
+
+
+## Pré processamento de dados
+
+Está sendo utilizado o pacote PIL ou o ImageDataGenerator(que usa pacote PIL) do keras para abertura das imagens
+ e redimensionamento com ANTALIAS.
+Os valores RGB originais estão sendo reescalados dividindo por 255. Além disso foram testadas diversas opções de Image
+ Augmentation.
+ 
+No caso da base Vazios, foi detectado erro de rotulagem e automaticamente gerada uma base filtrada através de threshold
+ em um dos classificadores treinados.
+ 
+ Os detalhes do pré processamento e principalmente da execução estão nos Notebooks. Resumo/índice no próximo item.
+ 
+## Implementação e refinamento
+
+Ver próximo item, que resume os achados de cada notebook utilizado.  
