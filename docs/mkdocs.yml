@@ -16,5 +16,5 @@ theme: material
 plugins:
     - search
     - git-revision-date
-    #- pdf-export:
-    #    combined: true
+    - pdf-export:
+        combined: true
