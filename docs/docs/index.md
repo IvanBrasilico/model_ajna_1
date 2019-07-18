@@ -89,16 +89,65 @@ no rastro de uma fraude.
 Utilizando as definições de Andrew Ng em deeplearning.ai, primeiramente tentaremos definir um erro "aceitável". Para isso,
 será estimado o erro humano, em seguida será avaliado o erro de um modelo baseline e avaliados visualmente os erros cometidos.
  
-Primeiramente será avaliada o acerto geral do modelo na base treinamento (accuracy), mas vigiando sempre a função custo (loss)
-e também os equivalentes na base validation (val_loss e val_accuracy). Assim, primeiramente se terá como meta a redução do
+Primeiramente será avaliada o acerto geral do modelo na base treinamento (*accuracy*), mas vigiando sempre a função custo (*loss*)
+e também os equivalentes na base validation (*val_loss* e *val_accuracy*). Assim, primeiramente se terá como meta a redução do
 "bias evitável" e ter certeza de estar com um modelo promissor. Em seguida será avaliada a variância e sobreajuste, isso é,
 se o "gap" entre acc e val_acc é alto. Caso sejam, será avaliado se é um problema de sobreajuste ou um vício/erro nas bases
 de dados.
 
-Após esta primeira fase, passará a se olhar também outras métricas (precisão, recall e f1-score) de uma das classes ou
+A *accuracy* (termo sem tradução exata para o Português exceto o neologismo acurácia, podendo ser traduzido também para exatidão)
+mede de todas as previsões realizadas, a porcentagem de acertos, isto é: 
+
+  total de previsões corretas / total de previsões
+
+Após esta primeira fase, passará a se olhar também outras métricas (precisão, *recall* e *f1-score*) de uma das classes ou
  das duas, conforme for mais importante para a visão de negócio.
 
-Como o projeto visa permitir reaproveitamento dos artefatos gerados e também gerar índices de similaridade para busca,
+A diferença das métricas precisão e *recall* para accuracy simples necessita entendimento do conceito de falso positivo e falso negativo.
+Assim, do total de exemplos da base submetidos ao modelo, podemos dividir por classe numa matriz de confusão. A matriz de confusão binária
+tem a seguinte configuração(considerando que fixamos POSITIVO como a classe 1):
+
+			        Valores reais
+                    Classe 0	Classe 1
+    Valores
+    preditivos      
+    Classe 0        TN		FN 
+   
+	Classe 1        FP		TP
+
+
+Assim:
+
+TP - True Positive é a quantidade de exemplos que estão rotulados na classe 1 e foram classificados na classe 1 corretamente pelo
+modelo (classe 1 é, por exemplo, PNEUMONIA na nossa base chestXRay)
+
+TN - True Negative é a quantidade de exemplos que estão rotulados na classe 0 e foram classificados na classe 0 corretamente pelo
+modelo (classe 0 é, por exemplo, NORMAL na nossa base chestXRay)
+
+FP - False Positive é a quantidade de exemplos que estão rotulados na classe 0 e foram classificados na classe 1 incorretamente pelo
+modelo - seriam os "alarmes falsos", pessoas sem pneumonia que foram classificadas como contendo pneumonia.
+
+FN - False Negative é a quantidade de exemplos que estão rotulados na classe 1 (Positivo para PNEUMONIA) e foram classificados na classe 0
+ incorretamente pelo modelo - seriam pessoas com pneumonia que o nosso modelo mandaria para caso, sem tratamento e com risco à sua saúde e até 
+risco de morte.
+
+Assim, seria melhor que nossos erros fossem concentrados no tipo FP - melhor mandar um paciente saudável para o médico revisar o exame do 
+que mandar o paciente doente para casa sem o médico analisar mais a fundo. Precisamos minimizar o erro FN mesmo que isso custe diminuir um 
+pouco o *accuracy*. A isso chamamos *Recall* ou recuperação: percentual do total de pacientes doentes detectados. Na tabela apresentada, 
+matematicamente é TP / TP + FN. Se FN = 0 *Recall* é 100%. Precisão é a quantidade de acertos quando o modelo detecta positivo na classe 1,
+ou TP / TP + FP.
+
+Note-se que caso se inverta a definição de "Positivo", o recall e precisão mudam, sendo quase trocados um pelo outro se a base é balanceada.
+ Deve ser evitada esta confusão quando desta avaliação, por isso é importante deixar claro que a maximização de *recall* é para a detecção da
+classe 1 - PNEUMONIA.
+
+Normalmente, todo modelo tem algum erro, e esse erro pode ser direcionado através de técnicas como Image Augmentation, peso de classes ou mudança de threshold.
+E há um *tradeoff* entre precisão e *recall*, quando um aumenta e outro diminui. Para medir o equilíbrio entre estas duas métricas, pode ser monitorado também
+o f1-score, que é a média harmônica entre Precisão e *Recall* 
+
+
+
+Como o projeto visa permitir reaproveitamento dos																																																																																																													artefatos gerados e também gerar índices de similaridade para busca,
 serão avaliados também uso de disco, memória e velocidade de cada modelo.
 
 Adicionalmente, para métrica de busca por similaridade, será utilizada avaliação visual pela escolha randômica de alguns

@@ -48,6 +48,27 @@ O primeiro modelo a ser treinado será sempre uma rede convolucional bem simples
 
 Além disso, na base Vazios, há um modelo em produção, uma SVM, que poderá ser comparada.
 
+As redes neurais convolucionais são hoje o "estado da arte" em visão computacional. As camadas convolucionais aprendem
+a aplicar filtros em diversas regiões das imagens, destacando formas, texturas, linhas, de acordo com a necessidade da
+tarefa em que estão sendo treinadas.  As convoluções são aplicadas consecutivamente, em objetos cada vez maiores, porque
+as imagens são progressivamente filtradas por convuluções, ou mais comumente por camadas de *pooling* que diminuem o tamanho
+da entrada, destacando partes mais importantes, e os filtros das convoluções mais profundas combinam então os destaques 
+dos filtros predecessores. Nas últimas camadas, estes mapas de características descobertos pelas convoluções são combinados
+em uma rede neural convencional conectada para utilização na tarefa de classificação.
+
+Como a rede neural é um aproximador de funções universal, através de *backpropagation* e gradiente descendente esta consegue
+derivar os pesos necessários para a tarefa de classificação treinada, desde que adequada projetada e treinada. 
+
+Antes do advento das redes neurais, os algoritmos que costumavam obter melhores resultados em classificação de imagens
+eram as Suport Vector Machines - SVMs. As SVMs podem utilizar diversos "kernels" para a tarefa de classificação, tendo sido o 
+*kernel* RBF utilizado com sucesso durante décadas, antes da rede AlexNet ter baixado em mais de 10 pontos percentuais o 
+erro no desafio AlexNet, antes dominado por SVMs. O kernel rbf funciona procurando várias funções gaussianas, em cada dimensão,
+que separem por uma margem específica, que é um hiperparâmetro do kernel, a maior quantidade de exemplos das classes.
+
+Assim, os baselines utilizados serão um kernel RBF já em produção e uma rede neural extremamente simples e rápida para treinar. 
+Em seguida, será utilizada a rede DenseNet121 que apresenta um bom equilíbrio entre resultados comprovados em bases difíceis,
+consumo de memória e complexidade computacional, com a técnica de *Transfer Learning*. Em seguida, será treinado um modelo 
+de rede siamesa. Todos os modelos serão avaliados paralelamente conforme seção métricas.
 
 # Metodologia
 
