@@ -9,12 +9,12 @@ Ivan da Silva Brasílico
  
 ### **Notas para a visualização em PDF** 
 
-O site [https://ivanbrasilico.github.io/projeto/](https://ivanbrasilico.github.io/projeto/) permite uma
+O site [https://ivanbrasilico.github.io/model_ajna_1/](https://ivanbrasilico.github.io/projeto/) permite uma
 melhor navegação e visualização mais completa, incluindo cópia HTML de todos os notebooks.
  
 O código-fonte completo do projeto está no GitHub:
 
-[https://github.com/IvanBrasilico/projeto](https://github.com/IvanBrasilico/projeto ) 
+[https://github.com/IvanBrasilico/model_ajna_1](https://github.com/IvanBrasilico/projeto ) 
 
 
 ## Visão geral
