@@ -100,8 +100,41 @@ Rede Siamesa
         1.0     0.9273    0.9974    0.9611      1151
 
  
+![Grafico comparativo](images/comparacao.png)
 
 
+Mais do que apenas ver os números, seria interessante visualizar e entender os erros que
+cada modelo está cometendo. Assim, no notebook 05 comparei também os erros de cada modelo 
+entre si. A divergência maior foi entre o modelo 1 e os demais, chegando a 3%. Os modelos de
+redes neurais possuem menos de 1,5% de divergência entre os erros e acertos. Isso indica comprovação
+parcial da teoria de que: 1. Há erros de rótulo, 2. Há exemplos muito difíceis ou no limiar.
+
+Para lembrar, no início do treinamento o modelo cometia erros como os abaixo, classificando contêineres
+claramente não vazios como vazios, mas com probabilidade baixa (65% ou menos, sendo que 50% é o limiar para
+classificação na outra classe).
+
+![Erros bobos](images/erros_vaziospoucacarga.png)
+
+Já os últimos modelos estão cometendo os erros mostrados abaixo. Note-se que o SVM comete erros "bobos". Já os erros de rede
+neural, especialmente os com recall mais alto, quase em 100% das vezes fica difícil de saber se é erro de rótulo, pois a visualização
+também indica um contêiner sem carga.
+
+* Erros SVM
+![Erros 1](images/erros_1.png)
+
+* Erros Rede Neural Simples
+![Erros 2](images/erros_2.png)
+
+* Erros DenseNet Transfer Learning
+![Erros 3](images/erros_3.png)
+
+* Erros DenseNet Transfer Learning com class weights
+[Erros 3a](images/erros_3a.png)
+
+* Erros Siamesa
+![Erros 4](images/erros_4.png)
+
+ 
 
 ### Desempenho (em tempo e consumo de memória)
 
