@@ -280,6 +280,41 @@ duas imagens: uma da classe 0 e outra da classe1. A que retornar menor número �
     0.0     0.9972    0.9228    0.9586      1166
     1.0     0.9273    0.9974    0.9611      1151
 </code></pre>
+<p><img alt="Grafico comparativo" src="../images/comparacao.png"/></p>
+<p>Mais do que apenas ver os números, seria interessante visualizar e entender os erros que
+cada modelo está cometendo. Assim, no notebook 05 comparei também os erros de cada modelo 
+entre si. A divergência maior foi entre o modelo 1 e os demais, chegando a 3%. Os modelos de
+redes neurais possuem menos de 1,5% de divergência entre os erros e acertos. Isso indica comprovação
+parcial da teoria de que: 1. Há erros de rótulo, 2. Há exemplos muito difíceis ou no limiar.</p>
+<p>Para lembrar, no início do treinamento o modelo cometia erros como os abaixo, classificando contêineres
+claramente não vazios como vazios, mas com probabilidade baixa (65% ou menos, sendo que 50% é o limiar para
+classificação na outra classe).</p>
+<p><img alt="Erros bobos" src="../images/erros_vaziospoucacarga.png"/></p>
+<p>Já os últimos modelos estão cometendo os erros mostrados abaixo. Note-se que o SVM comete erros "bobos". Já os erros de rede
+neural, especialmente os com recall mais alto, quase em 100% das vezes fica difícil de saber se é erro de rótulo, pois a visualização
+também indica um contêiner sem carga.</p>
+<ul>
+<li>
+<p>Erros SVM
+<img alt="Erros 1" src="../images/erros_1.png"/></p>
+</li>
+<li>
+<p>Erros Rede Neural Simples
+<img alt="Erros 2" src="../images/erros_2.png"/></p>
+</li>
+<li>
+<p>Erros DenseNet Transfer Learning
+<img alt="Erros 3" src="../images/erros_3.png"/></p>
+</li>
+<li>
+<p>Erros DenseNet Transfer Learning com class weights
+<a href="../images/erros_3a.png">Erros 3a</a></p>
+</li>
+<li>
+<p>Erros Siamesa
+<img alt="Erros 4" src="../images/erros_4.png"/></p>
+</li>
+</ul>
 <h3 id="desempenho-em-tempo-e-consumo-de-memoria">Desempenho (em tempo e consumo de memória)</h3>
 <p>Devido à grande dimensionalidade do problema, a solução SVM ocupa bastante memória e é a que tem maior tempo de 
 execução (em computador que possui GPU, provavelmente sem GPUs as redes neurais teriam desempenho muito inferior)

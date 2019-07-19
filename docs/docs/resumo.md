@@ -84,6 +84,52 @@ No caso da base Vazios, foi detectado erro de rotulagem e automaticamente gerada
  em um dos classificadores treinados.
  
  Os detalhes do pré processamento e principalmente da execução estão nos Notebooks. Resumo/índice no próximo item.
+
+
+## Análise 
+
+Para obter melhores resultados, serão provavelmente necessárias a utilização de técnicas adicionais, conforme citado anteriormente:
+
+**Tranfer Learning:** 
+
+Consiste em utilizar pesos que representam conhecimento acumulado/aprendido por uma rede neural em domínio similar.
+Assim, existem redes que são referências em *papers* publicados, representando avanços tecnológicos, e que foram treinadas em 
+milhões de imagens, como na base ImageNet (http://www.image-net.org/).
+
+Estas redes são treinadas por semanas, nestes milhões de imagens, aprendendo a "ver" formas, linhas, texturas, etc. Através do
+uso das primeiras camadas destas redes, excluindo apenas as últimas, responsáveis pela classificação, podemos extrair um resumo
+de todo esse aprendizado e transferir este conhecimento para uma nova tarefa.
+![Imagenet](images/convolutional-neural-networks-top-9-layer-4-5.jpg)
+
+
+**Image Augmentation:**
+
+Como temos relativamente poucos exemplos, uma forma de melhorar o aprendizado e principalmente evitar sobreajuste é aplicar 
+pequenas modificações aleatóriamente na base de treinamento. Assim, simulamos o treinamento com uma base maior.
+
+O keras possui diversas funções já pré preparadas para conseguir realizar esta tarefa com facilidade (https://keras.io/preprocessing/image/).
+
+Podem ser aplicados zooms, recortes, mudança de brilho, espelhamento, pequenos deslocamentos laterais, entre outros. Deve se ter em
+mente o domínio do problema, para não realizar tranformações que prejudiquem o aprendizado. Por exemplo, se o objeto a ser detectado
+tem um tamanho ou posição fixos, usar recorte ou zoom seria inadequado e mesmo os deslocamentos não podem ser grandes. 
+
+
+**Siamese networks:**
+
+As redes siamesas são em tudo iguais às redes convolucionais normais, exceto por uma particularidade: você sempre passa duas imagens
+pela mesma rede e no final compara as saídas. Com isso, a rede aprende uma função de similaridade, podendo ser utilizada para reconhecer
+objetos que não estavam na base de treinamento, desde que pertençam ao mesmo domíno. Junto com as GANs, são um avanço interesssante sobre
+as redes neurais convencionais, podendo ajudar a resolver a imensa fome por dados para treinamento. Mas, assim como as GANs, são um pouco
+mais difíceis de treinar e utilizar.
+
+Como aprendem uma função de similaridade, redes siamesas podem aprender um melhor *embedding* da imagem (os números que estarão na última camada 
+e representam tudo que foi "visto" pelas camadas convolucionais) e podem ser utilizadas para buscas de similaridade, One Shot Learning,  
+para lidar com classes desbalanceadas e até para fazer acompanhamento visual de objetos (object tracking).
+
+[One Shot Learning](https://www.cs.cmu.edu/~rsalakhu/papers/oneshot1.pdf)
+
+[Signature Verification](https://papers.nips.cc/paper/769-signature-verification-using-a-siamese-time-delay-neural-network.pdf)
+
  
 ## Implementação e refinamento
 
