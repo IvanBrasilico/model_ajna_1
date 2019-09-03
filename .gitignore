@@ -9,3 +9,6 @@ venv/*
 kerastunerlogs/
 *.h5
 *.pkl
+*_checkpoints
+/logs/*
+/keras-tuner/
