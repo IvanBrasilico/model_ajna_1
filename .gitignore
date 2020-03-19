@@ -12,3 +12,4 @@ kerastunerlogs/
 *_checkpoints
 /logs/*
 /keras-tuner/
+/extracoes/notebooks/vazios/*
