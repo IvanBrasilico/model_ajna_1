@@ -13,3 +13,5 @@ kerastunerlogs/
 /logs/*
 /keras-tuner/
 /extracoes/notebooks/vazios/*
+/extracoes/notebooks/vazios_cropped/*
+/extracoes/notebooks/transformed_vazios*
