@@ -2,9 +2,8 @@ import os
 from collections import Counter
 
 import click
-from ajna_commons.flask.conf import DATABASE, MONGODB_URI
-from ajna_commons.utils.images import get_imagens_recortadas
-from pymongo import MongoClient
+
+from utils import mongodb, get_image
 
 NCMUNICO = {'metadata.contentType': 'image/jpeg',
             'metadata.carga.ncm': {'$size': 1},
@@ -41,15 +40,16 @@ def save_imagens_ncm_unico(db,
         if len(ncms_encontrados) == 1:  # Achou 1 e somente 1 posição ncm
             posicao = list(ncms_encontrados)[0]
             if tipo_counter[posicao] < limitportipo:
-                for im in get_imagens_recortadas(db, _id):
+                image = get_image(db, _id)
+                if image:
                     sub_path = os.path.join(path, posicao)
                     try:
                         os.mkdir(sub_path)
                     except FileExistsError:
                         pass
                     filename = str(_id) + '.jpg'
-                    im.save(os.path.join(sub_path, filename))
-                    del im
+                    image.save(os.path.join(sub_path, filename))
+                    del image
                     tipo_counter[posicao] += 1
 
 
@@ -61,8 +61,7 @@ def save_imagens_ncm_unico(db,
               help='Limite por NCM ',
               default=20)
 def exportaimagens(limit, limitportipo):
-    db = MongoClient(host=MONGODB_URI)[DATABASE]
-    save_imagens_ncm_unico(db, 'ncmsunicos',
+    save_imagens_ncm_unico(mongodb, 'ncmsunicos',
                            limit=limit, limitportipo=limitportipo)
 
 

@@ -1,9 +1,14 @@
 """Funções utilitárias para exportação e montagem de training sets."""
+import io
 import os
 from datetime import date, datetime, timedelta
 
+from PIL import Image
+from bson import ObjectId
 from gridfs import GridFS
 from pymongo import MongoClient
+
+MIN_RATIO = 1.8
 
 today = date.today()
 str_today = datetime.strftime(today, '%d/%m/%Y')
@@ -24,6 +29,21 @@ fs = GridFS(mongodb)
 def parse_datas(inicio, fim):
     return datetime.strptime(inicio, '%d/%m/%Y'), \
            datetime.strptime(fim + ' 23:59:59', '%d/%m/%Y %H:%M:%S')
+
+def get_image(row, crop=False, min_ratio=MIN_RATIO):
+    """Retrieve image content from Mongo, crop on bbox if crop is True."""
+    oid = ObjectId(row['_id'])
+    if fs.exists(oid):
+        grid_out = fs.get(oid)
+        image = Image.open(io.BytesIO(grid_out.read()))
+        xfinal, yfinal = image.size
+        if xfinal / yfinal < min_ratio:
+            print(image.size, ' - abortando...')
+            return None
+        if crop:
+            coords = row['metadata']['predictions'][0]['bbox']
+            image = image.crop((coords[1], coords[0], coords[3], coords[2]))
+    return image
 
 
 def campos_mongo_para_lista(db, filtro: dict,

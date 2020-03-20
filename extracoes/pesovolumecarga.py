@@ -20,22 +20,26 @@ import random
 from datetime import datetime
 
 import click
-from pymongo import MongoClient
 
-from ajna_commons.conf import ENCODE
-from ajna_commons.flask.conf import DATABASE, MONGODB_URI
-from virasana.integracao import carga
+ENCODE = 'latin1'
+
+from utils import mongodb, str_yesterday, str_today, parse_datas, MIN_RATIO, get_image
+
 
 N_SAMPLES = 5000
-filtro = carga.ENCONTRADOS
-filtro['metadata.dataescaneamento'] = {'$gt': datetime(
-    2017, 10, 5), '$lt': datetime(2017, 10, 20)}
 
 
 @click.command()
-@click.option('--q', default=N_SAMPLES, help='Número de amostras (imagens)')
+@click.option('--inicio', default=str_yesterday,
+              help='Dia de início (dia/mês/ano) - padrão ontem')
+@click.option('--fim', default=str_today,
+              help='Dia de fim (dia/mês/ano) - padrão hoje')
+@click.option('--limit', default=100,
+              help='Limite de registros (para cada categoria) - padrão 100')
+@click.option('--crop', is_flag=True,
+              help='Especifique crop para recortar imagem bbox')
 @click.option('--out', default='.', help='Diretório de destino')
-def export(q, out):
+def export(inicio, fim, limit, crop, out):
     """Exporta csv com peso e volume do contêiner.
 
     Consulta MongoDB exportando campos selecionados e gravando em
@@ -43,14 +47,17 @@ def export(q, out):
 
     """
     print('iniciando consulta')
-    db = MongoClient(host=MONGODB_URI)[DATABASE]
-    cursor = db['fs.files'].find(
+    start, end = parse_datas(inicio, fim)
+    filtro = {'metadata.contentType': 'image/jpeg',
+              'metadata.carga.container': {'$exists': True}}
+    filtro['metadata.dataescaneamento'] = {'$gte': start, '$lt': end}
+    cursor = mongodb['fs.files'].find(
         filtro,
         {'metadata.recintoid': 1,
          'metadata.carga.container.container': 1,
          'metadata.carga.container.taracontainer': 1,
          'metadata.carga.container.pesobrutoitem': 1,
-         'metadata.carga.container.volumeitem': 1})
+         'metadata.carga.container.volumeitem': 1}).limit(limit * 3)
 
     containers = []
     for linha in cursor:
@@ -79,7 +86,7 @@ def export(q, out):
     print(len(containers))
 
     export = [['id', 'recintoid', 'numero', 'tara', 'peso', 'volume']]
-    export.extend(random.sample(containers, q))
+    export.extend(random.sample(containers, limit))
     with open(os.path.join(out, 'pesovolexport.csv'),
               'w', encoding=ENCODE, newline='') as out:
         writer = csv.writer(out)

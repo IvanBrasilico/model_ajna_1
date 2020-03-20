@@ -18,13 +18,19 @@ import click
 
 from utils import mongodb, str_yesterday, str_today, parse_datas, MIN_RATIO, get_image
 
+def get_peso_balanca(pesagens):
+    peso = 0.
+    if pesagens is not None:
+        for pesagem in pesagens:
+            if pesagem.get('peso') > peso and not pesagem.get('tara', 0.) == 0.:
+                peso = pesagem.get('peso')
+    return peso
 
-def cursor_vazio_nvazio(db, start, end, limit, vazio=True, crop=False):
+def cursor_pesagensbalanca(db, start, end, limit, crop=True):
     query = {'metadata.contentType': 'image/jpeg',
-             'metadata.carga.vazio': {'$exists': True},
-             'metadata.carga.vazio': vazio,
+             'metadata.pesagens': {'$exists': True},
              'metadata.dataescaneamento': {'$gte': start, '$lt': end}}
-    projection = {'_id': 1, 'metadata.carga.vazio': 1}
+    projection = {'_id': 1, 'metadata.carga.pesagens': 1}
     if crop:
         query['metadata.predictions.bbox'] = {'$exists': True}
         projection['metadata.predictions.bbox'] = 1
@@ -42,27 +48,24 @@ def extract_to(rows: list, crop=False, min_ratio=MIN_RATIO):
     will be croped on predictions[0].bbox
 
     """
-    caminho = 'vazios'
+    caminho = 'pesagensbalanca'
     if crop:
         caminho += '_cropped'
     if not os.path.exists(caminho):
         os.mkdir(caminho)
-    for destino in ('VAZIO', 'NVAZIO'):
-        if not os.path.exists(os.path.join(caminho, destino)):
-            os.mkdir(os.path.join(caminho, destino))
     count = 0
     for count, row in enumerate(rows):
         _id = row['_id']
-        vazio = row['metadata']['carga']['vazio']
-        destino = 'VAZIO' if vazio else 'NVAZIO'
-        caminho_atual = os.path.join(caminho, destino)
-        arquivo_atual = os.path.join(caminho_atual, str(_id)) + '.jpg'
+        pesobalanca = get_peso_balanca(row['metadata']['pesagens'])
+        arquivo_atual = os.path.join(caminho, str(_id)) + '.jpg'
         if os.path.exists(arquivo_atual):
             print(str(_id), ' existe, abortando...')
             continue
         image = get_image(row, crop, min_ratio)
         if image:
             image.save(arquivo_atual)
+            with open(arquivo_atual[:-4] + '.txt', 'w') as peso_out:
+                peso_out.write(pesobalanca)
     print('%s arquivos exportados...' % count)
     return count
 
@@ -82,7 +85,7 @@ def do(inicio, fim, limit, crop):
     print(start, end)
     s0 = time.time()
     for labels in (True, False):
-        cursor = cursor_vazio_nvazio(mongodb, start, end, limit)
+        cursor = cursor_pesagensbalanca(mongodb, start, end, limit)
         count = extract_to(cursor, crop)
         s1 = time.time()
         print('{:0.2f} segundos para processar {:d} registros'.format((s1 - s0), count))
