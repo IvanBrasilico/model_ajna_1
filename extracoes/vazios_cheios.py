@@ -16,7 +16,8 @@ import time
 
 import click
 
-from utils import mongodb, str_yesterday, str_today, parse_datas, MIN_RATIO, get_image
+from utils import mongodb, str_yesterday, str_today, parse_datas, MIN_RATIO, get_image, \
+    get_cursor_filtrado
 
 
 def cursor_vazio_nvazio(db, start, end, limit, vazio=True, crop=False):
@@ -28,8 +29,7 @@ def cursor_vazio_nvazio(db, start, end, limit, vazio=True, crop=False):
     if crop:
         query['metadata.predictions.bbox'] = {'$exists': True}
         projection['metadata.predictions.bbox'] = 1
-    # r = requests.post('https://ajna.labin.rf08.srf/virasana/grid_data', json=params, verify=False)
-    return db.fs.files.find(query, projection).limit(limit)
+    return get_cursor_filtrado(db, query, projection, limit)
 
 
 def extract_to(rows: list, crop=False, min_ratio=MIN_RATIO):

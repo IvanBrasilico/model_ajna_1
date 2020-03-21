@@ -46,6 +46,15 @@ def get_image(row, crop=False, min_ratio=MIN_RATIO):
     return image
 
 
+def get_cursor_filtrado(db, filtro, projection, limit=None):
+    print(filtro)
+    cursor = db.fs.files.find(filtro, projection).limit(limit)
+    # params = {'query': filtro, 'projection': projection}
+    # r = requests.post('https://ajna.labin.rf08.srf/virasana/grid_data',
+    # json=params, verify=False)
+    return cursor
+
+
 def campos_mongo_para_lista(db, filtro: dict,
                             chaves: list,
                             limit=0) -> list:

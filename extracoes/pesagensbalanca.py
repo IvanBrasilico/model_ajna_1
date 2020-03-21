@@ -54,18 +54,19 @@ def extract_to(rows: list, crop=False, min_ratio=MIN_RATIO):
     if not os.path.exists(caminho):
         os.mkdir(caminho)
     count = 0
-    for count, row in enumerate(rows):
-        _id = row['_id']
-        pesobalanca = get_peso_balanca(row['metadata']['pesagens'])
-        arquivo_atual = os.path.join(caminho, str(_id)) + '.jpg'
-        if os.path.exists(arquivo_atual):
-            print(str(_id), ' existe, abortando...')
-            continue
-        image = get_image(row, crop, min_ratio)
-        if image:
-            image.save(arquivo_atual)
-            with open(arquivo_atual[:-4] + '.txt', 'w') as peso_out:
-                peso_out.write(pesobalanca)
+    with open('pesos.txt', 'w') as peso_out:
+        peso_out.write('id,peso' + '\n')
+        for count, row in enumerate(rows):
+            _id = row['_id']
+            pesobalanca = get_peso_balanca(row['metadata']['pesagens'])
+            arquivo_atual = os.path.join(caminho, str(_id)) + '.jpg'
+            if os.path.exists(arquivo_atual):
+                print(str(_id), ' existe, abortando...')
+                continue
+            image = get_image(row, crop, min_ratio)
+            if image:
+                image.save(arquivo_atual)
+                peso_out.write(str(_id) + ',' + str(int(pesobalanca)) + '\n')
     print('%s arquivos exportados...' % count)
     return count
 
