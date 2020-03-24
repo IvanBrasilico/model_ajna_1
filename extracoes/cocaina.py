@@ -6,7 +6,7 @@ from utils import mongodb, get_image, str_yesterday, str_today, parse_datas, \
     get_cursor_filtrado
 
 COCAINA = {'metadata.contentType': 'image/jpeg',
-           'metadata.tags.tag': {'$eq': 1}}
+           'metadata.tags.tag': {'$eq': '1'}}
 
 
 def cursor_cocaina(db, start, end, limit=None, crop=False):
@@ -22,52 +22,60 @@ def cursor_cocaina(db, start, end, limit=None, crop=False):
     return get_cursor_filtrado(db, filtro, projection, limit=limit)
 
 
-def get_similar_image(db, conhecimento, ncms):
+def get_similar_image(db, conhecimento, ncms, start, end):
     """Para o treinamento, buscar imagem SEM cocaína do mesmo CE, DUE ou NCMs"""
     filtro = {'metadata.contentType': 'image/jpeg',
               'metadata.carga.conhecimento': conhecimento,
               '$or': [{'metadata.tags.tag': {'$exists': False}},
-                      {'metadata.tags.tag': {'$neq': 1}}
+                      {'metadata.tags.tag': {'$ne': '1'}}
                       ]
               }
-    cursor_similar = get_cursor_filtrado(db, filtro)
+    projection = {'_id': 1}
+    cursor_similar = get_cursor_filtrado(db, filtro, projection)
     if len(list(cursor_similar)) == 0:
         filtro.pop('metadata.carga.conhecimento')
         filtro['metadata.carga.ncm'] = {'$eq': ncms[0]}
         filtro['metadata.dataescaneamento'] = {'$gte': start, '$lt': end}
-        cursor_similar = get_cursor_filtrado(db, filtro)
+        cursor_similar = get_cursor_filtrado(db, filtro, projection).limit(10)
     if len(list(cursor_similar)) == 0:
         return None, None
     linha = list(cursor_similar)[0]
     return get_image(linha, crop=False), linha['_id']
 
 
-def extract_to(db, path, cursor, start, end,crop=True):
+def extract_to(db, path, cursor, start, end, crop=False):
     try:
         os.mkdir(path)
         os.mkdir(path + '/COCAINA')
         os.mkdir(path + '/SEMCOCAINA')
     except FileExistsError:
         pass
+    ind = 0
     # Colocar um número sequencial no início do nome do arquivo, para permitir treino
     # aos pares caso sejam utilizadas redes siamesas
     for ind, linha in enumerate(cursor):
         _id = linha['_id']
         container = linha['metadata']['numeroinformado']
-        ncms = linha.get('metadata').get('carga').get('ncm')
-        conhecimento = linha.get('metadata').get('carga').get('conhecimento').get('conhecimento')
+        carga = linha.get('metadata').get('carga')
+        if carga:
+            ncms = linha.get('metadata').get('carga').get('ncm')
+            conhecimento = linha.get('metadata').get('carga').get('conhecimento')[0].get('conhecimento')
         image = get_image(linha, crop=crop)
         if image:
-            similar_image, similar_id = get_similar_image(db, conhecimento, ncms, start, end)
-            if similar_image:
-                sub_path = os.path.join(path, 'SEMCOCAINA')
-                filename = str(ind) + '_' + str(similar_id) + '.jpg'
-                similar_image.save(os.path.join(sub_path, filename))
-                del similar_image
-                sub_path = os.path.join(path, 'COCAINA')
-                filename = str(ind) + '_' + str(_id) + '.jpg'
-                image.save(os.path.join(sub_path, filename))
-                del image
+            sub_path = os.path.join(path, 'COCAINA')
+            filename = str(ind) + '_' + str(_id) + '.jpg'
+            image.save(os.path.join(sub_path, filename))
+            print(ind, sub_path)
+            del image
+            if carga:
+                similar_image, similar_id = get_similar_image(db, conhecimento, ncms, start, end)
+                if similar_image:
+                    print(ind, sub_path)
+                    sub_path = os.path.join(path, 'SEMCOCAINA')
+                    filename = str(ind) + '_' + str(similar_id) + '.jpg'
+                    similar_image.save(os.path.join(sub_path, filename))
+                    del similar_image
+    return ind
 
 
 @click.command()
@@ -86,9 +94,9 @@ def extract_to(db, path, cursor, start, end,crop=True):
 def exportaimagens(inicio, fim, limit, limitportipo, crop):
     start, end = parse_datas(inicio, fim)
     cursor = cursor_cocaina(mongodb,
-                              start, end,
-                              limit=limit,
-                              crop=crop)
+                            start, end,
+                            limit=limit,
+                            crop=crop)
     extract_to(mongodb, 'cocaina', start, end, cursor)
 
 

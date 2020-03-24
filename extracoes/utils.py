@@ -52,7 +52,8 @@ def consulta_api(url: str, filtro: dict, projection: dict, limit: int):
     """Conecta na API AJNA como se fosse conectar a um Banco de Dados
     """
     # TODO: insert ajna authentication
-    params = {'query': filtro, 'projection': projection, 'limit': limit}
+    params = {'query': filtro, 'projection': projection}
+    if limit: params['limit'] = limit
     r = requests.post(url, json=params, verify=False)
     return r
 
@@ -65,7 +66,10 @@ def get_cursor_filtrado(db, filtro: dict, projection: dict, limit=None):
     print(filtro)
     if isinstance(db, str):
         return consulta_api(db, filtro, projection, limit)
-    return db.fs.files.find(filtro, projection).limit(limit)
+    cursor = db.fs.files.find(filtro, projection)
+    if limit:
+        cursor = cursor.limit(limit)
+    return cursor
 
 
 def campos_mongo_para_lista(db, filtro: dict,
