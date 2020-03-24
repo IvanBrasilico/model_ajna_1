@@ -34,34 +34,40 @@ def get_similar_image(db, conhecimento, ncms):
     if len(list(cursor_similar)) == 0:
         filtro.pop('metadata.carga.conhecimento')
         filtro['metadata.carga.ncm'] = {'$eq': ncms[0]}
+        filtro['metadata.dataescaneamento'] = {'$gte': start, '$lt': end}
         cursor_similar = get_cursor_filtrado(db, filtro)
+    if len(list(cursor_similar)) == 0:
+        return None, None
     linha = list(cursor_similar)[0]
     return get_image(linha, crop=False), linha['_id']
 
 
-def extract_to(db, path, cursor, crop=True):
+def extract_to(db, path, cursor, start, end,crop=True):
     try:
         os.mkdir(path)
         os.mkdir(path + '/COCAINA')
         os.mkdir(path + '/SEMCOCAINA')
     except FileExistsError:
         pass
-    for linha in cursor:
+    # Colocar um número sequencial no início do nome do arquivo, para permitir treino
+    # aos pares caso sejam utilizadas redes siamesas
+    for ind, linha in enumerate(cursor):
         _id = linha['_id']
         container = linha['metadata']['numeroinformado']
         ncms = linha.get('metadata').get('carga').get('ncm')
         conhecimento = linha.get('metadata').get('carga').get('conhecimento').get('conhecimento')
         image = get_image(linha, crop=crop)
         if image:
-            similar_image, similar_id = get_similar_image(db, conhecimento, ncms)
-            sub_path = os.path.join(path, 'COCAINA')
-            filename = str(similar_id) + '.jpg'
-            image.save(os.path.join(sub_path, filename))
-            del image
-            sub_path = os.path.join(path, 'SEMCOCAINA')
-            filename = str(similar_id) + '.jpg'
-            similar_image.save(os.path.join(sub_path, filename))
-            del similar_image
+            similar_image, similar_id = get_similar_image(db, conhecimento, ncms, start, end)
+            if similar_image:
+                sub_path = os.path.join(path, 'SEMCOCAINA')
+                filename = str(ind) + '_' + str(similar_id) + '.jpg'
+                similar_image.save(os.path.join(sub_path, filename))
+                del similar_image
+                sub_path = os.path.join(path, 'COCAINA')
+                filename = str(ind) + '_' + str(_id) + '.jpg'
+                image.save(os.path.join(sub_path, filename))
+                del image
 
 
 @click.command()
@@ -83,7 +89,7 @@ def exportaimagens(inicio, fim, limit, limitportipo, crop):
                               start, end,
                               limit=limit,
                               crop=crop)
-    extract_to(mongodb, 'cocaina', cursor)
+    extract_to(mongodb, 'cocaina', start, end, cursor)
 
 
 if __name__ == '__main__':
