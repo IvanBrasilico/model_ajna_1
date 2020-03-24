@@ -3,6 +3,7 @@ import io
 import os
 from datetime import date, datetime, timedelta
 
+import requests
 from PIL import Image
 from bson import ObjectId
 from gridfs import GridFS
@@ -30,6 +31,7 @@ def parse_datas(inicio, fim):
     return datetime.strptime(inicio, '%d/%m/%Y'), \
            datetime.strptime(fim + ' 23:59:59', '%d/%m/%Y %H:%M:%S')
 
+
 def get_image(row, crop=False, min_ratio=MIN_RATIO):
     """Retrieve image content from Mongo, crop on bbox if crop is True."""
     oid = ObjectId(row['_id'])
@@ -46,13 +48,24 @@ def get_image(row, crop=False, min_ratio=MIN_RATIO):
     return image
 
 
-def get_cursor_filtrado(db, filtro, projection, limit=None):
+def consulta_api(url: str, filtro: dict, projection: dict, limit: int):
+    """Conecta na API AJNA como se fosse conectar a um Banco de Dados
+    """
+    # TODO: insert ajna authentication
+    params = {'query': filtro, 'projection': projection, 'limit': limit}
+    r = requests.post(url, json=params, verify=False)
+    return r
+
+
+def get_cursor_filtrado(db, filtro: dict, projection: dict, limit=None):
+    """Acessa o mongodb ou a api do AJNA
+
+    :param db: conexão mongodb ou url de acesso à API AJNA
+    """
     print(filtro)
-    cursor = db.fs.files.find(filtro, projection).limit(limit)
-    # params = {'query': filtro, 'projection': projection}
-    # r = requests.post('https://ajna.labin.rf08.srf/virasana/grid_data',
-    # json=params, verify=False)
-    return cursor
+    if isinstance(db, str):
+        return consulta_api(db, filtro, projection, limit)
+    return db.fs.files.find(filtro, projection).limit(limit)
 
 
 def campos_mongo_para_lista(db, filtro: dict,
