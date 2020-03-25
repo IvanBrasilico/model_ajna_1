@@ -22,25 +22,25 @@ def cursor_cocaina(db, start, end, limit=None, crop=False):
     return get_cursor_filtrado(db, filtro, projection, limit=limit)
 
 
-def get_similar_image(db, conhecimento, ncms, start, end):
+def get_similar_image(db, conhecimento, ncms, start, end, crop=False):
     """Para o treinamento, buscar imagem SEM cocaína do mesmo CE, DUE ou NCMs"""
     filtro = {'metadata.contentType': 'image/jpeg',
-              'metadata.carga.conhecimento': conhecimento,
+              'metadata.carga.conhecimento.conhecimento': conhecimento,
               '$or': [{'metadata.tags.tag': {'$exists': False}},
                       {'metadata.tags.tag': {'$ne': '1'}}
                       ]
               }
     projection = {'_id': 1}
-    cursor_similar = get_cursor_filtrado(db, filtro, projection)
-    if len(list(cursor_similar)) == 0:
-        filtro.pop('metadata.carga.conhecimento')
-        filtro['metadata.carga.ncm'] = {'$eq': ncms[0]}
+    cursor_similar = list(get_cursor_filtrado(db, filtro, projection))
+    if len(cursor_similar) == 0:
+        filtro.pop('metadata.carga.conhecimento.conhecimento')
+        filtro['metadata.carga.ncm.ncm'] = {'$eq': ncms[0]}
         filtro['metadata.dataescaneamento'] = {'$gte': start, '$lt': end}
-        cursor_similar = get_cursor_filtrado(db, filtro, projection).limit(10)
-    if len(list(cursor_similar)) == 0:
-        return None, None
-    linha = list(cursor_similar)[0]
-    return get_image(linha, crop=False), linha['_id']
+        cursor_similar = list(get_cursor_filtrado(db, filtro, projection).limit(10))
+        if len(cursor_similar) == 0:
+            return None, None
+    linha = cursor_similar[0]
+    return get_image(linha, crop=crop), linha['_id']
 
 
 def extract_to(db, path, cursor, start, end, crop=False):
@@ -59,7 +59,8 @@ def extract_to(db, path, cursor, start, end, crop=False):
         carga = linha.get('metadata').get('carga')
         if carga:
             ncms = linha.get('metadata').get('carga').get('ncm')
-            conhecimento = linha.get('metadata').get('carga').get('conhecimento')[0].get('conhecimento')
+            conhecimento = linha.get('metadata').get('carga') \
+                .get('conhecimento')[0].get('conhecimento')
         image = get_image(linha, crop=crop)
         if image:
             sub_path = os.path.join(path, 'COCAINA')
@@ -68,12 +69,13 @@ def extract_to(db, path, cursor, start, end, crop=False):
             print(ind, sub_path)
             del image
             if carga:
-                similar_image, similar_id = get_similar_image(db, conhecimento, ncms, start, end)
+                similar_image, similar_id = get_similar_image(db, conhecimento, ncms,
+                                                              start, end, crop)
                 if similar_image:
-                    print(ind, sub_path)
                     sub_path = os.path.join(path, 'SEMCOCAINA')
                     filename = str(ind) + '_' + str(similar_id) + '.jpg'
                     similar_image.save(os.path.join(sub_path, filename))
+                    print(ind, sub_path)
                     del similar_image
     return ind
 
