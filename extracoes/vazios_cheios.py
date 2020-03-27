@@ -82,7 +82,7 @@ def do(inicio, fim, limit, crop):
     print(start, end)
     s0 = time.time()
     for labels in (True, False):
-        cursor = cursor_vazio_nvazio(mongodb, start, end, limit)
+        cursor = cursor_vazio_nvazio(mongodb, start, end, limit, crop)
         count = extract_to(cursor, crop)
         s1 = time.time()
         print('{:0.2f} segundos para processar {:d} registros'.format((s1 - s0), count))
