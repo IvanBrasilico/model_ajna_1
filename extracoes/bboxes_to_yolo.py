@@ -18,7 +18,7 @@ import click
 from PIL.Image import Image
 from bson import ObjectId
 
-from .utils import fs, mongodb, str_yesterday, str_today, parse_datas
+from utils import fs, mongodb, str_yesterday, str_today, parse_datas
 
 
 def cursor_images_and_bboxes(db, start, end, limit):
