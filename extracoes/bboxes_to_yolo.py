@@ -15,7 +15,7 @@ import os
 import time
 
 import click
-from PIL.Image import Image
+from PIL import Image
 from bson import ObjectId
 
 from utils import fs, mongodb, str_yesterday, str_today, parse_datas
