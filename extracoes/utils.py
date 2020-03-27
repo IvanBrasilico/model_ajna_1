@@ -43,8 +43,12 @@ def get_image(row, crop=False, min_ratio=MIN_RATIO):
             print(image.size, ' - abortando...')
             return None
         if crop:
-            coords = row['metadata']['predictions'][0]['bbox']
-            image = image.crop((coords[1], coords[0], coords[3], coords[2]))
+            try:
+                coords = row['metadata']['predictions'][0]['bbox']
+                image = image.crop((coords[1], coords[0], coords[3], coords[2]))
+            except IndexError as err:
+                print('Erro no bbox da imagem: ', row['_id'], err)
+                return None
     return image
 
 
