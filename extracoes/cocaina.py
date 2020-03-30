@@ -99,7 +99,7 @@ def exportaimagens(inicio, fim, limit, limitportipo, crop):
                             start, end,
                             limit=limit,
                             crop=crop)
-    extract_to(mongodb, 'cocaina', start, end, cursor)
+    extract_to(mongodb, 'cocaina', cursor, start, end)
 
 
 if __name__ == '__main__':
