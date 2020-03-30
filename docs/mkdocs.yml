@@ -8,6 +8,8 @@ nav:
     - Relatório Vazios: notebooks_vazios.md
     - Conclusões: conclusao.md
     - Sobre: sobre.md
+    - Extratores: extratores.md
+
 
 
 
@@ -16,5 +18,5 @@ theme: material
 plugins:
     - search
     - git-revision-date
-    - pdf-export:
-        combined: true
+    #- pdf-export:
+    #    combined: true
