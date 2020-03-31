@@ -64,11 +64,12 @@ def extract_to(rows: list, crop=False, min_ratio=MIN_RATIO):
             pesodeclarado = row['metadata']['carga']['pesototal']
             arquivo_atual = os.path.join(caminho, str(_id)) + '.jpg'
             if os.path.exists(arquivo_atual):
-                print(str(_id), ' existe, abortando...')
+                print(arquivo_atual, ' existe, abortando...')
                 continue
             image = get_image(row, crop, min_ratio)
             if image:
                 processados += 1
+                print('Salvando %s' % arquivo_atual)
                 image.save(arquivo_atual)
                 linha = [str(_id), str(int(pesobalanca)), str(int(pesodeclarado))]
                 print(linha)
