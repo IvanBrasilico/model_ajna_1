@@ -92,11 +92,10 @@ def do(inicio, fim, limit, crop):
     start, end = parse_datas(inicio, fim)
     print(start, end)
     s0 = time.time()
-    for labels in (True, False):
-        cursor = cursor_pesagensbalanca(mongodb, start, end, limit)
-        count = extract_to(cursor, crop)
-        s1 = time.time()
-        print('{:0.2f} segundos para processar {:d} registros'.format((s1 - s0), count))
+    cursor = cursor_pesagensbalanca(mongodb, start, end, limit)
+    count = extract_to(cursor, crop)
+    s1 = time.time()
+    print('{:0.2f} segundos para processar {:d} registros'.format((s1 - s0), count))
     print('Resultado salvo no diretório vazios')
 
 
