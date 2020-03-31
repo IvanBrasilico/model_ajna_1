@@ -29,8 +29,9 @@ def get_peso_balanca(pesagens):
 def cursor_pesagensbalanca(db, start, end, limit, crop=True):
     query = {'metadata.contentType': 'image/jpeg',
              'metadata.pesagens': {'$exists': True},
+             'metadata.carga.pesototal': {'$exists': True},
              'metadata.dataescaneamento': {'$gte': start, '$lt': end}}
-    projection = {'_id': 1, 'metadata.pesagens': 1}
+    projection = {'_id': 1, 'metadata.pesagens': 1, 'metadata.carga.pesototal': 1}
     if crop:
         query['metadata.predictions.bbox'] = {'$exists': True}
         projection['metadata.predictions.bbox'] = 1
@@ -59,6 +60,7 @@ def extract_to(rows: list, crop=False, min_ratio=MIN_RATIO):
         for count, row in enumerate(rows):
             _id = row['_id']
             pesobalanca = get_peso_balanca(row['metadata']['pesagens'])
+            pesodeclarado = row['metadata']['carga']['pesototal']
             arquivo_atual = os.path.join(caminho, str(_id)) + '.jpg'
             if os.path.exists(arquivo_atual):
                 print(str(_id), ' existe, abortando...')
@@ -66,7 +68,8 @@ def extract_to(rows: list, crop=False, min_ratio=MIN_RATIO):
             image = get_image(row, crop, min_ratio)
             if image:
                 image.save(arquivo_atual)
-                peso_out.write(str(_id) + ',' + str(int(pesobalanca)) + '\n')
+                linha = [str(_id), str(int(pesobalanca)), str(int(pesodeclarado))]
+                peso_out.write(','.join(linha) + '\n')
     print('%s arquivos exportados...' % count)
     return count
 
