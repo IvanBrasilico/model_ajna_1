@@ -30,7 +30,7 @@ def cursor_pesagensbalanca(db, start, end, limit, crop=True):
     query = {'metadata.contentType': 'image/jpeg',
              'metadata.pesagens': {'$exists': True},
              'metadata.dataescaneamento': {'$gte': start, '$lt': end}}
-    projection = {'_id': 1, 'metadata.carga.pesagens': 1}
+    projection = {'_id': 1, 'metadata.pesagens': 1}
     if crop:
         query['metadata.predictions.bbox'] = {'$exists': True}
         projection['metadata.predictions.bbox'] = 1
