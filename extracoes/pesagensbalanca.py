@@ -56,7 +56,7 @@ def extract_to(rows: list, crop=False, min_ratio=MIN_RATIO):
         os.mkdir(caminho)
     count = 0
     with open('pesos.txt', 'w') as peso_out:
-        peso_out.write('id,peso' + '\n')
+        peso_out.write('id,pesobalanca,pesodeclarado' + '\n')
         processados = 0
         for count, row in enumerate(rows):
             _id = row['_id']
@@ -72,7 +72,7 @@ def extract_to(rows: list, crop=False, min_ratio=MIN_RATIO):
                 print('Salvando %s' % arquivo_atual)
                 image.save(arquivo_atual)
                 linha = [str(_id), str(int(pesobalanca)), str(int(pesodeclarado))]
-                print(linha)
+                # print(linha)
                 peso_out.write(','.join(linha) + '\n')
     print('%s arquivos processados, %s exportados...' % (count, processados))
     return count
