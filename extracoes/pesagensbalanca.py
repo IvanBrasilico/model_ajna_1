@@ -29,9 +29,18 @@ def get_peso_balanca(pesagens):
 def cursor_pesagensbalanca(db, start, end, limit, crop=True):
     query = {'metadata.contentType': 'image/jpeg',
              'metadata.pesagens': {'$exists': True},
+             'metadata.xml': {'$exists': True},
              'metadata.carga.pesototal': {'$exists': True},
              'metadata.dataescaneamento': {'$gte': start, '$lt': end}}
-    projection = {'_id': 1, 'metadata.pesagens': 1, 'metadata.carga.pesototal': 1}
+    projection = {'_id': 1,
+                  'metadata.pesagens': 1,
+                  'metadata.carga.pesototal': 1,
+                  'metadata.UNIDADE': 1,
+                  'metadata.recinto': 1,
+                  'metadata.xml.site': 1,
+                  'metadata.xml.workstation': 1
+                 }
+
     if crop:
         query['metadata.predictions.bbox'] = {'$exists': True}
         projection['metadata.predictions.bbox'] = 1
@@ -56,22 +65,26 @@ def extract_to(rows: list, crop=False, min_ratio=MIN_RATIO):
         os.mkdir(caminho)
     count = 0
     with open('pesos.txt', 'w') as peso_out:
-        peso_out.write('id,pesobalanca,pesodeclarado' + '\n')
+        peso_out.write('id,pesobalanca,pesodeclarado,unidade,recinto,site,workstation' + '\n')
         processados = 0
         for count, row in enumerate(rows):
             _id = row['_id']
-            pesobalanca = get_peso_balanca(row['metadata']['pesagens'])
-            pesodeclarado = row['metadata']['carga']['pesototal']
             arquivo_atual = os.path.join(caminho, str(_id)) + '.jpg'
             if os.path.exists(arquivo_atual):
                 print(arquivo_atual, ' existe, abortando...')
                 continue
             image = get_image(row, crop, min_ratio)
             if image:
+                linha = []
+                linha.append(str(int(get_peso_balanca(row['metadata']['pesagens']))))
+                linha.append(str(int(row['metadata']['carga']['pesototal'])))
+                linha.append(row['metadata'].get('UNIDADE'))
+                linha.append(row['metadata'].get('recinto'))
+                linha.append(row['metadata'].get('xml').get('site'))
+                linha.append(row['metadata'].get('xml').get('workstation'))
                 processados += 1
                 print('Salvando %s' % arquivo_atual)
                 image.save(arquivo_atual)
-                linha = [str(_id), str(int(pesobalanca)), str(int(pesodeclarado))]
                 # print(linha)
                 peso_out.write(','.join(linha) + '\n')
     print('%s arquivos processados, %s exportados...' % (count, processados))
