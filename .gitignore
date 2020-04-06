@@ -17,3 +17,5 @@ kerastunerlogs/
 /extracoes/notebooks/transformed_vazios*
 /extracoes/notebooks/ncmsunicos*
 /extracoes/notebooks/cocaina*
+/extracoes/notebooks/tfserving/*
+/Publicacao_modelos/tfserving/*
