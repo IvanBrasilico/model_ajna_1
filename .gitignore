@@ -19,3 +19,5 @@ kerastunerlogs/
 /extracoes/notebooks/cocaina*
 /extracoes/notebooks/tfserving/*
 /Publicacao_modelos/tfserving/*
+/venvtf11.6/
+/Publicacao_modelos/tfserving1.6/

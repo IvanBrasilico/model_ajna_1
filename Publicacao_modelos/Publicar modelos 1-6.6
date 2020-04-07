@@ -1,0 +1,587 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2020-04-07T16:56:21.243915Z",
+     "start_time": "2020-04-07T16:56:20.948145Z"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "import requests\n",
+    "import os\n",
+    "from PIL import Image\n",
+    "from utils import prepare_images\n",
+    "\n",
+    "MODEL_DIR = './tfserving1.6'\n",
+    "if not os.path.exists(MODEL_DIR):\n",
+    "    os.mkdir(MODEL_DIR)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2020-04-07T16:56:24.207102Z",
+     "start_time": "2020-04-07T16:56:21.504727Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "Using TensorFlow backend.\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Função para exportar keras h5py para formato tensorflow serving\n",
+    "from keras import backend as K\n",
+    "from keras.models import load_model\n",
+    "from tensorflow.python.saved_model import builder as saved_model_builder\n",
+    "from tensorflow.python.saved_model.signature_def_utils import predict_signature_def\n",
+    "from tensorflow.python.saved_model import tag_constants\n",
+    "\n",
+    "# Function to export Keras model to Protocol Buffer format\n",
+    "# Inputs:\n",
+    "#       path_to_h5: Path to Keras h5 model\n",
+    "#       export_path: Path to store Protocol Buffer model\n",
+    "\n",
+    "def export_h5_to_pb(path_to_h5, export_path):\n",
+    "\n",
+    "    # Set the learning phase to Test since the model is already trained.\n",
+    "    K.set_learning_phase(0)\n",
+    "\n",
+    "    # Load the Keras model\n",
+    "    keras_model = load_model(path_to_h5)\n",
+    "\n",
+    "    # Build the Protocol Buffer SavedModel at 'export_path'\n",
+    "    builder = saved_model_builder.SavedModelBuilder(export_path)\n",
+    "\n",
+    "    # Create prediction signature to be used by TensorFlow Serving Predict API\n",
+    "    signature = predict_signature_def(inputs={\"images\": keras_model.input},\n",
+    "                                      outputs={\"scores\": keras_model.output})\n",
+    "\n",
+    "    with K.get_session() as sess:\n",
+    "        # Save the meta graph and the variables\n",
+    "        builder.add_meta_graph_and_variables(sess=sess, tags=[tag_constants.SERVING],\n",
+    "                                         signature_def_map={\"serving_default\": signature})\n",
+    "\n",
+    "    builder.save()\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Vazios"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2020-04-07T12:48:51.659395Z",
+     "start_time": "2020-04-07T12:48:51.503109Z"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# melhor modelo do notebook 01b3\n",
+    "# import tensorflow as tf\n",
+    "from keras.models import Sequential\n",
+    "from keras.layers import Dense, Dropout, Flatten\n",
+    "from keras.layers import Conv2D, MaxPooling2D\n",
+    "SIZE = (224, 224)\n",
+    "\n",
+    "model = Sequential([\n",
+    "  Conv2D(16, (3, 3),\n",
+    "                         padding='same',\n",
+    "                         activation='relu',\n",
+    "                         input_shape=(*SIZE, 3)),\n",
+    "  MaxPooling2D(pool_size=(2, 2)),\n",
+    "  Conv2D(32, (3, 3), padding='same', activation='relu'),\n",
+    "  MaxPooling2D(pool_size=(2, 2)),\n",
+    "  Dropout(0.2),\n",
+    "  Conv2D(64, (3, 3), padding='same', activation='relu'),\n",
+    "  MaxPooling2D(pool_size=(2, 2)),\n",
+    "  Dropout(0.25),\n",
+    "  Conv2D(128, (3, 3), padding='same', activation='relu'),\n",
+    "  MaxPooling2D(pool_size=(2, 2)),\n",
+    "  Dropout(0.25),\n",
+    "  Conv2D(128, (3, 3), activation='relu'),\n",
+    "  MaxPooling2D(pool_size=(2, 2)),\n",
+    "  Dropout(0.25),\n",
+    "  Conv2D(256, (3, 3), activation='relu'),\n",
+    "  Flatten(),\n",
+    "  Dense(256, activation='relu'),\n",
+    "  Dropout(0.4),\n",
+    "  Dense(1, activation='sigmoid')\n",
+    " \n",
+    "])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2020-04-07T12:48:52.045962Z",
+     "start_time": "2020-04-07T12:48:51.953810Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "_________________________________________________________________\n",
+      "Layer (type)                 Output Shape              Param #   \n",
+      "=================================================================\n",
+      "conv2d_23 (Conv2D)           (None, 224, 224, 16)      448       \n",
+      "_________________________________________________________________\n",
+      "max_pooling2d_21 (MaxPooling (None, 112, 112, 16)      0         \n",
+      "_________________________________________________________________\n",
+      "conv2d_24 (Conv2D)           (None, 112, 112, 32)      4640      \n",
+      "_________________________________________________________________\n",
+      "max_pooling2d_22 (MaxPooling (None, 56, 56, 32)        0         \n",
+      "_________________________________________________________________\n",
+      "dropout_21 (Dropout)         (None, 56, 56, 32)        0         \n",
+      "_________________________________________________________________\n",
+      "conv2d_25 (Conv2D)           (None, 56, 56, 64)        18496     \n",
+      "_________________________________________________________________\n",
+      "max_pooling2d_23 (MaxPooling (None, 28, 28, 64)        0         \n",
+      "_________________________________________________________________\n",
+      "dropout_22 (Dropout)         (None, 28, 28, 64)        0         \n",
+      "_________________________________________________________________\n",
+      "conv2d_26 (Conv2D)           (None, 28, 28, 128)       73856     \n",
+      "_________________________________________________________________\n",
+      "max_pooling2d_24 (MaxPooling (None, 14, 14, 128)       0         \n",
+      "_________________________________________________________________\n",
+      "dropout_23 (Dropout)         (None, 14, 14, 128)       0         \n",
+      "_________________________________________________________________\n",
+      "conv2d_27 (Conv2D)           (None, 12, 12, 128)       147584    \n",
+      "_________________________________________________________________\n",
+      "max_pooling2d_25 (MaxPooling (None, 6, 6, 128)         0         \n",
+      "_________________________________________________________________\n",
+      "dropout_24 (Dropout)         (None, 6, 6, 128)         0         \n",
+      "_________________________________________________________________\n",
+      "conv2d_28 (Conv2D)           (None, 4, 4, 256)         295168    \n",
+      "_________________________________________________________________\n",
+      "flatten_5 (Flatten)          (None, 4096)              0         \n",
+      "_________________________________________________________________\n",
+      "dense_9 (Dense)              (None, 256)               1048832   \n",
+      "_________________________________________________________________\n",
+      "dropout_25 (Dropout)         (None, 256)               0         \n",
+      "_________________________________________________________________\n",
+      "dense_10 (Dense)             (None, 1)                 257       \n",
+      "=================================================================\n",
+      "Total params: 1,589,281\n",
+      "Trainable params: 1,589,281\n",
+      "Non-trainable params: 0\n",
+      "_________________________________________________________________\n"
+     ]
+    }
+   ],
+   "source": [
+    "model.load_weights(os.path.join('..', 'models', 'B3modelweights.17-0.08.hdf5'))\n",
+    "model.summary()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2020-04-07T13:21:26.659379Z",
+     "start_time": "2020-04-07T13:21:26.625746Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "export_path = ./tfserving1.6/vazio/1\n",
+      "\n",
+      "h5_path = ./tfserving1.6/vazio.h5py\n",
+      "\n",
+      "\n",
+      "Saved model:\n"
+     ]
+    }
+   ],
+   "source": [
+    "from keras.models import save_model\n",
+    "\n",
+    "version = 1\n",
+    "export_path = os.path.join(MODEL_DIR, 'vazio', str(version))\n",
+    "print('export_path = {}\\n'.format(export_path))\n",
+    "\n",
+    "h5_path = os.path.join(MODEL_DIR, 'vazio.h5py')\n",
+    "print('h5_path = {}\\n'.format(h5_path))\n",
+    "\n",
+    "save_model(\n",
+    "    model,\n",
+    "    h5_path,\n",
+    "    overwrite=True,\n",
+    "    include_optimizer=False,\n",
+    ")\n",
+    "\n",
+    "export_h5_to_pb(h5_path, export_path)\n",
+    "\n",
+    "print('\\nSaved model:')\n",
+    "# !ls -l {export_path}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2020-04-07T13:27:08.910813Z",
+     "start_time": "2020-04-07T13:27:05.905998Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['5e5febda86556b3036c756cb.jpg', '5e692563635812f4b029d6b3.jpg', '5e6108f9dff3829839aa7e60.jpg', '5e7cc89d4bd4ad51c2d8bcaf.jpg', '5e5e4eeb86556b3036c71a1d.jpg', '5e6ba6ba4bd4ad51c2d5c7eb.jpg', '5e665e8f635812f4b028b2df.jpg', '5e610841f90d247d887a867c.jpg', '5e62311f9ccf00f7abbf68d4.jpg', '5e6925ba635812f4b029e399.jpg', '5e6ba6064bd4ad51c2d5b209.jpg', '5e6ba7744bd4ad51c2d5d59c.jpg', '5e6ba5fe4bd4ad51c2d5afe3.jpg', '5e6ba7744bd4ad51c2d5d57c.jpg', '5e6ba6054bd4ad51c2d5b1c9.jpg', '5e7cc8564bd4ad51c2d8b49c.jpg']\n",
+      "{'predictions': [[0.629091799], [0.965853333], [0.966044962], [0.966284215], [0.974903405], [0.976563573], [0.898215055], [0.96291852], [0.967284203], [0.961856], [0.000231626342], [0.977061331], [0.936749756], [0.972840607], [6.49218919e-06], [0.964953482]]}\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Testar Servidor\n",
+    "IMAGE_PATH = '../bases/vazios_cropped/VAZIO'\n",
+    "print(os.listdir(IMAGE_PATH)[:16])\n",
+    "images = prepare_images(os.listdir(IMAGE_PATH)[:16], IMAGE_PATH, (224, 224))\n",
+    "\n",
+    "json_batch = {\"signature_name\": \"predict\", \"instances\": images}\n",
+    "r = requests.post('http://localhost:8501/v1/models/vazio:predict', json=json_batch)\n",
+    "print(r.json())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "{'predictions': [[0.629091799], [0.965853333], [0.966044962], [0.966284215], [0.974903405], [0.976563573], \n",
+    "                 [0.898215055], [0.96291852], [0.967284203], [0.961856], [0.000231626342], [0.977061331], \n",
+    "                 [0.936749756], [0.972840607], [6.49218919e-06], [0.964953482]]}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# To serve multiple models, create a file like:\n",
+    "#tfserving/model_config.config\n",
+    "\n",
+    "model_config_list: {\n",
+    "  ...\n",
+    "  config: {\n",
+    "    name: \"vazio\",\n",
+    "    base_path: \"/home/ivan/pybr/projeto/Publicacao_modelos/tfserving/vazio\",\n",
+    "    model_platform: \"tensorflow\" \n",
+    "  }\n",
+    "}"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Pesos"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2020-04-07T17:01:26.714442Z",
+     "start_time": "2020-04-07T17:01:26.592899Z"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "from keras.models import Sequential\n",
+    "from keras.layers import Dense, Dropout, Flatten\n",
+    "from keras.layers import Conv2D, MaxPooling2D, AvgPool2D\n",
+    "\n",
+    "regression_model = Sequential([\n",
+    "    Conv2D(16, (7, 7), activation='relu',\n",
+    "           padding='same',\n",
+    "           strides=(2, 2),\n",
+    "           input_shape=(144, 288, 3)),\n",
+    "    MaxPooling2D(pool_size=(2, 4)),\n",
+    "    Dropout(0.25),\n",
+    "    Conv2D(16, (5, 5),\n",
+    "                  strides=(2, 2),\n",
+    "                  activation='relu', padding='same'),\n",
+    "    Dropout(0.25),\n",
+    "    Conv2D(16, (5, 5),\n",
+    "                  strides=(2, 2),\n",
+    "                  activation='relu'),\n",
+    "    Dropout(0.25),\n",
+    "    AvgPool2D(),\n",
+    "    Flatten(),\n",
+    "    Dense(512, activation='relu'),\n",
+    "    Dense(256, activation='relu'),\n",
+    "    Dropout(0.4),\n",
+    "    Dense(1)\n",
+    "])\n",
+    "regression_model.load_weights('../extracoes/notebooks/gerabasespesagens_cropped2_basefiltrada_scaled_warmup_tunned.hdf5')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2020-04-07T17:01:14.478501Z",
+     "start_time": "2020-04-07T17:01:14.424428Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "export_path = ./tfserving1.6/peso/1\n",
+      "\n",
+      "h5_path = ./tfserving1.6/peso.h5py\n",
+      "\n"
+     ]
+    },
+    {
+     "ename": "FailedPreconditionError",
+     "evalue": "Attempting to use uninitialized value conv2d_1/bias\n\t [[Node: _retval_conv2d_1/bias_0_0 = _Retval[T=DT_FLOAT, index=0, _device=\"/job:localhost/replica:0/task:0/device:CPU:0\"](conv2d_1/bias)]]",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mFailedPreconditionError\u001b[0m                   Traceback (most recent call last)",
+      "\u001b[0;32m~/.local/lib/python3.5/site-packages/tensorflow/python/client/session.py\u001b[0m in \u001b[0;36m_do_call\u001b[0;34m(self, fn, *args)\u001b[0m\n\u001b[1;32m   1349\u001b[0m     \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 1350\u001b[0;31m       \u001b[0;32mreturn\u001b[0m \u001b[0mfn\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0margs\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1351\u001b[0m     \u001b[0;32mexcept\u001b[0m \u001b[0merrors\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mOpError\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/.local/lib/python3.5/site-packages/tensorflow/python/client/session.py\u001b[0m in \u001b[0;36m_run_fn\u001b[0;34m(session, feed_dict, fetch_list, target_list, options, run_metadata)\u001b[0m\n\u001b[1;32m   1328\u001b[0m                                    \u001b[0mfeed_dict\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfetch_list\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mtarget_list\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 1329\u001b[0;31m                                    status, run_metadata)\n\u001b[0m\u001b[1;32m   1330\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/.local/lib/python3.5/site-packages/tensorflow/python/framework/errors_impl.py\u001b[0m in \u001b[0;36m__exit__\u001b[0;34m(self, type_arg, value_arg, traceback_arg)\u001b[0m\n\u001b[1;32m    472\u001b[0m             \u001b[0mcompat\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mas_text\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mc_api\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mTF_Message\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mstatus\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mstatus\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 473\u001b[0;31m             c_api.TF_GetCode(self.status.status))\n\u001b[0m\u001b[1;32m    474\u001b[0m     \u001b[0;31m# Delete the underlying status object from memory otherwise it stays alive\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mFailedPreconditionError\u001b[0m: Attempting to use uninitialized value conv2d_1/bias\n\t [[Node: _retval_conv2d_1/bias_0_0 = _Retval[T=DT_FLOAT, index=0, _device=\"/job:localhost/replica:0/task:0/device:CPU:0\"](conv2d_1/bias)]]",
+      "\nDuring handling of the above exception, another exception occurred:\n",
+      "\u001b[0;31mFailedPreconditionError\u001b[0m                   Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-6-b53b664f3ba5>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[1;32m     14\u001b[0m     \u001b[0mh5_path\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     15\u001b[0m     \u001b[0moverwrite\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mTrue\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---> 16\u001b[0;31m     \u001b[0minclude_optimizer\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;32mFalse\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     17\u001b[0m )\n",
+      "\u001b[0;32m~/.local/lib/python3.5/site-packages/tensorflow/python/keras/_impl/keras/models.py\u001b[0m in \u001b[0;36msave_model\u001b[0;34m(model, filepath, overwrite, include_optimizer)\u001b[0m\n\u001b[1;32m    135\u001b[0m     \u001b[0mmodel_weights_group\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mf\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcreate_group\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m'model_weights'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    136\u001b[0m     \u001b[0mmodel_layers\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mmodel\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mlayers\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--> 137\u001b[0;31m     \u001b[0mtopology\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msave_weights_to_hdf5_group\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mmodel_weights_group\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmodel_layers\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    138\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    139\u001b[0m     \u001b[0;32mif\u001b[0m \u001b[0minclude_optimizer\u001b[0m \u001b[0;32mand\u001b[0m \u001b[0mhasattr\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mmodel\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m'optimizer'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/.local/lib/python3.5/site-packages/tensorflow/python/keras/_impl/keras/engine/topology.py\u001b[0m in \u001b[0;36msave_weights_to_hdf5_group\u001b[0;34m(f, layers)\u001b[0m\n\u001b[1;32m   1268\u001b[0m     \u001b[0mg\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mf\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcreate_group\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mlayer\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mname\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1269\u001b[0m     \u001b[0msymbolic_weights\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mlayer\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mweights\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 1270\u001b[0;31m     \u001b[0mweight_values\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mK\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mbatch_get_value\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0msymbolic_weights\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1271\u001b[0m     \u001b[0mweight_names\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1272\u001b[0m     \u001b[0;32mfor\u001b[0m \u001b[0mi\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0mw\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mval\u001b[0m\u001b[0;34m)\u001b[0m \u001b[0;32min\u001b[0m \u001b[0menumerate\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mzip\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0msymbolic_weights\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mweight_values\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/.local/lib/python3.5/site-packages/tensorflow/python/keras/_impl/keras/backend.py\u001b[0m in \u001b[0;36mbatch_get_value\u001b[0;34m(tensors)\u001b[0m\n\u001b[1;32m   2406\u001b[0m   \"\"\"\n\u001b[1;32m   2407\u001b[0m   \u001b[0;32mif\u001b[0m \u001b[0mtensors\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 2408\u001b[0;31m     \u001b[0;32mreturn\u001b[0m \u001b[0mget_session\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mrun\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mtensors\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   2409\u001b[0m   \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   2410\u001b[0m     \u001b[0;32mreturn\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/.local/lib/python3.5/site-packages/tensorflow/python/client/session.py\u001b[0m in \u001b[0;36mrun\u001b[0;34m(self, fetches, feed_dict, options, run_metadata)\u001b[0m\n\u001b[1;32m    893\u001b[0m     \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    894\u001b[0m       result = self._run(None, fetches, feed_dict, options_ptr,\n\u001b[0;32m--> 895\u001b[0;31m                          run_metadata_ptr)\n\u001b[0m\u001b[1;32m    896\u001b[0m       \u001b[0;32mif\u001b[0m \u001b[0mrun_metadata\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    897\u001b[0m         \u001b[0mproto_data\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0mtf_session\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mTF_GetBuffer\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mrun_metadata_ptr\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/.local/lib/python3.5/site-packages/tensorflow/python/client/session.py\u001b[0m in \u001b[0;36m_run\u001b[0;34m(self, handle, fetches, feed_dict, options, run_metadata)\u001b[0m\n\u001b[1;32m   1126\u001b[0m     \u001b[0;32mif\u001b[0m \u001b[0mfinal_fetches\u001b[0m \u001b[0;32mor\u001b[0m \u001b[0mfinal_targets\u001b[0m \u001b[0;32mor\u001b[0m \u001b[0;34m(\u001b[0m\u001b[0mhandle\u001b[0m \u001b[0;32mand\u001b[0m \u001b[0mfeed_dict_tensor\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1127\u001b[0m       results = self._do_run(handle, final_targets, final_fetches,\n\u001b[0;32m-> 1128\u001b[0;31m                              feed_dict_tensor, options, run_metadata)\n\u001b[0m\u001b[1;32m   1129\u001b[0m     \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1130\u001b[0m       \u001b[0mresults\u001b[0m \u001b[0;34m=\u001b[0m \u001b[0;34m[\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/.local/lib/python3.5/site-packages/tensorflow/python/client/session.py\u001b[0m in \u001b[0;36m_do_run\u001b[0;34m(self, handle, target_list, fetch_list, feed_dict, options, run_metadata)\u001b[0m\n\u001b[1;32m   1342\u001b[0m     \u001b[0;32mif\u001b[0m \u001b[0mhandle\u001b[0m \u001b[0;32mis\u001b[0m \u001b[0;32mNone\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1343\u001b[0m       return self._do_call(_run_fn, self._session, feeds, fetches, targets,\n\u001b[0;32m-> 1344\u001b[0;31m                            options, run_metadata)\n\u001b[0m\u001b[1;32m   1345\u001b[0m     \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1346\u001b[0m       \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_do_call\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0m_prun_fn\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_session\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mhandle\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfeeds\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mfetches\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;32m~/.local/lib/python3.5/site-packages/tensorflow/python/client/session.py\u001b[0m in \u001b[0;36m_do_call\u001b[0;34m(self, fn, *args)\u001b[0m\n\u001b[1;32m   1361\u001b[0m         \u001b[0;32mexcept\u001b[0m \u001b[0mKeyError\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1362\u001b[0m           \u001b[0;32mpass\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m-> 1363\u001b[0;31m       \u001b[0;32mraise\u001b[0m \u001b[0mtype\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0me\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mnode_def\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mop\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mmessage\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m   1364\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1365\u001b[0m   \u001b[0;32mdef\u001b[0m \u001b[0m_extend_graph\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n",
+      "\u001b[0;31mFailedPreconditionError\u001b[0m: Attempting to use uninitialized value conv2d_1/bias\n\t [[Node: _retval_conv2d_1/bias_0_0 = _Retval[T=DT_FLOAT, index=0, _device=\"/job:localhost/replica:0/task:0/device:CPU:0\"](conv2d_1/bias)]]"
+     ]
+    }
+   ],
+   "source": [
+    "import tensorflow as tf\n",
+    "\n",
+    "\n",
+    "MODEL_DIR = './tfserving1.6'\n",
+    "version = 1\n",
+    "export_path = os.path.join(MODEL_DIR, 'peso', str(version))\n",
+    "print('export_path = {}\\n'.format(export_path))\n",
+    "\n",
+    "h5_path = os.path.join(MODEL_DIR, 'peso.h5py')\n",
+    "print('h5_path = {}\\n'.format(h5_path))\n",
+    "\n",
+    "tf.keras.models.save_model(\n",
+    "    regression_model,\n",
+    "    h5_path,\n",
+    "    overwrite=True,\n",
+    "    include_optimizer=False,\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2020-04-07T17:01:36.477100Z",
+     "start_time": "2020-04-07T17:01:36.191952Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "INFO:tensorflow:No assets to save.\n",
+      "INFO:tensorflow:No assets to write.\n",
+      "INFO:tensorflow:SavedModel written to: b'./tfserving1.6/peso/1/saved_model.pb'\n",
+      "\n",
+      "Saved model:\n",
+      "total 88\n",
+      "-rw-rw-r-- 1 ivan ivan 83539 Abr  7 14:01 saved_model.pb\n",
+      "drwxr-xr-x 2 ivan ivan  4096 Abr  7 14:01 variables\n"
+     ]
+    }
+   ],
+   "source": [
+    "K.set_learning_phase(0)\n",
+    "# Build the Protocol Buffer SavedModel at 'export_path'\n",
+    "builder = saved_model_builder.SavedModelBuilder(export_path)\n",
+    "\n",
+    "# Create prediction signature to be used by TensorFlow Serving Predict API\n",
+    "signature = predict_signature_def(inputs={\"images\": regression_model.input},\n",
+    "                                  outputs={\"scores\": regression_model.output})\n",
+    "\n",
+    "with K.get_session() as sess:\n",
+    "    # Save the meta graph and the variables\n",
+    "    builder.add_meta_graph_and_variables(sess=sess, tags=[tag_constants.SERVING],\n",
+    "                                         signature_def_map={\"serving_default\": signature})\n",
+    "    builder.save()\n",
+    "\n",
+    "print('\\nSaved model:')\n",
+    "!ls -l {export_path}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2020-04-07T17:04:48.229659Z",
+     "start_time": "2020-04-07T17:04:45.925901Z"
+    }
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'predictions': [[-0.0945815518], [1.31291544], [-0.892532349], [0.566698611], [0.791771054], [-0.356804579], [-1.11517954], [0.648615181], [-1.4110328], [-0.415910274], [-1.18397748], [0.289904267], [1.09787583], [0.625535965], [0.0675639287], [0.5964185]]}\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Testar Servidor\n",
+    "IMAGE_PATH = '../bases/pesagensbalanca/pesagensbalanca_cropped/'\n",
+    "images = prepare_images(os.listdir(IMAGE_PATH)[:16], IMAGE_PATH, (288, 144))\n",
+    "\n",
+    "json_batch = {\"signature_name\": \"serving_default\", \"instances\": images}\n",
+    "r = requests.post('http://localhost:8501/v1/models/peso:predict', json=json_batch)\n",
+    "print(r.json())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "{'predictions': [[-0.0945815518], [1.31291544], [-0.892532349], [0.566698611], [0.791771054], [-0.356804579],\n",
+    "                 [-1.11517954], [0.648615181], [-1.4110328], [-0.415910274], [-1.18397748], [0.289904267],\n",
+    "                 [1.09787583], [0.625535965], [0.0675639287], [0.5964185]]}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {
+    "ExecuteTime": {
+     "end_time": "2020-04-06T22:13:13.011446Z",
+     "start_time": "2020-04-06T22:13:13.008402Z"
+    }
+   },
+   "outputs": [
+    {
+     "ename": "SyntaxError",
+     "evalue": "invalid syntax (<ipython-input-4-34fbe87fb50f>, line 2)",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;36m  File \u001b[0;32m\"<ipython-input-4-34fbe87fb50f>\"\u001b[0;36m, line \u001b[0;32m2\u001b[0m\n\u001b[0;31m    model_config_list: {\u001b[0m\n\u001b[0m                     ^\u001b[0m\n\u001b[0;31mSyntaxError\u001b[0m\u001b[0;31m:\u001b[0m invalid syntax\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Configurar Servidor\n",
+    "model_config_list: {\n",
+    "  config: {\n",
+    "    name: \"peso\" ,\n",
+    "    base_path: \"/home/ivan/pybr/projeto/Publicacao_modelos/tfserving/peso\" ,\n",
+    "    model_platform: \" tensorflow\" \n",
+    "  },\n",
+    "    ...\n",
+    "}\n",
+    "# Rodar diretamente \n",
+    "tensorflow_model_server --rest_api_port=8501 \\\n",
+    "--model_config_file=\"/home/ivan/pybr/projeto/Publicacao_modelos/tfserving/model_config.config\""
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Configurar Servidor Docker\n",
+    "model_config_list: {\n",
+    "  config: {\n",
+    "    name: \"peso\" ,\n",
+    "    base_path: \"/models/Publicacao_modelos/tfserving/peso\" ,\n",
+    "    model_platform: \" tensorflow\" \n",
+    "  },\n",
+    "    ...\n",
+    "}\n",
+    "\n",
+    "# Rodar via docker\n",
+    "sudo docker run -t --rm -p 8501:8501 \\\n",
+    "    --mount type=bind,source=/home/ivan/pybr/projeto/,target=/models \\\n",
+    "    tensorflow/serving --model_config_file=models/Publicacao_modelos/tfserving/model_config_docker.config\n",
+    "    \n",
+    "    "
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "venv-gym2-tf1.6",
+   "language": "python",
+   "name": "venv-gym2-tf1.6"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.5.2"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
