@@ -52,9 +52,9 @@ model_config_list: {
  
  4. Iniciar tensorflow_model_server
  
-#### TODO: Ver comando para container docker rodar na inicialização 
+##### TODO: Ver comando para container docker rodar na inicialização 
 
-### Importante: no CentOS, devido ao SELinux, o volume do docker dará um "Permission Error". Rode o comando abaixo para dar a permissão
+##### Importante: no CentOS, devido ao SELinux, o volume do docker dará um "Permission Error". Rode o comando abaixo para dar a permissão
 
 ```shell script
 $ sudo chcon -Rt svirt_sandbox_file_t /home/ivan/tfserving
