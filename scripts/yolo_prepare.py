@@ -30,3 +30,7 @@ if not os.path.exists('yolo_weights/yolov3.weights'):
     if not success:
         sys.exit('Não foi possível obter os pesos yolov3 da darknet!!!')
 
+
+print('Foi baixado arquivo yolov.weights e montado arquivo de treinamento a partir do '
+      ' diretório yolo, gerado por extracoes/yolo.py e refinado com labelImg. \n'
+      'Siga as intrucoes no arquivo README-yolo.md para baixar e treinar a rede yolo.')

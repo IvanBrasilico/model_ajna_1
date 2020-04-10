@@ -18,10 +18,23 @@ $. venv/bin/activate
 $pip install -r requirements.txt
 ```
 
+**Atenção, rodar todos os scripts a partir do raiz do projeto**.
+ 
+ Os scripts e roteiros foram todos pensados para rodar a partir do raiz do venv ativo.
+ O Jupyter Notebook também deve ser iniciado no raiz do projeto sempre. Estas instruções
+ são para que não se tenha problemas de *path* ao rodar os códigos.
+  
+  Exemplo:
+
+```
+.../model_ajna_1(venv)$python scripts/bboxes_to_yolo.py
+.../model_ajna_1(venv)$python extracoes/yolo_prepare.py
+```
+
 Caso não tenha GPU disponível, rodar:
 ```
-$pip uninstall tensorflow-gpu==2.0.0b1
-$pip install tensorflow==2.0.0b1
+$pip uninstall "tensorflow-gpu>=2.0.0"
+$pip install "tensorflow>=2.0.0"
 ```
 
 Para rodar análises e treinamentos

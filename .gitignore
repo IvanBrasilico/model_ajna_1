@@ -22,3 +22,4 @@ kerastunerlogs/
 /venvtf11.6/
 /Publicacao_modelos/tfserving1.6/
 /yolo_weights/yolov3.weights
+/keras-yolo3/yolo-venv*
