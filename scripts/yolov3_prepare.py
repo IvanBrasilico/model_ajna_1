@@ -30,7 +30,20 @@ if not os.path.exists('yolo_weights/yolov3.weights'):
     if not success:
         sys.exit('Não foi possível obter os pesos yolov3 da darknet!!!')
 
+TRAIN_DIR = 'bases/yolo/'
+if not os.path.exists(TRAIN_DIR):
+    sys.exit('Não foi encontrado diretório bases/yolo. Use o arquivo '
+             'extracoes/yolo.py para gerar a base de treinamento. Utilize labelImg '
+             ' ou outro similar para revisar as marcações e treinar novamente.')
 
-print('Foi baixado arquivo yolov.weights e montado arquivo de treinamento a partir do '
-      ' diretório yolo, gerado por extracoes/yolo.py e refinado com labelImg. \n'
+with open('yolo_weights/container_train.txt', 'w') as train:
+    for filename in os.listdir(TRAIN_DIR):
+        with open(os.path.join(TRAIN_DIR, filename, filename + '.txt')) as txt_in:
+            labels = txt_in.readline()
+        train.write(os.path.join(TRAIN_DIR, filename, filename + '.jpg') +
+                    ' ' + labels + '0')
+
+print('Foi baixado arquivo yolo_weights/yolov.weights '
+      'e montado arquivo de treinamento yolo_weights/train_container.txt a partir do '
+      ' diretório yolo(gerado por extracoes/yolo.py e refinado com labelImg). \n'
       'Siga as intrucoes no arquivo README-yolo.md para baixar e treinar a rede yolo.')

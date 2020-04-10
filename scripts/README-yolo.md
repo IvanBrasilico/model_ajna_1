@@ -29,7 +29,7 @@ $. yolo-venv/bin/activate
 (yolo-venv)$pip install keras==2.1.6 tensorflow-gpu==1.13.2 h5py Pillow matplotlib
 (yolo-venv)$python convert.py yolov3.cfg ../yolo_weights/yolov3.weights model_data/yolo.h5
 (yolo-venv)$python yolo_video.py --image  # Para testar detecção em uma imagem
-(yolo-venv)$   # Para treinar  
+(yolo-venv)$python train_container.py  # Para treinar - note que esta versão tem algumas modifi  
 ```
 
 Para maiores instruções e detalhes, consultar README do projeto keras-yolo3
