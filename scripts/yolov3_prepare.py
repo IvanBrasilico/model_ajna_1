@@ -2,6 +2,7 @@ import os
 import sys
 
 import requests
+from PIL import Image
 from tqdm import tqdm
 
 
@@ -38,10 +39,25 @@ if not os.path.exists(TRAIN_DIR):
 
 with open('yolo_weights/container_train.txt', 'w') as train:
     for filename in os.listdir(TRAIN_DIR):
+        txt_filename = os.path.join(TRAIN_DIR, filename, filename + '.txt')
         with open(os.path.join(TRAIN_DIR, filename, filename + '.txt')) as txt_in:
             labels = txt_in.readline()
-        train.write(os.path.join(TRAIN_DIR, filename, filename + '.jpg') +
-                    ' ' + labels + '0')
+        img_filename = txt_filename.replace('.txt', '.jpg')
+        image = Image.open(img_filename)
+        # Converter v2 para v3
+        xfinal, yfinal = image.size
+        yolov2box = list(map(float, labels.split()))
+        class_id = yolov2box[0]
+        labels_int = yolov2box[1:]
+        x_min = (labels_int[0] - (labels_int[2] / 2)) * xfinal
+        y_min = (labels_int[1] - (labels_int[3] / 2)) * yfinal
+        x_max = x_min + (labels_int[2] * xfinal)
+        y_max = y_min + (labels_int[3] * yfinal)
+        box = ','.join(
+            list(map(lambda x: str(int(x)), [x_min, y_min, x_max, y_max, class_id]))
+        )
+        train.write(os.path.join('..', TRAIN_DIR, filename, filename + '.jpg')
+                    + ' ' + box + '\n')
 
 print('Foi baixado arquivo yolo_weights/yolov.weights '
       'e montado arquivo de treinamento yolo_weights/train_container.txt a partir do '

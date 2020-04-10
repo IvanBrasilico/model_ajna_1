@@ -64,6 +64,7 @@ def extract_yolo(rows: list, min_ratio=MIN_RATIO):
                 for prediction in predictions:
                     bbox = prediction['bbox']
                     print(bbox, image.size)
+                    # yolov2
                     coords = [str((bbox[1] + bbox[3]) / 2 / xfinal),
                               str((bbox[0] + bbox[2]) / 2 / yfinal),
                               str((bbox[3] - bbox[1]) / xfinal),
