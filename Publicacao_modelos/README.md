@@ -22,6 +22,7 @@ IP 10.68.100.90
 $ sudo yum install docker
 $ sudo service docker enable
 $ sudo service docker start
+$ sudo docker pull tensorflow/serving
 ```
 
 2. Baixar arquivos do modelo
