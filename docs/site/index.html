@@ -1,233 +1,420 @@
 
-<!DOCTYPE doctype html>
 
-<html class="no-js" lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta content="ie=edge" http-equiv="x-ua-compatible"/>
-<meta content="Followup do treinamento de novos modelos para o AJNA com TensorFlow2.0" name="description"/>
-<meta content="Copy to clipboard" name="lang:clipboard.copy"/>
-<meta content="Copied to clipboard" name="lang:clipboard.copied"/>
-<meta content="en" name="lang:search.language"/>
-<meta content="True" name="lang:search.pipeline.stopwords"/>
-<meta content="True" name="lang:search.pipeline.trimmer"/>
-<meta content="No matching documents" name="lang:search.result.none"/>
-<meta content="1 matching document" name="lang:search.result.one"/>
-<meta content="# matching documents" name="lang:search.result.other"/>
-<meta content="[\s\-]+" name="lang:search.tokenizer"/>
-<link href="assets/images/favicon.png" rel="shortcut icon"/>
-<meta content="mkdocs-1.0.4, mkdocs-material-4.4.0" name="generator"/>
-<title>Projeto AJNA - Treinamento de modelos</title>
-<link href="assets/stylesheets/application.0284f74d.css" rel="stylesheet"/>
-<script src="assets/javascripts/modernizr.74668098.js"></script>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&amp;display=fallback" rel="stylesheet"/>
-<style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
-<link href="assets/fonts/material-icons.css" rel="stylesheet"/>
-</head>
-<body dir="ltr">
-<svg class="md-svg">
-<defs>
-</defs>
-</svg>
-<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
-<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
-<label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
-<a class="md-skip" href="#visao-computacional-com-redes-convolucionais" tabindex="1">
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+        <meta name="description" content="Followup do treinamento de novos modelos para o AJNA com TensorFlow2.0">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
+    
+    
+      
+        <title>Projeto AJNA - Treinamento de modelos</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/application.0284f74d.css">
+      
+      
+    
+    
+      <script src="assets/javascripts/modernizr.74668098.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="assets/fonts/material-icons.css">
+    
+    
+    
+      
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#visao-computacional-com-redes-convolucionais" tabindex="1" class="md-skip">
         Skip to content
       </a>
-<header class="md-header" data-md-component="header">
-<nav class="md-header-nav md-grid">
-<div class="md-flex">
-<div class="md-flex__cell md-flex__cell--shrink">
-<a class="md-header-nav__button md-logo" href="." title="Projeto AJNA - Treinamento de modelos">
-<i class="md-icon"></i>
-</a>
-</div>
-<div class="md-flex__cell md-flex__cell--shrink">
-<label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
-</div>
-<div class="md-flex__cell md-flex__cell--stretch">
-<div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
-<span class="md-header-nav__topic">
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href="." title="Projeto AJNA - Treinamento de modelos" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
               Projeto AJNA - Treinamento de modelos
             </span>
-<span class="md-header-nav__topic">
+            <span class="md-header-nav__topic">
               
                 Definição
               
             </span>
-</div>
-</div>
-<div class="md-flex__cell md-flex__cell--shrink">
-<label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
 <div class="md-search" data-md-component="search" role="dialog">
-<label class="md-search__overlay" for="__search"></label>
-<div class="md-search__inner" role="search">
-<form class="md-search__form" name="search">
-<input autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="query" data-md-state="active" name="query" placeholder="Search" spellcheck="false" type="text"/>
-<label class="md-icon md-search__icon" for="__search"></label>
-<button class="md-icon md-search__icon" data-md-component="reset" tabindex="-1" type="reset">
-        
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
       </button>
-</form>
-<div class="md-search__output">
-<div class="md-search__scrollwrap" data-md-scrollfix="">
-<div class="md-search-result" data-md-component="result">
-<div class="md-search-result__meta">
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
             Type to start searching
           </div>
-<ol class="md-search-result__list"></ol>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</nav>
+        
+      </div>
+      
+    </div>
+  </nav>
 </header>
-<div class="md-container">
-<main class="md-main">
-<div class="md-main__inner md-grid" data-md-component="container">
-<div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
-<nav class="md-nav md-nav--primary" data-md-level="0">
-<label class="md-nav__title md-nav__title--site" for="__drawer">
-<a class="md-nav__button md-logo" href="." title="Projeto AJNA - Treinamento de modelos">
-<i class="md-icon"></i>
-</a>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href="." title="Projeto AJNA - Treinamento de modelos" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
     Projeto AJNA - Treinamento de modelos
   </label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item md-nav__item--active">
-<input class="md-toggle md-nav__toggle" data-md-toggle="toc" id="__toc" type="checkbox"/>
-<label class="md-nav__link md-nav__link--active" for="__toc">
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
         Definição
       </label>
-<a class="md-nav__link md-nav__link--active" href="." title="Definição">
+    
+    <a href="." title="Definição" class="md-nav__link md-nav__link--active">
       Definição
     </a>
+    
+      
 <nav class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">Table of contents</label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#classificacao-busca-simillaridade-reutilizacao-de-extracao-de-caracteristicas" title="Classificação, busca, simillaridade, reutilização de extração de características">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#classificacao-busca-simillaridade-reutilizacao-de-extracao-de-caracteristicas" title="Classificação, busca, simillaridade, reutilização de extração de características" class="md-nav__link">
     Classificação, busca, simillaridade, reutilização de extração de características
   </a>
-<nav class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#notas-para-a-visualizacao-em-pdf" title="Notas para a visualização em PDF">
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#notas-para-a-visualizacao-em-pdf" title="Notas para a visualização em PDF" class="md-nav__link">
     Notas para a visualização em PDF
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#visao-geral" title="Visão geral">
+      
+        <li class="md-nav__item">
+  <a href="#visao-geral" title="Visão geral" class="md-nav__link">
     Visão geral
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#organizacao" title="Organização">
+      
+        <li class="md-nav__item">
+  <a href="#organizacao" title="Organização" class="md-nav__link">
     Organização
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#descricao-do-problema-e-das-bases" title="Descrição do problema e das bases">
+      
+        <li class="md-nav__item">
+  <a href="#descricao-do-problema-e-das-bases" title="Descrição do problema e das bases" class="md-nav__link">
     Descrição do problema e das bases
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#metricas" title="Métricas">
+      
+        <li class="md-nav__item">
+  <a href="#metricas" title="Métricas" class="md-nav__link">
     Métricas
   </a>
+  
 </li>
-</ul>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="resumo/" title="Análise">
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="resumo/" title="Análise" class="md-nav__link">
       Análise
     </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="notebooks/" title="Relatório ChestXRay">
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="notebooks/" title="Relatório ChestXRay" class="md-nav__link">
       Relatório ChestXRay
     </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="notebooks_vazios/" title="Relatório Vazios">
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="notebooks_vazios/" title="Relatório Vazios" class="md-nav__link">
       Relatório Vazios
     </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="conclusao/" title="Conclusões">
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="conclusao/" title="Conclusões" class="md-nav__link">
       Conclusões
     </a>
-</li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="sobre/" title="Sobre">
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="sobre/" title="Sobre" class="md-nav__link">
       Sobre
     </a>
-</li>
-</ul>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="extratores/" title="Extratores" class="md-nav__link">
+      Extratores
+    </a>
+  </li>
+
+    
+  </ul>
 </nav>
-</div>
-</div>
-</div>
-<div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
-<div class="md-sidebar__scrollwrap">
-<div class="md-sidebar__inner">
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
 <nav class="md-nav md-nav--secondary">
-<label class="md-nav__title" for="__toc">Table of contents</label>
-<ul class="md-nav__list" data-md-scrollfix="">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#classificacao-busca-simillaridade-reutilizacao-de-extracao-de-caracteristicas" title="Classificação, busca, simillaridade, reutilização de extração de características">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#classificacao-busca-simillaridade-reutilizacao-de-extracao-de-caracteristicas" title="Classificação, busca, simillaridade, reutilização de extração de características" class="md-nav__link">
     Classificação, busca, simillaridade, reutilização de extração de características
   </a>
-<nav class="md-nav">
-<ul class="md-nav__list">
-<li class="md-nav__item">
-<a class="md-nav__link" href="#notas-para-a-visualizacao-em-pdf" title="Notas para a visualização em PDF">
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#notas-para-a-visualizacao-em-pdf" title="Notas para a visualização em PDF" class="md-nav__link">
     Notas para a visualização em PDF
   </a>
+  
 </li>
-</ul>
-</nav>
+        
+      </ul>
+    </nav>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#visao-geral" title="Visão geral">
+      
+        <li class="md-nav__item">
+  <a href="#visao-geral" title="Visão geral" class="md-nav__link">
     Visão geral
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#organizacao" title="Organização">
+      
+        <li class="md-nav__item">
+  <a href="#organizacao" title="Organização" class="md-nav__link">
     Organização
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#descricao-do-problema-e-das-bases" title="Descrição do problema e das bases">
+      
+        <li class="md-nav__item">
+  <a href="#descricao-do-problema-e-das-bases" title="Descrição do problema e das bases" class="md-nav__link">
     Descrição do problema e das bases
   </a>
+  
 </li>
-<li class="md-nav__item">
-<a class="md-nav__link" href="#metricas" title="Métricas">
+      
+        <li class="md-nav__item">
+  <a href="#metricas" title="Métricas" class="md-nav__link">
     Métricas
   </a>
+  
 </li>
-</ul>
+      
+      
+      
+      
+      
+    </ul>
+  
 </nav>
-</div>
-</div>
-</div>
-<div class="md-content">
-<article class="md-content__inner md-typeset"><a class="md-icon md-content__icon" download href="pdf/combined.pdf" title="PDF Export"></a>
-<h1 id="visao-computacional-com-redes-convolucionais">Visão computacional com Redes Convolucionais</h1>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="visao-computacional-com-redes-convolucionais">Visão computacional com Redes Convolucionais</h1>
 <h2 id="classificacao-busca-simillaridade-reutilizacao-de-extracao-de-caracteristicas">Classificação, busca, simillaridade, reutilização de extração de características</h2>
 <p>Ivan da Silva Brasílico</p>
 <p>2019-07-19</p>
@@ -264,6 +451,7 @@ de alguns modelos de visão computacional.</p>
 <p>Estes notebooks estão com a seguinte nomenclatura</p>
 <pre><code>&lt;número sequencial técnica/modelo&gt;&lt;refinamento&gt;-&lt;descricao&gt;-&lt;base&gt;
 </code></pre>
+
 <p>Ex: </p>
 <ul>
 <li>01 - número sequencial</li>
@@ -335,43 +523,65 @@ o f1-score, que é a média harmônica entre Precisão e <em>Recall</em> </p>
 serão avaliados também uso de disco, memória e velocidade de cada modelo.</p>
 <p>Adicionalmente, para métrica de busca por similaridade, será utilizada avaliação visual pela escolha randômica de alguns
 exemplos e se o rótulo é coincidente para os primeiros resultados de uma busca por similaridade.    </p>
-</article>
-</div>
-</div>
-</main>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
 <footer class="md-footer">
-<div class="md-footer-nav">
-<nav class="md-footer-nav__inner md-grid">
-<a class="md-flex md-footer-nav__link md-footer-nav__link--next" href="resumo/" rel="next" title="Análise">
-<div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
-<span class="md-flex__ellipsis">
-<span class="md-footer-nav__direction">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+        
+          <a href="resumo/" title="Análise" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
                   Next
                 </span>
                 Análise
               </span>
-</div>
-<div class="md-flex__cell md-flex__cell--shrink">
-<i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
-</div>
-</a>
-</nav>
-</div>
-<div class="md-footer-meta md-typeset">
-<div class="md-footer-meta__inner md-grid">
-<div class="md-footer-copyright">
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
         
         powered by
         <a href="https://www.mkdocs.org">MkDocs</a>
         and
         <a href="https://squidfunk.github.io/mkdocs-material/">
           Material for MkDocs</a>
-</div>
-</div>
-</div>
+      </div>
+      
+    </div>
+  </div>
 </footer>
-</div>
-<script src="assets/javascripts/application.245445c6.js"></script>
-<script>app.initialize({version:"1.0.4",url:{base:"."}})</script>
-</body>
+      
+    </div>
+    
+      <script src="assets/javascripts/application.245445c6.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:"."}})</script>
+      
+    
+  </body>
 </html>
