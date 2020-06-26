@@ -62,7 +62,7 @@ $ sudo chcon -Rt svirt_sandbox_file_t /home/ivan/tfserving
 ```
   
 ```shell script
-$ sudo docker run -it -p 8501:8501 -v /home/ivan/tfserving:/models tensorflow/serving --model_config_file=models/model_config.config
+$  sudo docker run -d -p 80:8501 -v /home/ivan/tfserving/:/models tensorflow/serving --model_config_file=models/model_config.config --restart always
 ```
 
 Feito! Agora você pode fazer uma consulta em 8501, conforme exemplos de "Publicar modelos.ipynb"
