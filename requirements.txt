@@ -5,7 +5,7 @@ attrs==19.3.0
 Automat==0.7.0
 backcall==0.1.0
 beautifulsoup4==4.7.1
-bleach==3.1.4
+bleach==3.3.0
 cachetools==4.0.0
 cairocffi==1.0.2
 CairoSVG==2.4.0
