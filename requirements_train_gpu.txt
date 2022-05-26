@@ -123,7 +123,7 @@ tb-nightly==1.14.0a20190603
 tensorboard==2.0.2
 tensorflow==2.0.1
 tensorflow-estimator==2.0.1
-tensorflow-gpu==2.0.1
+tensorflow-gpu==2.7.2
 termcolor==1.1.0
 terminado==0.8.2
 terminaltables==3.1.0
