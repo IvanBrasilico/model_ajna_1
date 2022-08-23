@@ -69,7 +69,7 @@ mkdocs-git-revision-date-plugin==0.1.5
 mkdocs-material==4.4.0
 mkdocs-minify-plugin==0.2.1
 mkdocs-pdf-export-plugin==0.5.5
-nbconvert==5.5.0
+nbconvert==6.5.1
 nbdime==1.0.6
 nbformat==4.4.0
 notebook==5.7.8
